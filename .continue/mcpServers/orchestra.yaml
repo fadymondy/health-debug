@@ -1,0 +1,6 @@
+name: orchestra
+command: /usr/local/bin/orchestra
+args:
+  - serve
+  - --workspace
+  - /Users/fadymondy/Sites/health-debug

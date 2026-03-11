@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__orchestra__get_current_user",
+      "mcp__orchestra__list_projects",
+      "mcp__orchestra__create_project",
+      "mcp__orchestra__create_person",
+      "mcp__orchestra__set_current_user",
+      "mcp__orchestra__set_current_feature",
+      "mcp__orchestra__advance_feature",
+      "mcp__orchestra__search_features",
+      "Bash(git init)",
+      "Bash(git add -A)",
+      "mcp__orchestra__create_feature",
+      "mcp__orchestra__get_feature",
+      "Bash(git config user.name)",
+      "Bash(git config user.email)"
+    ],
+    "additionalDirectories": [
+      "/Users/fadymondy/Sites/health-debug"
+    ]
+  }
+}

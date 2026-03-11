@@ -1,0 +1,30 @@
+# Xcode
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcworkspace/xcuserdata/
+DerivedData/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+build/
+
+# Swift Package Manager
+.build/
+Packages/HealthDebugKit/.build/
+*.resolved
+
+# macOS
+.DS_Store
+
+# IDE
+*.swp
+*~
+.idea/
+.vscode/
+
+# Secrets
+*.env
+*.key
+*.pem

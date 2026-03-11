@@ -1,0 +1,14 @@
+{
+  "context_servers": {
+    "orchestra": {
+      "command": {
+        "args": [
+          "serve",
+          "--workspace",
+          "/Users/fadymondy/Sites/health-debug"
+        ],
+        "path": "/usr/local/bin/orchestra"
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Health Debug needs access to your health data to track metabolic metrics, steps, heart rate, and sleep patterns for personalized health insights.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Health Debug writes workout and hydration data to Apple Health to keep your health records complete.</string>
+</dict>
+</plist>
