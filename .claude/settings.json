@@ -14,7 +14,8 @@
       "mcp__orchestra__create_feature",
       "mcp__orchestra__get_feature",
       "Bash(git config user.name)",
-      "Bash(git config user.email)"
+      "Bash(git config user.email)",
+      "Bash(git commit:*)"
     ],
     "additionalDirectories": [
       "/Users/fadymondy/Sites/health-debug"
