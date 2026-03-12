@@ -65,89 +65,51 @@ struct RootView: View {
 // MARK: - Main App View
 
 struct MainAppView: View {
-    @State private var mode: AppMode = .dashboard
-    @State private var showSettings = false
-    @State private var showSearch = false
-    @Environment(\.modelContext) private var context
-    @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
-    @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
+    var body: some View {
+        TabView {
+            Tab("Dashboard", systemImage: "heart.text.clipboard") {
+                ContentView()
+            }
 
-    enum AppMode: String, CaseIterable {
-        case dashboard = "Dashboard"
-        case intelligence = "Intelligence"
+            Tab("Search", systemImage: "magnifyingglass", role: .search) {
+                SearchPlaceholderView()
+            }
+
+            Tab("Intelligence", systemImage: "brain.head.profile.fill") {
+                IntelligenceView()
+            }
+        }
+        .tabBarMinimizeBehavior(.onScrollDown)
     }
+}
+
+// MARK: - Search Placeholder (FEAT-SFY)
+
+struct SearchPlaceholderView: View {
+    @State private var query = ""
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                modeSwitcher
-                    .padding(.horizontal)
-                    .padding(.bottom, 8)
+            VStack(spacing: 24) {
+                Spacer()
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 52))
+                    .foregroundStyle(AppTheme.primary)
+                    .padding()
+                    .glassEffect(.regular.tint(AppTheme.primary.opacity(0.15)), in: .circle)
 
-                ZStack {
-                    if mode == .dashboard {
-                        ContentView()
-                    } else {
-                        IntelligenceView()
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                Text("Smart Search")
+                    .font(.title2.bold())
+                Text("Search across all your health data,\nscreens, and AI insights.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                Spacer()
             }
-            .navigationTitle(LocalizedStringKey(mode.rawValue))
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        showSearch = true
-                    } label: {
-                        Image(systemName: "magnifyingglass")
-                    }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showSettings = true
-                    } label: {
-                        Image(systemName: "gearshape")
-                    }
-                }
-            }
-            .sheet(isPresented: $showSettings) {
-                if let profile = profiles.first {
-                    ProfileSettingsView(profile: profile, sleepConfig: sleepConfigs.first)
-                }
-            }
-            .sheet(isPresented: $showSearch) {
-                Text(LocalizedStringKey("Search coming soon"))
-                    .presentationDetents([.medium])
-            }
+            .padding()
+            .navigationTitle("Search")
+            .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
         }
-    }
-
-    private var modeSwitcher: some View {
-        HStack(spacing: 0) {
-            ForEach(AppMode.allCases, id: \.self) { m in
-                Button {
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                        mode = m
-                    }
-                } label: {
-                    Text(LocalizedStringKey(m.rawValue))
-                        .font(.subheadline.bold())
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(mode == m ? Color.primary : Color.secondary)
-                .background {
-                    if mode == m {
-                        Capsule()
-                            .glassEffect(.regular.tint(AppTheme.primary.opacity(0.2)), in: Capsule())
-                    }
-                }
-            }
-        }
-        .padding(4)
-        .glassEffect(.regular.tint(Color.primary.opacity(0.05)), in: Capsule())
     }
 }
 

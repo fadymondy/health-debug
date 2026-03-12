@@ -13,7 +13,10 @@ struct ContentView: View {
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
 
+    @State private var showSettings = false
+
     var body: some View {
+        NavigationStack {
         ScrollView {
             VStack(spacing: 16) {
                 if !health.isAuthorized {
@@ -56,6 +59,19 @@ struct ContentView: View {
         .refreshable {
             await health.refreshAll()
         }
+        .navigationTitle("Dashboard")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { showSettings = true } label: {
+                    Image(systemName: "gearshape")
+                }
+            }
+        }
+        .sheet(isPresented: $showSettings) {
+            if let profile = profiles.first {
+                ProfileSettingsView(profile: profile, sleepConfig: sleepConfigs.first)
+            }
+        }
         .onAppear {
             hydration.refresh(context: context)
             if let profile = profiles.first {
@@ -66,6 +82,7 @@ struct ContentView: View {
             shutdownMgr.startCountdown(config: sleepConfigs.first)
             standTimer.refreshTodayCount(context: context)
         }
+        } // end NavigationStack
     }
 
     // MARK: - Auth Card
@@ -502,5 +519,5 @@ struct MetricCard: View {
 }
 
 #Preview {
-    ContentView()
+    MainAppView()
 }
