@@ -43,22 +43,16 @@
 		};
 		A1400002 /* HealthDebug/macOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = HealthDebug/macOS;
 			sourceTree = "<group>";
 		};
 		A1400003 /* HealthDebug/watchOS Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = "HealthDebug/watchOS Watch App";
 			sourceTree = "<group>";
 		};
 		A1400004 /* HealthDebug/Shared */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = HealthDebug/Shared;
 			sourceTree = "<group>";
 		};
@@ -240,7 +234,7 @@
 			mainGroup = A1600001;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				A1B00001 /* XCLocalSwiftPackageReference "HealthDebugKit" */,
+				A1B00001 /* XCLocalSwiftPackageReference "Packages/HealthDebugKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A1600004 /* Products */;
@@ -618,7 +612,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		A1B00001 /* XCLocalSwiftPackageReference "HealthDebugKit" */ = {
+		A1B00001 /* XCLocalSwiftPackageReference "Packages/HealthDebugKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/HealthDebugKit;
 		};

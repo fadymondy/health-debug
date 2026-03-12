@@ -6,10 +6,10 @@ enum AppTheme {
 
     // MARK: Core Palette
 
-    /// Primary brand color — neon green (#00FF41) in dark, very dark green in light for button contrast.
+    /// Primary brand color — teal-green, comfortable for buttons.
     static let primary = Color(
-        light: Color(hex: 0x034D22),
-        dark: Color(hex: 0x00FF41)
+        light: Color(hex: 0x0A7E5A),   // deep teal-green for light mode
+        dark: Color(hex: 0x30D158)     // Apple's system green (comfortable, not neon) for dark mode
     )
 
     /// Secondary — dark navy in light, cool cyan in dark.
@@ -18,10 +18,10 @@ enum AppTheme {
         dark: Color(hex: 0x00D4FF)
     )
 
-    /// Accent — dark green in light, bright mint in dark.
+    /// Accent — mint green accent.
     static let accent = Color(
-        light: Color(hex: 0x04501F),
-        dark: Color(hex: 0x39FF85)
+        light: Color(hex: 0x0D6E4E),
+        dark: Color(hex: 0x34C759)   // Apple system green variant
     )
 
     /// Warning — consistent orange.

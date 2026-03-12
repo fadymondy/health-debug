@@ -7,6 +7,7 @@ import HealthDebugKit
 enum HealthScreen: Hashable {
     case steps, energy, heartRate, sleep
     case hydration, standTimer, nutrition, caffeine, shutdown, weight
+    case dailyFlow
 }
 
 // MARK: - Content View
@@ -20,11 +21,12 @@ struct ContentView: View {
     @StateObject private var shutdownMgr = ShutdownManager.shared
     @StateObject private var caffeineMgr = CaffeineManager.shared
     @StateObject private var nutritionMgr = NutritionManager.shared
+    @StateObject private var layout = DashboardLayout.shared
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
 
     @State private var showSettings = false
-    @State private var showDailyFlow = false
+    @State private var showEditLayout = false
 
     var body: some View {
         NavigationStack {
@@ -33,9 +35,8 @@ struct ContentView: View {
                     if !health.isAuthorized {
                         authCard
                     } else {
-                        metricsGrid
-                        activitySection
-                        healthSection
+                        pinnedSection
+                        allCardsSection
                     }
                 }
                 .padding(.vertical)
@@ -54,6 +55,7 @@ struct ContentView: View {
                 case .caffeine: CaffeineDetailView()
                 case .shutdown: ShutdownDetailView()
                 case .weight: ZeppDetailView()
+                case .dailyFlow: DailyFlowDetailView()
                 }
             }
             .toolbar {
@@ -63,10 +65,10 @@ struct ContentView: View {
                     }
                 }
                 ToolbarItem(placement: .topBarLeading) {
-                    Button { showDailyFlow = true } label: {
+                    Button { showEditLayout = true } label: {
                         HStack(spacing: 5) {
-                            Image(systemName: "checklist")
-                            Text(LocalizedStringKey("Daily Flow")).font(.subheadline)
+                            Image(systemName: "square.grid.2x2")
+                            Text(LocalizedStringKey("Edit")).font(.subheadline)
                         }
                     }
                 }
@@ -76,8 +78,9 @@ struct ContentView: View {
                     ProfileSettingsView(profile: profile, sleepConfig: sleepConfigs.first)
                 }
             }
-            .sheet(isPresented: $showDailyFlow) {
-                DailyFlowSheet().presentationDetents([.medium, .large])
+            .sheet(isPresented: $showEditLayout) {
+                DashboardEditSheet()
+                    .presentationDetents([.large])
             }
             .onAppear {
                 hydration.refresh(context: context)
@@ -111,10 +114,40 @@ struct ContentView: View {
         .padding(.horizontal)
     }
 
-    // MARK: - Metrics Grid
+    // MARK: - Pinned Section (2x2 grid)
 
-    private var metricsGrid: some View {
-        LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
+    private var pinnedSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text(LocalizedStringKey("Pinned"))
+                    .font(.title3.bold())
+                Spacer()
+                Button {
+                    showEditLayout = true
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .padding(.horizontal).padding(.top, 4)
+
+            LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
+                ForEach(layout.pinnedOrdered, id: \.self) { cardID in
+                    pinnedCardView(for: cardID)
+                }
+            }
+            .padding(.horizontal)
+        }
+        .onLongPressGesture {
+            showEditLayout = true
+        }
+    }
+
+    @ViewBuilder
+    private func pinnedCardView(for cardID: String) -> some View {
+        switch cardID {
+        case "steps":
             NavigationLink(value: HealthScreen.steps) {
                 HealthMetricCard(
                     icon: "figure.walk", title: "Steps",
@@ -124,7 +157,7 @@ struct ContentView: View {
                     progress: min(1.0, health.stepCount / 10000)
                 )
             }
-
+        case "energy":
             NavigationLink(value: HealthScreen.energy) {
                 HealthMetricCard(
                     icon: "flame.fill", title: "Active Energy",
@@ -134,7 +167,7 @@ struct ContentView: View {
                     progress: min(1.0, health.activeEnergy / 600)
                 )
             }
-
+        case "heartRate":
             NavigationLink(value: HealthScreen.heartRate) {
                 HealthMetricCard(
                     icon: "heart.fill", title: "Heart Rate",
@@ -145,7 +178,7 @@ struct ContentView: View {
                     statusColor: heartZoneColor
                 )
             }
-
+        case "sleep":
             NavigationLink(value: HealthScreen.sleep) {
                 HealthMetricCard(
                     icon: "moon.zzz.fill", title: "Sleep",
@@ -156,9 +189,267 @@ struct ContentView: View {
                     statusColor: sleepQualityColor
                 )
             }
+        case "hydration":
+            NavigationLink(value: HealthScreen.hydration) {
+                HealthMetricCard(
+                    icon: "drop.fill", title: "Hydration",
+                    value: "\(hydration.todayTotal)", unit: "ml",
+                    caption: profiles.first.map { hydration.status(profile: $0).rawValue } ?? "",
+                    color: AppTheme.secondary,
+                    progress: min(1.0, Double(hydration.todayTotal) / Double(max(1, hydration.dailyGoal)))
+                )
+            }
+        case "standTimer":
+            NavigationLink(value: HealthScreen.standTimer) {
+                HealthMetricCard(
+                    icon: "figure.stand", title: "Stand Timer",
+                    value: "\(standTimer.todayCompleted)", unit: nil,
+                    caption: "\(NSLocalizedString("of", comment: "")) \(StandTimerManager.dailyTarget) \(NSLocalizedString("sessions", comment: ""))",
+                    color: AppTheme.accent,
+                    progress: min(1.0, Double(standTimer.todayCompleted) / Double(StandTimerManager.dailyTarget)),
+                    statusColor: standTimerStatusColor
+                )
+            }
+        case "nutrition":
+            NavigationLink(value: HealthScreen.nutrition) {
+                HealthMetricCard(
+                    icon: "fork.knife", title: "Nutrition",
+                    value: String(format: "%.0f%%", nutritionMgr.safetyScore), unit: nil,
+                    caption: "\(nutritionMgr.todaySafeCount) \(NSLocalizedString("safe", comment: "")) · \(nutritionMgr.todayUnsafeCount) \(NSLocalizedString("unsafe", comment: ""))",
+                    color: nutritionStatusColor,
+                    progress: nutritionMgr.safetyScore / 100,
+                    statusColor: nutritionStatusColor
+                )
+            }
+        case "caffeine":
+            NavigationLink(value: HealthScreen.caffeine) {
+                HealthMetricCard(
+                    icon: "cup.and.saucer.fill", title: "Caffeine",
+                    value: String(format: "%.0f%%", caffeineMgr.cleanTransitionPercent), unit: nil,
+                    caption: caffeineMgr.transitionStatus.rawValue,
+                    color: caffeineStatusColor,
+                    progress: caffeineMgr.cleanTransitionPercent / 100,
+                    statusColor: caffeineStatusColor
+                )
+            }
+        case "shutdown":
+            NavigationLink(value: HealthScreen.shutdown) {
+                HealthMetricCard(
+                    icon: "moon.fill", title: "Shutdown",
+                    value: shutdownMgr.state == .active
+                        ? ShutdownManager.formatCountdown(shutdownMgr.secondsUntilSleep)
+                        : ShutdownManager.formatCountdown(shutdownMgr.secondsUntilShutdown),
+                    unit: nil,
+                    caption: shutdownMgr.state == .active
+                        ? NSLocalizedString("Active", comment: "")
+                        : NSLocalizedString("OK", comment: ""),
+                    color: shutdownMgr.state == .active ? .orange : AppTheme.secondary,
+                    progress: nil,
+                    statusColor: shutdownMgr.state == .active ? .orange : AppTheme.primary
+                )
+            }
+        case "weight":
+            NavigationLink(value: HealthScreen.weight) {
+                HealthMetricCard(
+                    icon: "scalemass.fill", title: "Weight",
+                    value: String(format: "%.1f", health.zeppMetrics.weight), unit: "kg",
+                    caption: health.zeppMetrics.lastUpdated.map {
+                        $0.formatted(.relative(presentation: .named))
+                    } ?? NSLocalizedString("Never synced", comment: ""),
+                    color: AppTheme.primary,
+                    progress: nil
+                )
+            }
+        case "dailyFlow":
+            NavigationLink(value: HealthScreen.dailyFlow) {
+                DailyFlowMetricCard()
+            }
+        default:
+            EmptyView()
         }
-        .padding(.horizontal)
     }
+
+    // MARK: - All Cards Section
+
+    private var allCardsSection: some View {
+        VStack(spacing: 14) {
+            HStack {
+                Text(LocalizedStringKey("All Cards"))
+                    .font(.title3.bold())
+                Spacer()
+            }
+            .padding(.horizontal).padding(.top, 4)
+
+            ForEach(layout.unpinnedCards, id: \.self) { cardID in
+                fullCardView(for: cardID)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func fullCardView(for cardID: String) -> some View {
+        switch cardID {
+        case "dailyFlow":
+            NavigationLink(value: HealthScreen.dailyFlow) {
+                DailyFlowFullCard()
+            }
+        case "steps":
+            NavigationLink(value: HealthScreen.steps) {
+                HealthCard(
+                    icon: "figure.walk", title: "Steps",
+                    color: AppTheme.primary,
+                    primaryValue: formatted(health.stepCount),
+                    detail: "/ 10,000 \(NSLocalizedString("steps", comment: ""))",
+                    statusText: String(format: NSLocalizedString("%.0f%% of daily goal", comment: ""), min(100, health.stepCount / 10000 * 100)),
+                    statusColor: AppTheme.primary,
+                    progress: min(1.0, health.stepCount / 10000),
+                    quickActions: []
+                )
+            }
+        case "energy":
+            NavigationLink(value: HealthScreen.energy) {
+                HealthCard(
+                    icon: "flame.fill", title: "Active Energy",
+                    color: .orange,
+                    primaryValue: "\(formatted(health.activeEnergy)) kcal",
+                    detail: "/ 600 kcal",
+                    statusText: String(format: NSLocalizedString("%.0f%% of goal", comment: ""), min(100, health.activeEnergy / 600 * 100)),
+                    statusColor: .orange,
+                    progress: min(1.0, health.activeEnergy / 600),
+                    quickActions: []
+                )
+            }
+        case "heartRate":
+            NavigationLink(value: HealthScreen.heartRate) {
+                HealthCard(
+                    icon: "heart.fill", title: "Heart Rate",
+                    color: .red,
+                    primaryValue: "\(formatted(health.heartRate)) BPM",
+                    detail: heartZoneLabel,
+                    statusText: heartZoneLabel,
+                    statusColor: heartZoneColor,
+                    progress: min(1.0, max(0, (health.heartRate - 40) / 120)),
+                    quickActions: []
+                )
+            }
+        case "sleep":
+            NavigationLink(value: HealthScreen.sleep) {
+                HealthCard(
+                    icon: "moon.zzz.fill", title: "Sleep",
+                    color: AppTheme.secondary,
+                    primaryValue: String(format: "%.1f hrs", health.sleepHours),
+                    detail: NSLocalizedString("/ 8 hours target", comment: ""),
+                    statusText: sleepQualityLabel,
+                    statusColor: sleepQualityColor,
+                    progress: min(1.0, health.sleepHours / 8.0),
+                    quickActions: []
+                )
+            }
+        case "hydration":
+            NavigationLink(value: HealthScreen.hydration) {
+                HealthCard(
+                    icon: "drop.fill", title: "Hydration",
+                    color: AppTheme.secondary,
+                    primaryValue: "\(hydration.todayTotal) ml",
+                    detail: "/ \(hydration.dailyGoal) ml",
+                    statusText: profiles.first.map { hydration.status(profile: $0).rawValue } ?? "",
+                    statusColor: hydrationStatusColor,
+                    progress: min(1.0, Double(hydration.todayTotal) / Double(max(1, hydration.dailyGoal))),
+                    quickActions: [
+                        .init(label: NSLocalizedString("Log 250ml", comment: ""), icon: "plus.circle.fill", color: AppTheme.secondary) {
+                            hydration.logWater(250, source: "quick", context: context, profile: profiles.first)
+                        },
+                        .init(label: NSLocalizedString("Log 500ml", comment: ""), icon: "drop.circle.fill", color: AppTheme.secondary) {
+                            hydration.logWater(500, source: "quick", context: context, profile: profiles.first)
+                        }
+                    ]
+                )
+            }
+        case "standTimer":
+            NavigationLink(value: HealthScreen.standTimer) {
+                HealthCard(
+                    icon: "figure.stand", title: "Stand Timer",
+                    color: AppTheme.accent,
+                    primaryValue: "\(standTimer.todayCompleted)",
+                    detail: "/ \(StandTimerManager.dailyTarget) \(NSLocalizedString("sessions", comment: ""))",
+                    statusText: standTimerStatusText,
+                    statusColor: standTimerStatusColor,
+                    progress: min(1.0, Double(standTimer.todayCompleted) / Double(StandTimerManager.dailyTarget)),
+                    quickActions: standTimer.state == .idle ? [
+                        .init(label: NSLocalizedString("Start", comment: ""), icon: "play.circle.fill", color: AppTheme.accent) {
+                            standTimer.startCycle()
+                        }
+                    ] : []
+                )
+            }
+        case "nutrition":
+            NavigationLink(value: HealthScreen.nutrition) {
+                HealthCard(
+                    icon: "fork.knife", title: "Nutrition",
+                    color: nutritionStatusColor,
+                    primaryValue: String(format: "%.0f%%", nutritionMgr.safetyScore),
+                    detail: "\(nutritionMgr.todaySafeCount) \(NSLocalizedString("safe", comment: "")) · \(nutritionMgr.todayUnsafeCount) \(NSLocalizedString("unsafe", comment: ""))",
+                    statusText: nutritionMgr.safetyStatus.rawValue,
+                    statusColor: nutritionStatusColor,
+                    progress: nutritionMgr.safetyScore / 100,
+                    quickActions: [
+                        .init(label: NSLocalizedString("Log Meal", comment: ""), icon: "plus.circle.fill", color: nutritionStatusColor) { }
+                    ],
+                    badge: nutritionMgr.todayUnsafeCount > 0 ? "\(nutritionMgr.todayUnsafeCount) ⚠" : nil
+                )
+            }
+        case "caffeine":
+            NavigationLink(value: HealthScreen.caffeine) {
+                HealthCard(
+                    icon: "cup.and.saucer.fill", title: "Caffeine",
+                    color: caffeineStatusColor,
+                    primaryValue: String(format: "%.0f%%", caffeineMgr.cleanTransitionPercent),
+                    detail: "\(caffeineMgr.todayCleanCount) \(NSLocalizedString("clean", comment: "")) · \(caffeineMgr.todaySugarCount) \(NSLocalizedString("sugar", comment: ""))",
+                    statusText: caffeineMgr.transitionStatus.rawValue,
+                    statusColor: caffeineStatusColor,
+                    progress: caffeineMgr.cleanTransitionPercent / 100,
+                    quickActions: []
+                )
+            }
+        case "shutdown":
+            NavigationLink(value: HealthScreen.shutdown) {
+                let isActive = shutdownMgr.state == .active
+                HealthCard(
+                    icon: "moon.fill", title: "System Shutdown",
+                    color: isActive ? .orange : AppTheme.secondary,
+                    primaryValue: isActive
+                        ? ShutdownManager.formatCountdown(shutdownMgr.secondsUntilSleep)
+                        : ShutdownManager.formatCountdown(shutdownMgr.secondsUntilShutdown),
+                    detail: isActive
+                        ? NSLocalizedString("Active — No food until sleep", comment: "")
+                        : NSLocalizedString("You can eat normally", comment: ""),
+                    statusText: isActive ? NSLocalizedString("ACTIVE", comment: "") : NSLocalizedString("OK", comment: ""),
+                    statusColor: isActive ? .orange : AppTheme.primary,
+                    progress: nil,
+                    quickActions: []
+                )
+            }
+        case "weight":
+            NavigationLink(value: HealthScreen.weight) {
+                HealthCard(
+                    icon: "scalemass.fill", title: "Weight",
+                    color: AppTheme.primary,
+                    primaryValue: String(format: "%.1f kg", health.zeppMetrics.weight),
+                    detail: health.zeppMetrics.lastUpdated.map {
+                        NSLocalizedString("Synced", comment: "") + " " + $0.formatted(.relative(presentation: .named))
+                    } ?? NSLocalizedString("Never synced", comment: ""),
+                    statusText: nil,
+                    statusColor: AppTheme.primary,
+                    progress: nil,
+                    quickActions: []
+                )
+            }
+        default:
+            EmptyView()
+        }
+    }
+
+    // MARK: - Computed Status Properties
 
     private var heartZoneLabel: String {
         switch health.heartRate {
@@ -190,52 +481,6 @@ struct ContentView: View {
         default: return .red
         }
     }
-
-    // MARK: - Activity Section
-
-    private var activitySection: some View {
-        VStack(spacing: 14) {
-            sectionHeader("Activity")
-
-            NavigationLink(value: HealthScreen.hydration) {
-                HealthCard(
-                    icon: "drop.fill", title: "Hydration",
-                    color: AppTheme.secondary,
-                    primaryValue: "\(hydration.todayTotal) ml",
-                    detail: "/ \(hydration.dailyGoal) ml",
-                    statusText: profiles.first.map { hydration.status(profile: $0).rawValue } ?? "",
-                    statusColor: hydrationStatusColor,
-                    progress: min(1.0, Double(hydration.todayTotal) / Double(max(1, hydration.dailyGoal))),
-                    quickActions: [
-                        .init(label: NSLocalizedString("Log 250ml", comment: ""), icon: "plus.circle.fill", color: AppTheme.secondary) {
-                            hydration.logWater(250, source: "quick", context: context, profile: profiles.first)
-                        },
-                        .init(label: NSLocalizedString("Log 500ml", comment: ""), icon: "drop.circle.fill", color: AppTheme.secondary) {
-                            hydration.logWater(500, source: "quick", context: context, profile: profiles.first)
-                        }
-                    ]
-                )
-            }
-
-            NavigationLink(value: HealthScreen.standTimer) {
-                HealthCard(
-                    icon: "figure.stand", title: "Stand Timer",
-                    color: AppTheme.accent,
-                    primaryValue: "\(standTimer.todayCompleted)",
-                    detail: "/ \(StandTimerManager.dailyTarget) \(NSLocalizedString("sessions", comment: ""))",
-                    statusText: standTimerStatusText,
-                    statusColor: standTimerStatusColor,
-                    progress: min(1.0, Double(standTimer.todayCompleted) / Double(StandTimerManager.dailyTarget)),
-                    quickActions: standTimer.state == .idle ? [
-                        .init(label: NSLocalizedString("Start", comment: ""), icon: "play.circle.fill", color: AppTheme.accent) {
-                            standTimer.startCycle()
-                        }
-                    ] : []
-                )
-            }
-        }
-    }
-
     private var hydrationStatusColor: Color {
         guard let profile = profiles.first else { return AppTheme.secondary }
         switch hydration.status(profile: profile) {
@@ -260,90 +505,6 @@ struct ContentView: View {
         case .walking: return AppTheme.primary
         }
     }
-
-    // MARK: - Health Section
-
-    private var healthSection: some View {
-        VStack(spacing: 14) {
-            sectionHeader("Health")
-
-            NavigationLink(value: HealthScreen.nutrition) {
-                HealthCard(
-                    icon: "fork.knife", title: "Nutrition",
-                    color: nutritionStatusColor,
-                    primaryValue: String(format: "%.0f%%", nutritionMgr.safetyScore),
-                    detail: "\(nutritionMgr.todaySafeCount) \(NSLocalizedString("safe", comment: "")) · \(nutritionMgr.todayUnsafeCount) \(NSLocalizedString("unsafe", comment: ""))",
-                    statusText: nutritionMgr.safetyStatus.rawValue,
-                    statusColor: nutritionStatusColor,
-                    progress: nutritionMgr.safetyScore / 100,
-                    quickActions: [
-                        .init(label: NSLocalizedString("Log Meal", comment: ""), icon: "plus.circle.fill", color: nutritionStatusColor) { }
-                    ],
-                    badge: nutritionMgr.todayUnsafeCount > 0 ? "\(nutritionMgr.todayUnsafeCount) ⚠" : nil
-                )
-            }
-
-            NavigationLink(value: HealthScreen.caffeine) {
-                HealthCard(
-                    icon: "cup.and.saucer.fill", title: "Caffeine",
-                    color: caffeineStatusColor,
-                    primaryValue: String(format: "%.0f%%", caffeineMgr.cleanTransitionPercent),
-                    detail: "\(caffeineMgr.todayCleanCount) \(NSLocalizedString("clean", comment: "")) · \(caffeineMgr.todaySugarCount) \(NSLocalizedString("sugar", comment: ""))",
-                    statusText: caffeineMgr.transitionStatus.rawValue,
-                    statusColor: caffeineStatusColor,
-                    progress: caffeineMgr.cleanTransitionPercent / 100,
-                    quickActions: []
-                )
-            }
-
-            NavigationLink(value: HealthScreen.shutdown) {
-                let isActive = shutdownMgr.state == .active
-                HealthCard(
-                    icon: "moon.fill", title: "System Shutdown",
-                    color: isActive ? .orange : AppTheme.secondary,
-                    primaryValue: isActive
-                        ? ShutdownManager.formatCountdown(shutdownMgr.secondsUntilSleep)
-                        : ShutdownManager.formatCountdown(shutdownMgr.secondsUntilShutdown),
-                    detail: isActive
-                        ? NSLocalizedString("Active — No food until sleep", comment: "")
-                        : NSLocalizedString("You can eat normally", comment: ""),
-                    statusText: isActive ? NSLocalizedString("ACTIVE", comment: "") : NSLocalizedString("OK", comment: ""),
-                    statusColor: isActive ? .orange : AppTheme.primary,
-                    progress: nil,
-                    quickActions: []
-                )
-            }
-
-            NavigationLink(value: HealthScreen.weight) {
-                HealthCard(
-                    icon: "scalemass.fill", title: "Weight",
-                    color: AppTheme.primary,
-                    primaryValue: String(format: "%.1f kg", health.zeppMetrics.weight),
-                    detail: health.zeppMetrics.lastUpdated.map {
-                        NSLocalizedString("Synced", comment: "") + " " + $0.formatted(.relative(presentation: .named))
-                    } ?? NSLocalizedString("Never synced", comment: ""),
-                    statusText: nil,
-                    statusColor: AppTheme.primary,
-                    progress: nil,
-                    quickActions: []
-                )
-            }
-
-            NavigationLink(value: HealthScreen.sleep) {
-                HealthCard(
-                    icon: "bed.double.fill", title: "Last Night",
-                    color: AppTheme.secondary,
-                    primaryValue: String(format: "%.1f hrs", health.sleepHours),
-                    detail: NSLocalizedString("/ 8 hours target", comment: ""),
-                    statusText: sleepQualityLabel,
-                    statusColor: sleepQualityColor,
-                    progress: min(1.0, health.sleepHours / 8.0),
-                    quickActions: []
-                )
-            }
-        }
-    }
-
     private var nutritionStatusColor: Color {
         switch nutritionMgr.safetyStatus {
         case .allSafe, .noMeals: return AppTheme.primary
@@ -359,18 +520,107 @@ struct ContentView: View {
         }
     }
 
-    // MARK: - Section Header
-
-    private func sectionHeader(_ title: String) -> some View {
-        HStack {
-            Text(LocalizedStringKey(title)).font(.title3.bold())
-            Spacer()
-        }
-        .padding(.horizontal).padding(.top, 4)
-    }
-
     private func formatted(_ value: Double) -> String {
         value >= 1000 ? String(format: "%.1fk", value / 1000) : String(format: "%.0f", value)
+    }
+}
+
+// MARK: - Dashboard Edit Sheet
+
+struct DashboardEditSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var layout = DashboardLayout.shared
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section {
+                    Text(LocalizedStringKey("Long-press any pinned card or tap Edit to customize your dashboard. Pin up to 4 cards for the top grid."))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Section(header: Text(LocalizedStringKey("Card Order & Pins"))) {
+                    ForEach(layout.allCardOrder, id: \.self) { cardID in
+                        HStack(spacing: 14) {
+                            // Pin toggle
+                            Button {
+                                layout.togglePin(cardID)
+                            } label: {
+                                Image(systemName: layout.isPinned(cardID) ? "pin.fill" : "pin")
+                                    .foregroundStyle(layout.isPinned(cardID) ? AppTheme.secondary : .secondary)
+                                    .font(.subheadline)
+                            }
+                            .buttonStyle(.plain)
+
+                            // Card icon + name
+                            Label(LocalizedStringKey(cardDisplayName(cardID)), systemImage: cardIcon(cardID))
+                                .font(.subheadline)
+
+                            Spacer()
+
+                            // Pinned badge
+                            if layout.isPinned(cardID) {
+                                Text(LocalizedStringKey("Pinned"))
+                                    .font(.caption2.bold())
+                                    .foregroundStyle(AppTheme.secondary)
+                                    .padding(.horizontal, 7).padding(.vertical, 3)
+                                    .glassEffect(.regular.tint(AppTheme.secondary.opacity(0.2)), in: Capsule())
+                            }
+                        }
+                        .padding(.vertical, 2)
+                    }
+                    .onMove { source, destination in
+                        layout.move(from: source, to: destination)
+                    }
+                }
+            }
+            .navigationTitle(LocalizedStringKey("Edit Dashboard"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(LocalizedStringKey("Done")) { dismiss() }
+                        .fontWeight(.semibold)
+                }
+                ToolbarItem(placement: .topBarLeading) {
+                    EditButton()
+                }
+            }
+        }
+    }
+
+    private func cardDisplayName(_ id: String) -> String {
+        switch id {
+        case "dailyFlow": return "Daily Flow"
+        case "steps": return "Steps"
+        case "energy": return "Active Energy"
+        case "heartRate": return "Heart Rate"
+        case "sleep": return "Sleep"
+        case "hydration": return "Hydration"
+        case "standTimer": return "Stand Timer"
+        case "nutrition": return "Nutrition"
+        case "caffeine": return "Caffeine"
+        case "shutdown": return "System Shutdown"
+        case "weight": return "Weight"
+        default: return id
+        }
+    }
+
+    private func cardIcon(_ id: String) -> String {
+        switch id {
+        case "dailyFlow": return "checklist"
+        case "steps": return "figure.walk"
+        case "energy": return "flame.fill"
+        case "heartRate": return "heart.fill"
+        case "sleep": return "moon.zzz.fill"
+        case "hydration": return "drop.fill"
+        case "standTimer": return "figure.stand"
+        case "nutrition": return "fork.knife"
+        case "caffeine": return "cup.and.saucer.fill"
+        case "shutdown": return "moon.fill"
+        case "weight": return "scalemass.fill"
+        default: return "square"
+        }
     }
 }
 
@@ -404,7 +654,7 @@ struct HealthCard: View {
             HStack(spacing: 8) {
                 Image(systemName: icon)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(color)
+                    .foregroundStyle(.secondary)
                 Text(LocalizedStringKey(title))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
@@ -423,6 +673,7 @@ struct HealthCard: View {
             // Primary metric
             Text(verbatim: primaryValue)
                 .font(.system(size: 28, weight: .bold, design: .rounded))
+                .foregroundStyle(statusColor)
                 .padding(.horizontal, 16)
 
             // Detail
@@ -462,7 +713,7 @@ struct HealthCard: View {
                             action.action()
                         } label: {
                             Label(LocalizedStringKey(action.label), systemImage: action.icon)
-                                .font(.caption.bold()).foregroundStyle(action.color)
+                                .font(.caption.bold()).foregroundStyle(.secondary)
                         }
                         .buttonStyle(.glass).tint(action.color)
                     }
@@ -499,7 +750,7 @@ struct HealthMetricCard: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Image(systemName: icon)
-                    .font(.subheadline.weight(.semibold)).foregroundStyle(color)
+                    .font(.subheadline.weight(.semibold)).foregroundStyle(.secondary)
                 Text(LocalizedStringKey(title))
                     .font(.caption.weight(.medium)).foregroundStyle(.secondary)
                 Spacer()
@@ -538,21 +789,6 @@ struct HealthMetricCard: View {
         .glassEffect(.regular.tint(color.opacity(0.08)), in: RoundedRectangle(cornerRadius: 16))
         // Prevent card glass from stealing the NavigationLink tap
         .allowsHitTesting(false)
-    }
-}
-
-// MARK: - Daily Flow Sheet
-
-struct DailyFlowSheet: View {
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                DailyFlowCard().padding(.top)
-                Spacer()
-            }
-            .navigationTitle(LocalizedStringKey("Daily Flow"))
-            .navigationBarTitleDisplayMode(.inline)
-        }
     }
 }
 

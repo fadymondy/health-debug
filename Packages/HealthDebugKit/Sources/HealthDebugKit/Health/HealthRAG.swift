@@ -107,6 +107,20 @@ public final class HealthRAG: ObservableObject {
             "\(msg.role.rawValue): \(msg.content)"
         }.joined(separator: "\n\n")
 
+        // Detect app language for response localization
+        let languageCode = Locale.current.language.languageCode?.identifier ?? "en"
+        let languageInstruction: String
+        switch languageCode {
+        case "ar":
+            languageInstruction = "IMPORTANT: You MUST respond entirely in Arabic (العربية). Do not use any English words in your response."
+        case "fr":
+            languageInstruction = "IMPORTANT: You MUST respond entirely in French."
+        case "de":
+            languageInstruction = "IMPORTANT: You MUST respond entirely in German."
+        default:
+            languageInstruction = "Respond in English."
+        }
+
         return """
         You are the Health Debug AI assistant. You help users optimize their health based on real data.
 
@@ -129,6 +143,7 @@ public final class HealthRAG: ObservableObject {
         USER MESSAGE:
         \(userMessage)
 
+        \(languageInstruction)
         Respond concisely. Use markdown formatting. Be specific with health advice based on the actual data.
         """
     }

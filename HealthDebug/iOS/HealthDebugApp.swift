@@ -72,7 +72,7 @@ struct MainAppView: View {
             }
 
             Tab("Search", systemImage: "magnifyingglass", role: .search) {
-                SearchPlaceholderView()
+                SearchView()
             }
 
             Tab("Intelligence", systemImage: "brain.head.profile.fill") {

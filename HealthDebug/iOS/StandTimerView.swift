@@ -8,23 +8,22 @@ struct StandTimerView: View {
     @Query(StandSession.todayDescriptor()) private var todaySessions: [StandSession]
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    timerRing
-                    statusCard
-                    todayProgressCard
-                    if !todaySessions.isEmpty {
-                        sessionHistoryCard
-                    }
+        ScrollView {
+            VStack(spacing: 20) {
+                timerRing
+                statusCard
+                todayProgressCard
+                if !todaySessions.isEmpty {
+                    sessionHistoryCard
                 }
-                .padding(.vertical)
             }
-            .navigationTitle("Stand Timer")
-            .onAppear {
-                timer.refreshTodayCount(context: context)
-                Task { await timer.requestNotificationPermission() }
-            }
+            .padding(.vertical)
+        }
+        .navigationTitle(LocalizedStringKey("Stand Timer"))
+        .navigationBarTitleDisplayMode(.large)
+        .onAppear {
+            timer.refreshTodayCount(context: context)
+            Task { await timer.requestNotificationPermission() }
         }
     }
 

@@ -10,24 +10,23 @@ struct ShutdownView: View {
     private var config: SleepConfig? { sleepConfigs.first }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    shutdownRing
-                    statusCard
-                    AIInsightCard(domain: .shutdown)
-                    allowedItemsCard
-                    infoCard
-                }
-                .padding(.vertical)
+        ScrollView {
+            VStack(spacing: 20) {
+                shutdownRing
+                statusCard
+                AIInsightCard(domain: .shutdown)
+                allowedItemsCard
+                infoCard
             }
-            .navigationTitle("Shutdown")
-            .onAppear {
-                shutdown.startCountdown(config: config)
-            }
-            .onDisappear {
-                shutdown.stopCountdown()
-            }
+            .padding(.vertical)
+        }
+        .navigationTitle(LocalizedStringKey("Shutdown"))
+        .navigationBarTitleDisplayMode(.large)
+        .onAppear {
+            shutdown.startCountdown(config: config)
+        }
+        .onDisappear {
+            shutdown.stopCountdown()
         }
     }
 

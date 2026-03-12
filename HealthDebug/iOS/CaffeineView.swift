@@ -11,24 +11,23 @@ struct CaffeineView: View {
     private var profile: UserProfile? { profiles.first }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    caffeineBlockCard
-                    transitionRing
-                    AIInsightCard(domain: .caffeine)
-                    quickLogGrid
-                    fattyLiverCard
-                    if !todayLogs.isEmpty {
-                        historyCard
-                    }
+        ScrollView {
+            VStack(spacing: 20) {
+                caffeineBlockCard
+                transitionRing
+                AIInsightCard(domain: .caffeine)
+                quickLogGrid
+                fattyLiverCard
+                if !todayLogs.isEmpty {
+                    historyCard
                 }
-                .padding(.vertical)
             }
-            .navigationTitle("Caffeine")
-            .onAppear {
-                caffeine.refresh(context: context)
-            }
+            .padding(.vertical)
+        }
+        .navigationTitle(LocalizedStringKey("Caffeine"))
+        .navigationBarTitleDisplayMode(.large)
+        .onAppear {
+            caffeine.refresh(context: context)
         }
     }
 

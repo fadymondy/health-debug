@@ -2,48 +2,201 @@ import SwiftUI
 import SwiftData
 import HealthDebugKit
 
+// MARK: - HealthFeedCard
+
+struct HealthFeedCard: View {
+    let icon: String
+    let title: String
+    let color: Color
+    let value: String
+    let statusLabel: String
+    let statusColor: Color
+    let primaryActionLabel: String
+    let primaryActionIcon: String
+    let askAIQuery: String
+    let primaryAction: () -> Void
+
+    @Environment(\.modelContext) private var context
+    @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
+    @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
+
+    @State private var aiResponse = ""
+    @State private var isLoadingAI = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            // Header
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Text(verbatim: title)
+                    .font(.subheadline.weight(.semibold))
+                Spacer()
+                Text(verbatim: statusLabel)
+                    .font(.caption2.bold())
+                    .foregroundStyle(statusColor)
+                    .padding(.horizontal, 8).padding(.vertical, 3)
+                    .glassEffect(.regular.tint(statusColor.opacity(0.2)), in: Capsule())
+            }
+
+            // Value
+            Text(verbatim: value)
+                .font(.system(size: 20, weight: .bold, design: .rounded))
+                .foregroundStyle(statusColor)
+
+            // Action buttons row
+            HStack(spacing: 8) {
+                Button {
+                    primaryAction()
+                } label: {
+                    Label(LocalizedStringKey(primaryActionLabel), systemImage: primaryActionIcon)
+                        .font(.caption.bold())
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.glass).tint(color)
+
+                if isLoadingAI {
+                    HStack(spacing: 6) {
+                        ProgressView().controlSize(.small)
+                        Text(LocalizedStringKey("Thinking…"))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                } else if aiResponse.isEmpty {
+                    Button {
+                        runAI()
+                    } label: {
+                        Label(LocalizedStringKey("Ask AI"), systemImage: "sparkles")
+                            .font(.caption.bold())
+                    }
+                    .buttonStyle(.glass).tint(AppTheme.secondary)
+                }
+
+                Spacer()
+            }
+
+            // Inline AI markdown response
+            if !aiResponse.isEmpty {
+                Divider()
+                MarkdownView(content: aiResponse)
+                    .font(.caption)
+                HStack {
+                    Spacer()
+                    Button {
+                        withAnimation { aiResponse = "" }
+                    } label: {
+                        Label(LocalizedStringKey("Clear"), systemImage: "xmark.circle")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassEffect(.regular.tint(color.opacity(0.07)), in: RoundedRectangle(cornerRadius: 20))
+        .padding(.horizontal)
+    }
+
+    private func runAI() {
+        isLoadingAI = true
+        let profile = profiles.first
+        Task {
+            let countBefore = HealthRAG.shared.messages.count
+            await HealthRAG.shared.send(askAIQuery, context: context, profile: profile, sleepConfig: sleepConfigs.first)
+            await MainActor.run {
+                // Take the last assistant message added after our send
+                let newMessages = HealthRAG.shared.messages.dropFirst(countBefore)
+                aiResponse = newMessages.last(where: { $0.role == .assistant })?.content ?? ""
+                isLoadingAI = false
+            }
+        }
+    }
+}
+
+// MARK: - IntelligenceView
+
 struct IntelligenceView: View {
     @Environment(\.modelContext) private var context
     @StateObject private var ai = AIService.shared
     @StateObject private var analytics = AnalyticsEngine.shared
-    @StateObject private var rag = HealthRAG.shared
+    @StateObject private var health = HealthKitManager.shared
+    @StateObject private var hydration = HydrationManager.shared
+    @StateObject private var nutrition = NutritionManager.shared
+    @StateObject private var caffeine = CaffeineManager.shared
+    @StateObject private var standTimer = StandTimerManager.shared
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
 
     @State private var showAPISettings = false
-    @State private var showShareSheet = false
-    @State private var shareItems: [Any] = []
 
     private var profile: UserProfile? { profiles.first }
+
+    // MARK: - Health Score (0-100)
+
+    private var healthScore: Int {
+        var score = 0.0
+        var components = 0.0
+
+        // Hydration: % of daily goal
+        let hydrationPct = profile.map {
+            min(1.0, Double(hydration.todayTotal) / Double(max(1, $0.dailyWaterGoalMl)))
+        } ?? min(1.0, Double(hydration.todayTotal) / 2500.0)
+        score += hydrationPct * 20; components += 20
+
+        // Nutrition safety score (0-100 → 0-20)
+        score += (nutrition.safetyScore / 100.0) * 20; components += 20
+
+        // Caffeine clean transition (0-100 → 0-20)
+        score += (caffeine.cleanTransitionPercent / 100.0) * 20; components += 20
+
+        // Stand sessions (completed / target → 0-20)
+        let standPct = min(1.0, Double(standTimer.todayCompleted) / Double(StandTimerManager.dailyTarget))
+        score += standPct * 20; components += 20
+
+        // Sleep quality (0-8h target → 0-20)
+        let sleepPct = min(1.0, health.sleepHours / 8.0)
+        score += sleepPct * 20; components += 20
+
+        guard components > 0 else { return 0 }
+        return Int((score / components) * 100)
+    }
+
+    private var healthScoreColor: Color {
+        switch healthScore {
+        case 80...: return AppTheme.primary
+        case 50..<80: return .orange
+        default: return .red
+        }
+    }
+
+    private var healthScoreLabel: String {
+        switch healthScore {
+        case 80...: return NSLocalizedString("Excellent", comment: "")
+        case 60..<80: return NSLocalizedString("Good", comment: "")
+        case 40..<60: return NSLocalizedString("Fair", comment: "")
+        default: return NSLocalizedString("Needs Attention", comment: "")
+        }
+    }
+
+    // MARK: - Body
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
-                    // AI provider badge
-                    providerBadge
-
-                    // AI Chat inline
-                    chatSection
-
-                    // Domain insights stack
-                    insightsSection
-
-                    // Full analysis
+                    healthScoreCard
+                    feedSection
+                    analyzeButton
                     if !analytics.lastAnalysis.isEmpty {
                         analysisSection
                     }
-
-                    // Smart analyze button
-                    analyzeButton
-
-                    // Export share
-                    shareButton
                 }
                 .padding(.vertical)
             }
-            .scrollDismissesKeyboard(.interactively)
-            .navigationTitle("Intelligence")
+            .navigationTitle(LocalizedStringKey("Intelligence"))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -58,201 +211,208 @@ struct IntelligenceView: View {
             .sheet(isPresented: $showAPISettings) {
                 APISettingsSheet()
             }
-            .sheet(isPresented: $showShareSheet) {
-                ShareSheet(items: shareItems)
-            }
+        }
+        .onAppear {
+            hydration.refresh(context: context)
+            nutrition.refresh(context: context)
+            caffeine.refresh(context: context)
+            standTimer.refreshTodayCount(context: context)
         }
     }
 
-    // MARK: - Provider Badge
+    // MARK: - 1. Health Score Card
 
-    private var providerBadge: some View {
-        HStack(spacing: 8) {
-            Image(systemName: ai.selectedProvider == .apple ? "apple.intelligence" : "cloud.fill")
-                .foregroundStyle(ai.selectedProvider == .apple ? AppTheme.primary : AppTheme.accent)
-            Text(ai.selectedProvider.rawValue)
-                .font(.subheadline.bold())
-            Spacer()
-            if ai.selectedProvider == .apple {
-                Text(ai.isAppleAIAvailable ? "Ready" : "Unavailable")
-                    .font(.caption2.bold())
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .glassEffect(
-                        .regular.tint((ai.isAppleAIAvailable ? AppTheme.primary : Color.orange).opacity(0.3)),
-                        in: Capsule()
-                    )
-                    .foregroundStyle(ai.isAppleAIAvailable ? AppTheme.primary : .orange)
-            }
-        }
-        .padding()
-        .frame(maxWidth: .infinity)
-        .glassEffect(
-            .regular.tint((ai.isConfigured ? AppTheme.primary : Color.orange).opacity(0.1)),
-            in: RoundedRectangle(cornerRadius: 20)
-        )
-        .padding(.horizontal)
-    }
-
-    // MARK: - Inline Chat
-
-    private var chatSection: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // Messages (last 6, no scroll — tap to open full chat)
-            if !rag.messages.isEmpty {
-                VStack(spacing: 8) {
-                    ForEach(rag.messages.suffix(4)) { message in
-                        inlineBubble(message)
+    private var healthScoreCard: some View {
+        Button {
+            runAnalysis()
+        } label: {
+            VStack(spacing: 16) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(LocalizedStringKey("Health Score"))
+                            .font(.headline)
+                            .foregroundStyle(.secondary)
+                        Text(LocalizedStringKey("Your health score today"))
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
                     }
-                    if rag.isProcessing {
-                        HStack {
-                            HStack(spacing: 6) {
-                                ProgressView().controlSize(.small)
-                                Text("Thinking...")
-                                    .font(.caption)
+                    Spacer()
+                    // Provider badge
+                    HStack(spacing: 4) {
+                        Image(systemName: ai.selectedProvider == .apple ? "apple.intelligence" : "cloud.fill")
+                            .font(.caption2)
+                        Text(ai.selectedProvider.rawValue)
+                            .font(.caption2.bold())
+                    }
+                    .foregroundStyle(ai.selectedProvider == .apple ? AppTheme.primary : AppTheme.accent)
+                    .padding(.horizontal, 8).padding(.vertical, 3)
+                    .glassEffect(.regular.tint(AppTheme.primary.opacity(0.1)), in: Capsule())
+                }
+
+                // Score ring + number
+                HStack(spacing: 24) {
+                    ZStack {
+                        Circle()
+                            .stroke(healthScoreColor.opacity(0.15), lineWidth: 10)
+                            .frame(width: 100, height: 100)
+                        Circle()
+                            .trim(from: 0, to: CGFloat(healthScore) / 100.0)
+                            .stroke(healthScoreColor.gradient, style: StrokeStyle(lineWidth: 10, lineCap: .round))
+                            .frame(width: 100, height: 100)
+                            .rotationEffect(.degrees(-90))
+                            .animation(.spring(response: 0.6), value: healthScore)
+                        VStack(spacing: 0) {
+                            HStack(alignment: .lastTextBaseline, spacing: 2) {
+                                Text(verbatim: "\(healthScore)")
+                                    .font(.system(size: 30, weight: .bold, design: .rounded))
+                                    .foregroundStyle(healthScoreColor)
+                                Text(LocalizedStringKey("/100"))
+                                    .font(.caption.bold())
                                     .foregroundStyle(.secondary)
                             }
-                            .padding(10)
-                            .glassEffect(.regular.tint(AppTheme.secondary.opacity(0.1)), in: RoundedRectangle(cornerRadius: 14))
-                            Spacer()
                         }
-                        .padding(.horizontal)
+                    }
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        scoreComponentRow(icon: "drop.fill", label: "Hydration", color: AppTheme.secondary,
+                            value: profile.map { min(1.0, Double(hydration.todayTotal) / Double(max(1, $0.dailyWaterGoalMl))) } ?? 0)
+                        scoreComponentRow(icon: "fork.knife", label: "Nutrition", color: AppTheme.primary,
+                            value: nutrition.safetyScore / 100.0)
+                        scoreComponentRow(icon: "figure.stand", label: "Stands", color: AppTheme.accent,
+                            value: min(1.0, Double(standTimer.todayCompleted) / Double(StandTimerManager.dailyTarget)))
+                        scoreComponentRow(icon: "moon.zzz.fill", label: "Sleep", color: AppTheme.secondary,
+                            value: min(1.0, health.sleepHours / 8.0))
+                    }
+                    Spacer()
+                }
+
+                HStack {
+                    Text(verbatim: healthScoreLabel)
+                        .font(.subheadline.bold())
+                        .foregroundStyle(healthScoreColor)
+                    Spacer()
+                    if ai.isLoading {
+                        ProgressView().controlSize(.small)
+                        Text(LocalizedStringKey("Analyzing…"))
+                            .font(.caption).foregroundStyle(.secondary)
+                    } else {
+                        Label(LocalizedStringKey("Tap to analyze"), systemImage: "sparkles")
+                            .font(.caption).foregroundStyle(.secondary)
                     }
                 }
-                .padding(.bottom, 8)
-            } else {
-                // Smart prompt suggestions
-                smartPromptsGrid
-                    .padding(.bottom, 8)
             }
-
-            // Input bar
-            chatInputBar
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .glassEffect(.regular.tint(healthScoreColor.opacity(0.1)), in: RoundedRectangle(cornerRadius: 20))
+            .padding(.horizontal)
         }
-        .padding(.vertical, 12)
-        .glassEffect(.regular.tint(AppTheme.primary.opacity(0.08)), in: RoundedRectangle(cornerRadius: 20))
-        .padding(.horizontal)
+        .buttonStyle(.plain)
+        .disabled(ai.isLoading)
     }
 
-    private func inlineBubble(_ message: HealthRAG.Message) -> some View {
-        HStack(alignment: .top, spacing: 0) {
-            if message.role == .user { Spacer(minLength: 40) }
-            Text(cleanTags(message.content))
-                .font(.subheadline)
-                .padding(10)
-                .glassEffect(
-                    .regular.tint((message.role == .user ? AppTheme.primary : AppTheme.secondary).opacity(0.15)),
-                    in: RoundedRectangle(cornerRadius: 14)
-                )
-                .frame(maxWidth: .infinity, alignment: message.role == .user ? .trailing : .leading)
-            if message.role == .assistant { Spacer(minLength: 40) }
-        }
-        .padding(.horizontal)
-    }
-
-    private var smartPromptsGrid: some View {
-        LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 8) {
-            smartPromptButton("How am I doing today?", icon: "chart.bar.fill")
-            smartPromptButton("What should I eat now?", icon: "fork.knife")
-            smartPromptButton("Analyze my sleep", icon: "moon.zzz.fill")
-            smartPromptButton("Caffeine advice", icon: "cup.and.saucer.fill")
-        }
-        .padding(.horizontal)
-    }
-
-    private func smartPromptButton(_ text: String, icon: String) -> some View {
-        Button {
-            Task {
-                await rag.send(text, context: context, profile: profile, sleepConfig: sleepConfigs.first)
+    private func scoreComponentRow(icon: String, label: String, color: Color, value: Double) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.caption2).foregroundStyle(color)
+                .frame(width: 16)
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 2).fill(color.opacity(0.15)).frame(height: 4)
+                    RoundedRectangle(cornerRadius: 2).fill(color)
+                        .frame(width: geo.size.width * max(0, min(1, value)), height: 4)
+                        .animation(.spring(response: 0.5), value: value)
+                }
             }
-        } label: {
-            HStack(spacing: 6) {
-                Image(systemName: icon)
-                    .font(.caption)
-                    .foregroundStyle(AppTheme.primary)
-                Text(text)
-                    .font(.caption)
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(2)
-                Spacer()
-            }
-            .padding(10)
-        }
-        .buttonStyle(.glass)
-        .disabled(rag.isProcessing)
-    }
-
-    @State private var chatInput = ""
-    @FocusState private var chatFocused: Bool
-
-    private var chatInputBar: some View {
-        HStack(spacing: 10) {
-            TextField("Ask your health AI...", text: $chatInput, axis: .vertical)
-                .lineLimit(1...3)
-                .textFieldStyle(.plain)
-                .focused($chatFocused)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .glassEffect(.regular.tint(AppTheme.secondary.opacity(0.1)), in: RoundedRectangle(cornerRadius: 14))
-
-            Button {
-                sendChat()
-            } label: {
-                Image(systemName: "arrow.up")
-                    .font(.subheadline.bold())
-                    .padding(10)
-            }
-            .buttonStyle(.glassProminent)
-            .tint(AppTheme.primary)
-            .buttonBorderShape(.circle)
-            .disabled(chatInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || rag.isProcessing)
-        }
-        .padding(.horizontal, 12)
-    }
-
-    private func sendChat() {
-        let text = chatInput.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !text.isEmpty else { return }
-        chatInput = ""
-        chatFocused = false
-        Task {
-            await rag.send(text, context: context, profile: profile, sleepConfig: sleepConfigs.first)
+            .frame(height: 4)
+            Text(LocalizedStringKey(label))
+                .font(.caption2).foregroundStyle(.secondary)
+                .frame(width: 60, alignment: .leading)
         }
     }
 
-    private func cleanTags(_ text: String) -> String {
-        text.replacingOccurrences(of: #"\[ACTION:[^\]]+\]"#, with: "", options: .regularExpression)
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-    }
+    // MARK: - 2. Feed Section
 
-    // MARK: - Domain Insights
-
-    private var insightsSection: some View {
+    private var feedSection: some View {
         VStack(spacing: 12) {
             HStack {
-                Label("AI Insights", systemImage: "sparkles")
+                Label(LocalizedStringKey("Health Feed"), systemImage: "dot.radiowaves.left.and.right")
                     .font(.headline)
                     .foregroundStyle(AppTheme.primary)
                 Spacer()
             }
             .padding(.horizontal)
 
-            VStack(spacing: 12) {
-                AIInsightCard(domain: .dashboard)
-                AIInsightCard(domain: .hydration)
-                AIInsightCard(domain: .nutrition)
-                AIInsightCard(domain: .caffeine)
-                AIInsightCard(domain: .shutdown)
+            HealthFeedCard(
+                icon: "drop.fill",
+                title: NSLocalizedString("Hydration", comment: ""),
+                color: AppTheme.secondary,
+                value: profile.map { "\(hydration.todayTotal) ml / \($0.dailyWaterGoalMl) ml" }
+                    ?? "\(hydration.todayTotal) ml / 2500 ml",
+                statusLabel: profile.map { hydration.status(profile: $0).rawValue } ?? "–",
+                statusColor: hydrationFeedColor,
+                primaryActionLabel: NSLocalizedString("Log 250ml", comment: ""),
+                primaryActionIcon: "drop.circle.fill",
+                askAIQuery: "How is my hydration today? Give brief advice."
+            ) {
+                hydration.logWater(250, source: "feed", context: context, profile: profile)
             }
+
+            HealthFeedCard(
+                icon: "fork.knife",
+                title: NSLocalizedString("Nutrition", comment: ""),
+                color: nutritionFeedColor,
+                value: "\(nutrition.todaySafeCount) \(NSLocalizedString("safe", comment: "")) · \(nutrition.todayUnsafeCount) \(NSLocalizedString("unsafe", comment: ""))",
+                statusLabel: nutrition.safetyStatus.rawValue,
+                statusColor: nutritionFeedColor,
+                primaryActionLabel: NSLocalizedString("Log Meal", comment: ""),
+                primaryActionIcon: "fork.knife.circle.fill",
+                askAIQuery: "Analyze my nutrition today and suggest improvements."
+            ) {}
+
+            HealthFeedCard(
+                icon: "cup.and.saucer.fill",
+                title: NSLocalizedString("Caffeine", comment: ""),
+                color: caffeineFeedColor,
+                value: "\(caffeine.todayCleanCount) \(NSLocalizedString("clean", comment: "")) · \(caffeine.todaySugarCount) \(NSLocalizedString("sugar", comment: ""))",
+                statusLabel: caffeine.transitionStatus.rawValue,
+                statusColor: caffeineFeedColor,
+                primaryActionLabel: NSLocalizedString("View Logs", comment: ""),
+                primaryActionIcon: "list.bullet.circle.fill",
+                askAIQuery: "Give me caffeine advice for today."
+            ) {}
+
+            HealthFeedCard(
+                icon: "figure.walk",
+                title: NSLocalizedString("Steps & Energy", comment: ""),
+                color: AppTheme.primary,
+                value: "\(formatDouble(health.stepCount)) \(NSLocalizedString("steps", comment: "")) · \(String(format: "%.0f", health.activeEnergy)) kcal",
+                statusLabel: health.stepCount >= 10000 ? NSLocalizedString("Goal Met", comment: "") : NSLocalizedString("In Progress", comment: ""),
+                statusColor: health.stepCount >= 10000 ? AppTheme.primary : .orange,
+                primaryActionLabel: NSLocalizedString("View Detail", comment: ""),
+                primaryActionIcon: "chart.bar.fill",
+                askAIQuery: "How are my activity levels today? Any recommendations?"
+            ) {}
+
+            HealthFeedCard(
+                icon: "moon.zzz.fill",
+                title: NSLocalizedString("Sleep", comment: ""),
+                color: sleepFeedColor,
+                value: String(format: "%.1f hrs", health.sleepHours),
+                statusLabel: sleepFeedLabel,
+                statusColor: sleepFeedColor,
+                primaryActionLabel: NSLocalizedString("View Detail", comment: ""),
+                primaryActionIcon: "moon.circle.fill",
+                askAIQuery: "Analyze my sleep quality and give advice."
+            ) {}
         }
     }
 
-    // MARK: - Full Analysis
+    // MARK: - 3. Full Analysis
 
     private var analysisSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Label("Full Analysis", systemImage: "brain.head.profile.fill")
+                Label(LocalizedStringKey("Full Analysis"), systemImage: "brain.head.profile.fill")
                     .font(.headline)
                     .foregroundStyle(AppTheme.primary)
                 Spacer()
@@ -270,7 +430,7 @@ struct IntelligenceView: View {
         .padding(.horizontal)
     }
 
-    // MARK: - Analyze Button
+    // MARK: - 4. Analyze Button
 
     private var analyzeButton: some View {
         GlassEffectContainer {
@@ -280,9 +440,9 @@ struct IntelligenceView: View {
                 HStack {
                     if ai.isLoading {
                         ProgressView().controlSize(.small)
-                        Text(ai.selectedProvider == .apple ? "Analyzing on-device..." : "Analyzing 72h of data...")
+                        Text(ai.selectedProvider == .apple ? LocalizedStringKey("Analyzing on-device…") : LocalizedStringKey("Analyzing 72h of data…"))
                     } else {
-                        Label("Analyze My Health", systemImage: "brain.head.profile.fill")
+                        Label(LocalizedStringKey("Analyze My Health"), systemImage: "brain.head.profile.fill")
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -290,38 +450,52 @@ struct IntelligenceView: View {
             .buttonStyle(.glassProminent)
             .tint(AppTheme.primary)
             .controlSize(.large)
-            .disabled(ai.isLoading || !ai.isConfigured)
+            .disabled(ai.isLoading)
         }
         .padding(.horizontal)
     }
 
-    // MARK: - Share Button
+    // MARK: - Computed Feed Colors
 
-    private var shareButton: some View {
-        GlassEffectContainer {
-            HStack(spacing: 12) {
-                Button {
-                    sharePDF()
-                } label: {
-                    Label("Share PDF", systemImage: "doc.richtext.fill")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.glassProminent)
-                .tint(AppTheme.secondary)
-                .controlSize(.large)
-
-                Button {
-                    shareMarkdown()
-                } label: {
-                    Label("Markdown", systemImage: "text.badge.star")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.glass)
-                .controlSize(.large)
-            }
+    private var hydrationFeedColor: Color {
+        guard let profile else { return AppTheme.secondary }
+        switch hydration.status(profile: profile) {
+        case .onTrack, .goalReached: return AppTheme.primary
+        case .slightlyBehind: return .orange
+        case .dehydrated: return .red
         }
-        .padding(.horizontal)
-        .padding(.bottom, 8)
+    }
+
+    private var nutritionFeedColor: Color {
+        switch nutrition.safetyStatus {
+        case .allSafe, .noMeals: return AppTheme.primary
+        case .warning: return .orange
+        case .critical: return .red
+        }
+    }
+
+    private var caffeineFeedColor: Color {
+        switch caffeine.transitionStatus {
+        case .clean, .noIntake: return AppTheme.primary
+        case .transitioning: return .orange
+        case .redBullDependent: return .red
+        }
+    }
+
+    private var sleepFeedLabel: String {
+        switch health.sleepHours {
+        case 7...: return NSLocalizedString("Good", comment: "")
+        case 5..<7: return NSLocalizedString("Low", comment: "")
+        default: return NSLocalizedString("Critical", comment: "")
+        }
+    }
+
+    private var sleepFeedColor: Color {
+        switch health.sleepHours {
+        case 7...: return AppTheme.primary
+        case 5..<7: return .orange
+        default: return .red
+        }
     }
 
     // MARK: - Actions
@@ -342,78 +516,7 @@ struct IntelligenceView: View {
         }
     }
 
-    private func sharePDF() {
-        let healthContext = analytics.buildContext(context: context, profile: profile, sleepConfig: sleepConfigs.first)
-        let pdfData = PDFReportGenerator.shared.generateReport(
-            healthContext: healthContext,
-            aiAnalysis: analytics.lastAnalysis.isEmpty ? nil : analytics.lastAnalysis,
-            profile: profile
-        )
-        let fileName = "HealthDebug-Report-\(Date.now.formatted(.iso8601.dateSeparator(.dash))).pdf"
-        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
-        try? pdfData.write(to: tempURL)
-        shareItems = [tempURL]
-        showShareSheet = true
+    private func formatDouble(_ value: Double) -> String {
+        value >= 1000 ? String(format: "%.1fk", value / 1000) : String(format: "%.0f", value)
     }
-
-    private func shareMarkdown() {
-        let healthContext = analytics.buildContext(context: context, profile: profile, sleepConfig: sleepConfigs.first)
-        let md = buildMarkdown(context: healthContext)
-        let fileName = "HealthDebug-\(Date.now.formatted(.iso8601.dateSeparator(.dash))).md"
-        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
-        try? md.write(to: tempURL, atomically: true, encoding: .utf8)
-        shareItems = [tempURL]
-        showShareSheet = true
-    }
-
-    private func buildMarkdown(context ctx: HealthContext) -> String {
-        let date = Date.now.formatted(date: .abbreviated, time: .shortened)
-        var md = """
-        # Health Debug Report
-        *Generated: \(date)*
-
-        ## Profile
-        - Weight: \(String(format: "%.1f", ctx.profile?.weightKg ?? 0)) kg
-        - BMI: \(String(format: "%.1f", ctx.profile?.bmi ?? 0))
-        - Daily water goal: \(ctx.profile?.dailyWaterGoalMl ?? 0) ml
-
-        ## Hydration (72h)
-        - Total: \(ctx.hydration.totalMl) ml / \(ctx.hydration.goalMl) ml goal
-        - Logs: \(ctx.hydration.logCount)
-
-        ## Nutrition (72h)
-        - Total meals: \(ctx.nutrition.totalMeals) (\(ctx.nutrition.safeMeals) safe, \(ctx.nutrition.unsafeMeals) unsafe)
-        """
-        if !ctx.nutrition.triggersHit.isEmpty {
-            md += "\n- Triggers: \(ctx.nutrition.triggersHit.joined(separator: ", "))"
-        }
-        md += """
-
-        ## Caffeine (72h)
-        - Total: \(ctx.caffeine.totalDrinks) (\(ctx.caffeine.cleanBased) clean, \(ctx.caffeine.sugarBased) sugar)
-
-        ## Movement (72h)
-        - Stand sessions: \(ctx.movement.completedWalks) / \(ctx.movement.targetSessions) target
-
-        ## Sleep Config
-        - Target: \(String(format: "%02d:%02d", ctx.sleep.targetHour, ctx.sleep.targetMinute))
-        - Shutdown window: \(ctx.sleep.shutdownWindowHours)h before sleep
-        """
-        if !analytics.lastAnalysis.isEmpty {
-            md += "\n\n## AI Analysis\n\(analytics.lastAnalysis)"
-        }
-        return md
-    }
-}
-
-// MARK: - ShareSheet
-
-struct ShareSheet: UIViewControllerRepresentable {
-    let items: [Any]
-
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: items, applicationActivities: nil)
-    }
-
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
