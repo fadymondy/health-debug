@@ -21,6 +21,7 @@ struct ContentView: View {
                     if !health.isAuthorized {
                         authCard
                     } else {
+                        AIInsightCard(domain: .dashboard)
                         metricsGrid
                         hydrationCard
                         nutritionCard

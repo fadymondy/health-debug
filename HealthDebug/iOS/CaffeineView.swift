@@ -16,6 +16,7 @@ struct CaffeineView: View {
                 VStack(spacing: 20) {
                     caffeineBlockCard
                     transitionRing
+                    AIInsightCard(domain: .caffeine)
                     quickLogGrid
                     fattyLiverCard
                     if !todayLogs.isEmpty {

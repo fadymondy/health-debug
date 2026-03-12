@@ -49,6 +49,35 @@ Auto-scheduled reminders:
 - Shutdown: GERD shutdown start alert
 - Permission requested on app launch via `UNUserNotificationCenter`
 
+## AI-Driven UX (Contextual Insight Cards)
+
+Every health screen displays an `AIInsightCard` — a glass-styled card that auto-generates a domain-specific AI tip on appear.
+
+### How It Works
+
+1. `AIInsightEngine.generate(for: .hydration, ...)` builds a short domain prompt with the user's actual data
+2. Sends to `AIService.analyze()` (Apple Intelligence by default)
+3. Response cached for 5 minutes per domain to avoid redundant calls
+4. Displayed as rich Markdown via `MarkdownView` inside a glass card
+5. Refresh button lets user force-regenerate; fallback text shown if AI is unavailable
+
+### Screens Enhanced
+
+| Screen | Domain | Insight Focus |
+|--------|--------|---------------|
+| Dashboard | `.dashboard` | Overall health status, what needs attention |
+| Hydration | `.hydration` | Water deficit, uric acid flush for gout |
+| Nutrition | `.nutrition` | Safe meal ratio, GERD trigger analysis |
+| Caffeine | `.caffeine` | Clean transition progress, liver health |
+| Shutdown | `.shutdown` | GERD compliance, bedtime eating warning |
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `HealthDebugKit/Health/AIInsightEngine.swift` | Domain prompt builder, 5-min cache, fallback messages |
+| `HealthDebug/iOS/AIInsightCard.swift` | Reusable SwiftUI card with glass effect + MarkdownView |
+
 ## JSON Export
 
 `AnalyticsEngine.exportJSON()` exports the full `HealthContext` as pretty-printed JSON via `UIActivityViewController` share sheet.

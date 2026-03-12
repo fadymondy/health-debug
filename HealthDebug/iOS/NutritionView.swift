@@ -19,6 +19,7 @@ struct NutritionView: View {
                         shutdownWarning
                     }
                     safetyScoreCard
+                    AIInsightCard(domain: .nutrition)
                     quickLogSection
                     if !nutrition.todayUnsafe.isEmpty {
                         triggersCard

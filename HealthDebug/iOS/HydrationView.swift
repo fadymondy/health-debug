@@ -16,6 +16,7 @@ struct HydrationView: View {
                 VStack(spacing: 20) {
                     waterRing
                     quickLogButtons
+                    AIInsightCard(domain: .hydration)
                     if let profile {
                         scheduleCard(profile: profile)
                         goutCard(profile: profile)

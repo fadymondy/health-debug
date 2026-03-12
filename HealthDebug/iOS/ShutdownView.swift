@@ -15,6 +15,7 @@ struct ShutdownView: View {
                 VStack(spacing: 20) {
                     shutdownRing
                     statusCard
+                    AIInsightCard(domain: .shutdown)
                     allowedItemsCard
                     infoCard
                 }
