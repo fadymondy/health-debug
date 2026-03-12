@@ -1,27 +1,17 @@
 import SwiftUI
+import SwiftData
 import HealthDebugKit
 
 struct ContentView: View {
     @StateObject private var health = HealthKitManager.shared
+    @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
+    @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
+    @State private var showSettings = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
-                    // Header
-                    HStack {
-                        Image(systemName: "heart.text.clipboard")
-                            .font(.title)
-                            .foregroundStyle(.red)
-                        Text("Health Debug")
-                            .font(.title2.bold())
-                        Spacer()
-                        Text("v\(HealthDebugKit.version)")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding(.horizontal)
-
                     if !health.isAuthorized {
                         authCard
                     } else {
@@ -33,6 +23,20 @@ struct ContentView: View {
                 .padding(.vertical)
             }
             .navigationTitle("Dashboard")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                }
+            }
+            .sheet(isPresented: $showSettings) {
+                if let profile = profiles.first {
+                    ProfileSettingsView(profile: profile, sleepConfig: sleepConfigs.first)
+                }
+            }
             .refreshable {
                 await health.refreshAll()
             }
@@ -45,7 +49,7 @@ struct ContentView: View {
         VStack(spacing: 12) {
             Image(systemName: "lock.shield")
                 .font(.system(size: 40))
-                .foregroundStyle(.orange)
+                .foregroundStyle(AppTheme.secondary)
             Text("HealthKit Access Required")
                 .font(.headline)
             Text("Tap to authorize reading your health data.")
@@ -58,11 +62,12 @@ struct ContentView: View {
                     await health.refreshAll()
                 }
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.glassProminent)
+            .tint(AppTheme.primary)
         }
         .padding(24)
         .frame(maxWidth: .infinity)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .glassEffect(.regular.tint(AppTheme.secondary.opacity(0.3)), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal)
     }
 
@@ -70,10 +75,10 @@ struct ContentView: View {
 
     private var metricsGrid: some View {
         LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
-            MetricCard(icon: "figure.walk", title: "Steps", value: formatted(health.stepCount), color: .green)
+            MetricCard(icon: "figure.walk", title: "Steps", value: formatted(health.stepCount), color: AppTheme.primary)
             MetricCard(icon: "flame.fill", title: "Active Energy", value: "\(formatted(health.activeEnergy)) kcal", color: .orange)
             MetricCard(icon: "heart.fill", title: "Heart Rate", value: "\(formatted(health.heartRate)) bpm", color: .red)
-            MetricCard(icon: "moon.zzz.fill", title: "Sleep", value: String(format: "%.1fh", health.sleepHours), color: .indigo)
+            MetricCard(icon: "moon.zzz.fill", title: "Sleep", value: String(format: "%.1fh", health.sleepHours), color: AppTheme.secondary)
         }
         .padding(.horizontal)
     }
@@ -84,6 +89,7 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 8) {
             Label("Zepp Scale", systemImage: "scalemass.fill")
                 .font(.headline)
+                .foregroundStyle(AppTheme.primary)
             Divider()
             HStack {
                 VStack(alignment: .leading) {
@@ -110,7 +116,7 @@ struct ContentView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .glassEffect(.regular.tint(AppTheme.primary.opacity(0.15)), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal)
     }
 
@@ -120,6 +126,7 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 8) {
             Label("Last Night", systemImage: "bed.double.fill")
                 .font(.headline)
+                .foregroundStyle(AppTheme.secondary)
             Divider()
             HStack {
                 Text(String(format: "%.1f hours", health.sleepHours))
@@ -130,14 +137,14 @@ struct ContentView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .glassEffect(.regular.tint(AppTheme.secondary.opacity(0.15)), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal)
     }
 
     private var sleepQualityBadge: some View {
         let (label, color): (String, Color) = {
             switch health.sleepHours {
-            case 7...: return ("Good", .green)
+            case 7...: return ("Good", AppTheme.primary)
             case 5..<7: return ("Low", .orange)
             default: return ("Critical", .red)
             }
@@ -146,7 +153,7 @@ struct ContentView: View {
             .font(.caption.bold())
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(color.opacity(0.2), in: Capsule())
+            .glassEffect(.regular.tint(color.opacity(0.3)), in: Capsule())
             .foregroundStyle(color)
     }
 
@@ -178,7 +185,7 @@ struct MetricCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .glassEffect(.regular.tint(color.opacity(0.15)), in: RoundedRectangle(cornerRadius: 16))
     }
 }
 

@@ -25,7 +25,38 @@ public final class HealthKitManager: ObservableObject {
 
     // MARK: - Published State
 
-    @Published public var isAuthorized = false
+    @Published public var isAuthorized: Bool
+
+    private init() {
+        // Check actual HealthKit authorization status on launch
+        if HKHealthStore.isHealthDataAvailable(),
+           let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount) {
+            isAuthorized = healthStore.authorizationStatus(for: stepType) == .sharingDenied
+                || healthStore.authorizationStatus(for: stepType) == .notDetermined
+                ? false : true
+        } else {
+            isAuthorized = false
+        }
+        // HealthKit doesn't expose read auth directly, so try a fetch to confirm
+        Task { await checkAuthorization() }
+    }
+
+    private func checkAuthorization() async {
+        guard isAvailable else { return }
+        do {
+            // If we can fetch steps without error, we're authorized
+            let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
+            let descriptor = HKStatisticsQueryDescriptor(
+                predicate: .quantitySample(type: stepType, predicate: todayPredicate()),
+                options: .cumulativeSum
+            )
+            _ = try await descriptor.result(for: healthStore)
+            isAuthorized = true
+            await refreshAll()
+        } catch {
+            isAuthorized = false
+        }
+    }
     @Published public var stepCount: Double = 0
     @Published public var activeEnergy: Double = 0 // kcal
     @Published public var heartRate: Double = 0 // bpm
@@ -61,6 +92,7 @@ public final class HealthKitManager: ObservableObject {
         guard isAvailable else { return }
         try await healthStore.requestAuthorization(toShare: [], read: Self.readTypes)
         isAuthorized = true
+        await refreshAll()
     }
 
     // MARK: - Fetch Today's Steps

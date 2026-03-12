@@ -14,8 +14,33 @@ struct HealthDebugApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
         .modelContainer(sharedModelContainer)
+    }
+}
+
+struct RootView: View {
+    @Environment(\.modelContext) private var context
+    @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
+    @State private var showOnboarding = false
+
+    private var needsOnboarding: Bool {
+        profiles.isEmpty || !(profiles.first?.onboardingCompleted ?? false)
+    }
+
+    var body: some View {
+        Group {
+            if needsOnboarding || showOnboarding {
+                OnboardingView {
+                    showOnboarding = false
+                }
+            } else {
+                ContentView()
+            }
+        }
+        .onAppear {
+            showOnboarding = needsOnboarding
+        }
     }
 }

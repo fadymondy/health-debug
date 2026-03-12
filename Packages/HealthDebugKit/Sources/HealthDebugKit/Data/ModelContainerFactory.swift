@@ -18,13 +18,11 @@ public enum ModelContainerFactory {
         Schema(allModels)
     }
 
-    /// Creates the shared ModelContainer with CloudKit support (disabled on simulator).
+    /// Creates the shared ModelContainer.
+    /// CloudKit is disabled until paid Apple Developer account is active.
+    /// Change `.none` to `.automatic` once iCloud entitlement is available.
     public static func create(inMemory: Bool = false) throws -> ModelContainer {
-        #if targetEnvironment(simulator)
         let cloudKit: ModelConfiguration.CloudKitDatabase = .none
-        #else
-        let cloudKit: ModelConfiguration.CloudKitDatabase = .automatic
-        #endif
 
         let config = ModelConfiguration(
             schema: schema,
