@@ -6,6 +6,7 @@ struct ContentView: View {
     @Environment(\.modelContext) private var context
     @StateObject private var health = HealthKitManager.shared
     @StateObject private var standTimer = StandTimerManager.shared
+    @StateObject private var hydration = HydrationManager.shared
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
     @State private var showSettings = false
@@ -18,6 +19,7 @@ struct ContentView: View {
                         authCard
                     } else {
                         metricsGrid
+                        hydrationCard
                         standTimerCard
                         zeppCard
                         sleepCard
@@ -84,6 +86,55 @@ struct ContentView: View {
             MetricCard(icon: "moon.zzz.fill", title: "Sleep", value: String(format: "%.1fh", health.sleepHours), color: AppTheme.secondary)
         }
         .padding(.horizontal)
+    }
+
+    // MARK: - Hydration Card
+
+    private var hydrationCard: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Hydration", systemImage: "drop.fill")
+                .font(.headline)
+                .foregroundStyle(AppTheme.secondary)
+            Divider()
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(hydration.todayTotal) ml")
+                        .font(.title3.bold())
+                    Text("/ \(hydration.dailyGoal) ml")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                if let profile = profiles.first {
+                    let status = hydration.status(profile: profile)
+                    let color: Color = {
+                        switch status {
+                        case .onTrack, .goalReached: return AppTheme.primary
+                        case .slightlyBehind: return .orange
+                        case .dehydrated: return .red
+                        }
+                    }()
+                    Text(status.rawValue)
+                        .font(.caption.bold())
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .glassEffect(.regular.tint(color.opacity(0.3)), in: Capsule())
+                        .foregroundStyle(color)
+                }
+            }
+            ProgressView(value: min(1.0, Double(hydration.todayTotal) / Double(max(1, hydration.dailyGoal))))
+                .tint(AppTheme.secondary)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassEffect(.regular.tint(AppTheme.secondary.opacity(0.15)), in: RoundedRectangle(cornerRadius: 20))
+        .padding(.horizontal)
+        .onAppear {
+            hydration.refresh(context: context)
+            if let profile = profiles.first {
+                hydration.dailyGoal = profile.dailyWaterGoalMl
+            }
+        }
     }
 
     // MARK: - Stand Timer Card

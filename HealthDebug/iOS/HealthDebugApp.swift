@@ -45,6 +45,9 @@ struct RootView: View {
                     Tab("Dashboard", systemImage: "heart.text.clipboard") {
                         ContentView()
                     }
+                    Tab("Hydration", systemImage: "drop.fill") {
+                        HydrationView()
+                    }
                     Tab("Stand", systemImage: "figure.stand") {
                         StandTimerView()
                     }
