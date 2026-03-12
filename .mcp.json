@@ -6,7 +6,7 @@
         "--workspace",
         "/Users/fadymondy/Sites/health-debug"
       ],
-      "command": "/usr/local/bin/orchestra"
+      "command": "/Users/fadymondy/Sites/orchestra-agents/bin/orchestra"
     }
   }
 }

@@ -156,13 +156,17 @@ Run `orchestra serve` to start the MCP server. IDE config is in `.mcp.json`.
 
 ## Installed Packs
 
-No packs installed. Run `orchestra pack recommend` to get suggestions.
+- **orchestra-mcp/pack-essentials** (v0.1.0) — 4 skills, 3 agents, 1 hooks
+- **orchestra-mcp/pack-native-swift** (v0.1.0) — 0 skills, 1 agents, 0 hooks
 
 ## Skills (Slash Commands)
 
 | Command | Source |
 |---------|--------|
+| `/docs` | .claude/skills/docs/ |
+| `/plugin-generator` | .claude/skills/plugin-generator/ |
 | `/project-manager` | .claude/skills/project-manager/ |
+| `/qa-testing` | .claude/skills/qa-testing/ |
 
 ## Agents
 
@@ -170,8 +174,14 @@ Specialized agents in `.claude/agents/` auto-delegate based on task context.
 
 | Agent | File |
 |-------|------|
+| `devops` | .claude/agents/devops.md |
 | `orchestra` | .claude/agents/orchestra.md |
+| `qa-playwright` | .claude/agents/qa-playwright.md |
+| `scrum-master` | .claude/agents/scrum-master.md |
+| `swift-plugin` | .claude/agents/swift-plugin.md |
 
 ## Hooks
 
-No hooks installed.
+| Hook | File |
+|------|------|
+| `orchestra-mcp-hook` | .claude/hooks/orchestra-mcp-hook.sh |

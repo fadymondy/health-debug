@@ -28,10 +28,21 @@
       "Bash(xcrun simctl io F09B0A1C-D45F-40F1-BB14-7D7214BF2EE9 screenshot /tmp/health-debug-screenshot.png)",
       "Bash(xcrun simctl io F09B0A1C-D45F-40F1-BB14-7D7214BF2EE9 screenshot /tmp/health-debug-screenshot2.png)",
       "Bash(xcrun simctl io F09B0A1C-D45F-40F1-BB14-7D7214BF2EE9 screenshot /tmp/health-debug-screenshot3.png)",
-      "mcp__orchestra__submit_review"
+      "mcp__orchestra__submit_review",
+      "Bash(xcrun simctl io F09B0A1C-D45F-40F1-BB14-7D7214BF2EE9 screenshot /tmp/health-debug-cga.png)",
+      "Bash(pgrep -f \"orchestra\")",
+      "Bash(/Users/fadymondy/Sites/orchestra-agents/bin/orchestra version)",
+      "mcp__orchestra__list_features",
+      "Bash(/Users/fadymondy/Sites/orchestra-agents/bin/orchestra feature create --project health-debug --title \"test-feature\" --kind chore)",
+      "mcp__orchestra__set_project_stacks",
+      "mcp__orchestra__get_project_stacks",
+      "mcp__orchestra__detect_stacks",
+      "Bash(find /Users/fadymondy/Sites/health-debug/.orchestra* -type f)",
+      "mcp__orchestra__delete_project"
     ],
     "additionalDirectories": [
-      "/Users/fadymondy/Sites/health-debug"
+      "/Users/fadymondy/Sites/health-debug",
+      "/Users/fadymondy/Sites/health-debug/.projects"
     ]
   }
 }

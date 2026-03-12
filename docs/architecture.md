@@ -16,6 +16,9 @@ All business logic lives in `Packages/HealthDebugKit/`:
 HealthDebugKit/
 ├── Sources/HealthDebugKit/
 │   ├── HealthDebugKit.swift       # Entry point
+│   ├── Data/
+│   │   ├── ModelContainerFactory.swift  # Centralized container creation
+│   │   └── Queries.swift                # Fetch descriptors & aggregates
 │   └── Models/                    # SwiftData models
 │       ├── WaterLog.swift
 │       ├── MealLog.swift

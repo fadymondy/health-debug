@@ -86,3 +86,29 @@ Stores baseline metrics and targets.
 Work window: `workStartHour/Minute` to `workEndHour/Minute` (default: 9:00–19:00).
 
 Computed: `bmi`, `workWindowHours`.
+
+## Query Helpers
+
+Each model provides static `FetchDescriptor` builders in `Data/Queries.swift`:
+
+| Model | Query | Returns |
+|-------|-------|---------|
+| `WaterLog` | `todayDescriptor()` | Today's logs, newest first |
+| `WaterLog` | `todayTotal(in:)` | Total ml consumed today |
+| `MealLog` | `todayDescriptor()` | Today's meals |
+| `MealLog` | `todayUnsafeDescriptor()` | Today's unsafe meals only |
+| `CaffeineLog` | `todayDescriptor()` | Today's caffeine logs |
+| `CaffeineLog` | `todaySugarCount(in:)` | Count of sugar-based caffeine today |
+| `StandSession` | `todayDescriptor()` | Today's stand sessions |
+| `StandSession` | `todayCompletedCount(in:)` | Completed sessions today |
+| `UserProfile` | `currentDescriptor()` | Single user profile (limit 1) |
+| `SleepConfig` | `currentDescriptor()` | Most recent sleep config |
+
+## ModelContainerFactory
+
+Centralized in `Data/ModelContainerFactory.swift`:
+
+- `ModelContainerFactory.create()` — Production container (CloudKit on device, local on simulator)
+- `ModelContainerFactory.preview()` — In-memory container for SwiftUI previews and tests
+- `ModelContainerFactory.schema` — Full schema with all 6 models
+- `ModelContainerFactory.allModels` — Array of all model types
