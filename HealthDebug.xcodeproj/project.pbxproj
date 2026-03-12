@@ -7,19 +7,103 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		116DCD88C80F62D81AA27A4B /* HeartRateWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7614089CFDDF33337A5F037E /* HeartRateWidget.swift */; };
+		1339FAF7C35449C66E6BE7DC /* WeightWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E825C568F0A9B040E4DDE9D0 /* WeightWidget.swift */; };
+		169D1F337D466ECB58FAF0C8 /* StepsWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FAD251B7A0CF93658E9605 /* StepsWidget.swift */; };
+		196FE9FF6EB9D27E9A4EDDE6 /* NutritionWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E89C3670D7A5FC2B1BC41 /* NutritionWidget.swift */; };
+		2C953F2CACA747ACDA481A5A /* WidgetTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AAB05036E99B56BC73A184 /* WidgetTimelineProvider.swift */; };
+		2E0C17F61B9665DE8B7176ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26460479F87454DB463B8DF2 /* Foundation.framework */; };
+		3A5CB509C1FE6507A52FD311 /* LockScreenWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C311252328831FF36EA929 /* LockScreenWidgets.swift */; };
+		53FF489EAB1CA60CAAF6CB8F /* HydrationWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06B3F7683686CA8E5D875AC /* HydrationWidget.swift */; };
+		57BAE374CF0609688A45B8BB /* CaffeineWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0FD03B760ED0F147AE8336 /* CaffeineWidget.swift */; };
+		618B17D97895F3599C7A5880 /* HealthDebugWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3DE1E77944743D0F956B4A0E /* HealthDebugWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		75215E8F08E5C3E5288E4A1F /* SleepWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B9B7E5D70E8F9CC949B704 /* SleepWidget.swift */; };
+		841A1C00A642912275503FAF /* DailyFlowWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FC81EB5574C563F904DEB03 /* DailyFlowWidget.swift */; };
 		A1000001 /* HealthDebugKit in Frameworks */ = {isa = PBXBuildFile; productRef = A1000002 /* HealthDebugKit */; };
 		A1000003 /* HealthDebugKit in Frameworks */ = {isa = PBXBuildFile; productRef = A1000004 /* HealthDebugKit */; };
 		A1000005 /* HealthDebugKit in Frameworks */ = {isa = PBXBuildFile; productRef = A1000006 /* HealthDebugKit */; };
 		A1000007 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1000008 /* HealthKit.framework */; };
 		A1000009 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A100000A /* HealthKit.framework */; };
+		A21A04B1B64202E22531F701 /* HealthDebugWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15FE5F94ABCC5BAEB13506EC /* HealthDebugWidgetBundle.swift */; };
+		ADA1621134E411C32644C124 /* WidgetShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B3EFEF50F369DA2D44E730 /* WidgetShared.swift */; };
+		E45A2DD704D85E73123F0E77 /* ShutdownWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4475ACA474D0C991F06D93B /* ShutdownWidget.swift */; };
+		E87F12C6C88452340E9E99B8 /* StandTimerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE302E2CC6FEF57F3AC835D /* StandTimerWidget.swift */; };
+		FDF34E000B18783E4BD58E33 /* EnergyWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4C374D73AB6D91AE65691A /* EnergyWidget.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		826E8B09C34E37BFD0AA5D4D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1A00001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1BFDC00696FB531241866EEC;
+			remoteInfo = HealthDebugWidgets;
+		};
+		936055775FB5CC6580B67E5F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1A00001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EE19D0A63C30AE132A3125CF;
+			remoteInfo = HealthDebugWidgets;
+		};
+		97F6573B3D56A752BB4C4022 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1A00001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 63C767F0E8507A4A3DE24ED0;
+			remoteInfo = HealthDebugWidgets;
+		};
+		FC0CFB9BDCB08C6DE5B071BD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1A00001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0466E42137B0ECAB71663DA7;
+			remoteInfo = HealthDebugWidgets;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DD384476960D73A77FFF1ADC /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				618B17D97895F3599C7A5880 /* HealthDebugWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		15FE5F94ABCC5BAEB13506EC /* HealthDebugWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HealthDebugWidgetBundle.swift; sourceTree = "<group>"; };
+		1C0FD03B760ED0F147AE8336 /* CaffeineWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CaffeineWidget.swift; sourceTree = "<group>"; };
+		26460479F87454DB463B8DF2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		3188A600D14D55A1A6180ECC /* HealthDebugWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HealthDebugWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		37AAB05036E99B56BC73A184 /* WidgetTimelineProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetTimelineProvider.swift; sourceTree = "<group>"; };
+		3DE1E77944743D0F956B4A0E /* HealthDebugWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HealthDebugWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		440E34F990B700964DCB6554 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		49FAD251B7A0CF93658E9605 /* StepsWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StepsWidget.swift; sourceTree = "<group>"; };
+		6A4C374D73AB6D91AE65691A /* EnergyWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EnergyWidget.swift; sourceTree = "<group>"; };
+		7614089CFDDF33337A5F037E /* HeartRateWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HeartRateWidget.swift; sourceTree = "<group>"; };
+		767E89C3670D7A5FC2B1BC41 /* NutritionWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NutritionWidget.swift; sourceTree = "<group>"; };
+		7FC81EB5574C563F904DEB03 /* DailyFlowWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DailyFlowWidget.swift; sourceTree = "<group>"; };
+		96B3EFEF50F369DA2D44E730 /* WidgetShared.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetShared.swift; sourceTree = "<group>"; };
 		A1000008 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		A100000A /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		A1100001 /* HealthDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1100002 /* Health Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Health Debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1100003 /* HealthDebug Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HealthDebug Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5C311252328831FF36EA929 /* LockScreenWidgets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LockScreenWidgets.swift; sourceTree = "<group>"; };
+		B316EA61E925D056504F4111 /* HealthDebugWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HealthDebugWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3B9B7E5D70E8F9CC949B704 /* SleepWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SleepWidget.swift; sourceTree = "<group>"; };
+		D4475ACA474D0C991F06D93B /* ShutdownWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShutdownWidget.swift; sourceTree = "<group>"; };
+		DDE302E2CC6FEF57F3AC835D /* StandTimerWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StandTimerWidget.swift; sourceTree = "<group>"; };
+		E06B3F7683686CA8E5D875AC /* HydrationWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HydrationWidget.swift; sourceTree = "<group>"; };
+		E825C568F0A9B040E4DDE9D0 /* WeightWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeightWidget.swift; sourceTree = "<group>"; };
+		F99B6C0078EE2518DB649CA4 /* HealthDebugWidgets.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = HealthDebugWidgets.entitlements; sourceTree = "<group>"; };
+		FF1A8E0A73434AB038E18DF6 /* HealthDebugWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HealthDebugWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -43,16 +127,22 @@
 		};
 		A1400002 /* HealthDebug/macOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = HealthDebug/macOS;
 			sourceTree = "<group>";
 		};
 		A1400003 /* HealthDebug/watchOS Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "HealthDebug/watchOS Watch App";
 			sourceTree = "<group>";
 		};
 		A1400004 /* HealthDebug/Shared */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = HealthDebug/Shared;
 			sourceTree = "<group>";
 		};
@@ -85,9 +175,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EE7F56957396E767F33FFF0A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E0C17F61B9665DE8B7176ED /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4891BE8BB4ECC298600899AC /* HealthDebugWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				E8B3C635143EAAD3922F65F6 /* Widgets */,
+				37AAB05036E99B56BC73A184 /* WidgetTimelineProvider.swift */,
+				15FE5F94ABCC5BAEB13506EC /* HealthDebugWidgetBundle.swift */,
+				A5C311252328831FF36EA929 /* LockScreenWidgets.swift */,
+				96B3EFEF50F369DA2D44E730 /* WidgetShared.swift */,
+				F99B6C0078EE2518DB649CA4 /* HealthDebugWidgets.entitlements */,
+				440E34F990B700964DCB6554 /* Info.plist */,
+			);
+			name = HealthDebugWidgets;
+			path = HealthDebugWidgets;
+			sourceTree = SOURCE_ROOT;
+		};
 		A1600001 = {
 			isa = PBXGroup;
 			children = (
@@ -98,6 +211,7 @@
 				A1600002 /* Packages */,
 				A1600003 /* Frameworks */,
 				A1600004 /* Products */,
+				4891BE8BB4ECC298600899AC /* HealthDebugWidgets */,
 			);
 			sourceTree = "<group>";
 		};
@@ -113,6 +227,7 @@
 			children = (
 				A1000008 /* HealthKit.framework */,
 				A100000A /* HealthKit.framework */,
+				E214224E376B35896804D3CB /* iOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -123,8 +238,39 @@
 				A1100001 /* HealthDebug.app */,
 				A1100002 /* Health Debug.app */,
 				A1100003 /* HealthDebug Watch App.app */,
+				FF1A8E0A73434AB038E18DF6 /* HealthDebugWidgets.appex */,
+				3188A600D14D55A1A6180ECC /* HealthDebugWidgets.appex */,
+				B316EA61E925D056504F4111 /* HealthDebugWidgets.appex */,
+				3DE1E77944743D0F956B4A0E /* HealthDebugWidgets.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E214224E376B35896804D3CB /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				26460479F87454DB463B8DF2 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		E8B3C635143EAAD3922F65F6 /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				C3B9B7E5D70E8F9CC949B704 /* SleepWidget.swift */,
+				767E89C3670D7A5FC2B1BC41 /* NutritionWidget.swift */,
+				D4475ACA474D0C991F06D93B /* ShutdownWidget.swift */,
+				E06B3F7683686CA8E5D875AC /* HydrationWidget.swift */,
+				49FAD251B7A0CF93658E9605 /* StepsWidget.swift */,
+				7614089CFDDF33337A5F037E /* HeartRateWidget.swift */,
+				6A4C374D73AB6D91AE65691A /* EnergyWidget.swift */,
+				1C0FD03B760ED0F147AE8336 /* CaffeineWidget.swift */,
+				7FC81EB5574C563F904DEB03 /* DailyFlowWidget.swift */,
+				E825C568F0A9B040E4DDE9D0 /* WeightWidget.swift */,
+				DDE302E2CC6FEF57F3AC835D /* StandTimerWidget.swift */,
+			);
+			name = Widgets;
+			path = Widgets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,10 +283,15 @@
 				A1800001 /* Sources */,
 				A1500001 /* Frameworks */,
 				A1900001 /* Resources */,
+				DD384476960D73A77FFF1ADC /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				DCB2547E455C8E82C552115F /* PBXTargetDependency */,
+				CF7B51FA339F897C334EB76C /* PBXTargetDependency */,
+				CC430CED247E6A257C3DA544 /* PBXTargetDependency */,
+				A7ABA36F01EA5606D537F978 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				A1400001 /* HealthDebug/iOS */,
@@ -202,6 +353,23 @@
 			productReference = A1100003 /* HealthDebug Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
+		EE19D0A63C30AE132A3125CF /* HealthDebugWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 266A23980DBB763DAF73D3F2 /* Build configuration list for PBXNativeTarget "HealthDebugWidgets" */;
+			buildPhases = (
+				0382D16BF794F08EA9F8D215 /* Sources */,
+				EE7F56957396E767F33FFF0A /* Frameworks */,
+				525FBDD6544F5EBE66ADFD6B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HealthDebugWidgets;
+			productName = HealthDebugWidgets;
+			productReference = 3DE1E77944743D0F956B4A0E /* HealthDebugWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -234,7 +402,7 @@
 			mainGroup = A1600001;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				A1B00001 /* XCLocalSwiftPackageReference "Packages/HealthDebugKit" */,
+				A1B00001 /* XCLocalSwiftPackageReference "HealthDebugKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A1600004 /* Products */;
@@ -244,11 +412,19 @@
 				A1300001 /* HealthDebug iOS */,
 				A1300002 /* HealthDebug macOS */,
 				A1300003 /* HealthDebug watchOS */,
+				EE19D0A63C30AE132A3125CF /* HealthDebugWidgets */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		525FBDD6544F5EBE66ADFD6B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A1900001 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -273,6 +449,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0382D16BF794F08EA9F8D215 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C953F2CACA747ACDA481A5A /* WidgetTimelineProvider.swift in Sources */,
+				A21A04B1B64202E22531F701 /* HealthDebugWidgetBundle.swift in Sources */,
+				3A5CB509C1FE6507A52FD311 /* LockScreenWidgets.swift in Sources */,
+				ADA1621134E411C32644C124 /* WidgetShared.swift in Sources */,
+				75215E8F08E5C3E5288E4A1F /* SleepWidget.swift in Sources */,
+				196FE9FF6EB9D27E9A4EDDE6 /* NutritionWidget.swift in Sources */,
+				E45A2DD704D85E73123F0E77 /* ShutdownWidget.swift in Sources */,
+				53FF489EAB1CA60CAAF6CB8F /* HydrationWidget.swift in Sources */,
+				169D1F337D466ECB58FAF0C8 /* StepsWidget.swift in Sources */,
+				116DCD88C80F62D81AA27A4B /* HeartRateWidget.swift in Sources */,
+				FDF34E000B18783E4BD58E33 /* EnergyWidget.swift in Sources */,
+				57BAE374CF0609688A45B8BB /* CaffeineWidget.swift in Sources */,
+				841A1C00A642912275503FAF /* DailyFlowWidget.swift in Sources */,
+				1339FAF7C35449C66E6BE7DC /* WeightWidget.swift in Sources */,
+				E87F12C6C88452340E9E99B8 /* StandTimerWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A1800001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -296,7 +494,78 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		A7ABA36F01EA5606D537F978 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EE19D0A63C30AE132A3125CF /* HealthDebugWidgets */;
+			targetProxy = 936055775FB5CC6580B67E5F /* PBXContainerItemProxy */;
+		};
+		CC430CED247E6A257C3DA544 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			targetProxy = 826E8B09C34E37BFD0AA5D4D /* PBXContainerItemProxy */;
+		};
+		CF7B51FA339F897C334EB76C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			targetProxy = FC0CFB9BDCB08C6DE5B071BD /* PBXContainerItemProxy */;
+		};
+		DCB2547E455C8E82C552115F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			targetProxy = 97F6573B3D56A752BB4C4022 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		2D3723162489E59E63C236FD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = HealthDebugWidgets/HealthDebugWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JW9HJH86GC;
+				INFOPLIST_FILE = HealthDebugWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.threex1.HealthDebug.widgets;
+				PRODUCT_NAME = HealthDebugWidgets;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		85E4BED92CE001E3633C38A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = HealthDebugWidgets/HealthDebugWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JW9HJH86GC;
+				INFOPLIST_FILE = HealthDebugWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.threex1.HealthDebug.widgets;
+				PRODUCT_NAME = HealthDebugWidgets;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 		A1C00001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -573,6 +842,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		266A23980DBB763DAF73D3F2 /* Build configuration list for PBXNativeTarget "HealthDebugWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D3723162489E59E63C236FD /* Release */,
+				85E4BED92CE001E3633C38A8 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A1700001 /* Build configuration list for PBXNativeTarget "HealthDebug iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -612,7 +890,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		A1B00001 /* XCLocalSwiftPackageReference "Packages/HealthDebugKit" */ = {
+		A1B00001 /* XCLocalSwiftPackageReference "HealthDebugKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/HealthDebugKit;
 		};

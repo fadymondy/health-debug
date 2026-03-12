@@ -6,7 +6,7 @@ import WidgetKit
 
 // MARK: - Flow Goal Labels
 
-private let flowGoalKeys: [LocalizedStringKey] = [
+@MainActor private let flowGoalKeys: [LocalizedStringKey] = [
     "Morning Hydration",
     "Meals Logged",
     "Stand Sessions",

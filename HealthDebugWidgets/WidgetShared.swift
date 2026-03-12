@@ -31,8 +31,8 @@ struct WidgetSnapshot: Codable {
     var updatedAt: Date = .now
 }
 
-final class WidgetDataStore {
-    static let shared = WidgetDataStore()
+final class WidgetDataStore: @unchecked Sendable {
+    nonisolated(unsafe) static let shared = WidgetDataStore()
     private static let appGroupID = "group.io.3x1.HealthDebug"
     private static let snapshotKey = "widget_snapshot_v1"
     private let defaults: UserDefaults

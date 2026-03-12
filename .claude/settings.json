@@ -213,7 +213,17 @@
       "Bash(xcrun devicectl device process launch --device 00008140-000E712926F1801C io.threex1.HealthDebug)",
       "Bash(git add Packages/HealthDebugKit/Sources/HealthDebugKit/Models/UserProfile.swift)",
       "Bash(git add .claude/settings.json)",
-      "Bash(git stash drop)"
+      "Bash(git stash drop)",
+      "Bash(xcrun simctl spawn booted log show --predicate 'process == \"\"HealthDebug\"\"' --last 1m)",
+      "Bash(log show --predicate 'process == \"\"HealthDebug\"\" AND messageType == fault' --last 2m)",
+      "Bash(sort -t_ -k2)",
+      "Bash(find /Users/fadymondy/Sites/health-debug -name \"project.pbxproj\" -exec grep -l \"HealthDebugWidgets\\\\|widget\" {} ;)",
+      "Bash(xargs ls -la)",
+      "Bash(file /Users/fadymondy/Sites/health-debug/HealthDebugWidgets/*)",
+      "Bash(xcodebuild -scheme \"HealthDebugWidgets\" -destination \"platform=iOS Simulator,name=iPhone 17\" -configuration Debug build)",
+      "Bash(# Get the actual bundle ID from the built iOS app plist plutil -p \"\"/Users/fadymondy/Library/Developer/Xcode/DerivedData/HealthDebug-eqhtsorvaraaolfkrztjpprppsky/Build/Products/Debug-iphonesimulator/HealthDebug.app/Info.plist\"\")",
+      "Bash(# Get the bundle ID from the built widget appex plist plutil -p \"\"/Users/fadymondy/Library/Developer/Xcode/DerivedData/HealthDebug-eqhtsorvaraaolfkrztjpprppsky/Build/Products/Debug-iphonesimulator/HealthDebugWidgets.appex/Info.plist\"\")",
+      "Bash(xcodebuild -scheme \"HealthDebug iOS\" -destination \"generic/platform=iOS\" -configuration Debug -allowProvisioningUpdates build)"
     ],
     "additionalDirectories": [
       "/Users/fadymondy/Sites/health-debug",

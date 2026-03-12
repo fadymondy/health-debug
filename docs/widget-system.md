@@ -57,6 +57,18 @@ All use `.widgetAccentable()` for system vibrant tinting on lock screen.
 
 `ContentView.refreshWidgets()` is called on `.onAppear` and pull-to-refresh. It collects values from all managers and calls `WidgetRefresher.refresh(...)`, which writes a `WidgetSnapshot` to the shared App Group and triggers `WidgetCenter.reloadAllTimelines()`.
 
+## Xcode Target Setup
+
+The widget extension is registered as `HealthDebugWidgets` in `HealthDebug.xcodeproj`:
+
+- **Product type**: `com.apple.product-type.app-extension`
+- **Bundle ID**: `io.threex1.HealthDebug.widgets`
+- **Extension point**: `com.apple.widgetkit-extension` (in `HealthDebugWidgets/Info.plist`)
+- **Embed phase**: `HealthDebug iOS` target → Embed Foundation Extensions → `HealthDebugWidgets.appex`
+- **Signing**: `DEVELOPMENT_TEAM = JW9HJH86GC`, `CODE_SIGN_STYLE = Automatic`
+
+The widget extension does **not** link `HealthDebugKit` to avoid pulling in HealthKit entitlements. All shared data flows through the App Group UserDefaults via `WidgetShared.swift`.
+
 ## Adding a New Widget
 
 1. Add a new `Widget` struct in `HealthDebugWidgets/Widgets/`
