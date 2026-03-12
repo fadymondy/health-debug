@@ -128,9 +128,15 @@ struct NutritionView: View {
 
     private var quickLogSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Quick Log (Safe Foods)")
-                .font(.headline)
-                .padding(.horizontal)
+            HStack {
+                Text("Quick Log (Safe Foods)")
+                    .font(.headline)
+                Spacer()
+                Text("\(nutrition.todayMeals.count)/\(NutritionManager.maxDailyMeals)")
+                    .font(.caption)
+                    .foregroundStyle(nutrition.todayMeals.count >= NutritionManager.maxDailyMeals ? .red : .secondary)
+            }
+            .padding(.horizontal)
 
             // Proteins
             quickLogRow(title: "Proteins", items: FoodRegistry.safeProteins, category: .protein, icon: "fish.fill", color: AppTheme.primary)
@@ -162,6 +168,8 @@ struct NutritionView: View {
                                 .padding(.vertical, 8)
                         }
                         .buttonStyle(.glass)
+                        .disabled(!nutrition.canLog)
+                        .opacity(nutrition.canLog ? 1 : 0.5)
                     }
                 }
                 .padding(.horizontal)
@@ -243,6 +251,14 @@ struct NutritionView: View {
             Form {
                 Section("Food Name") {
                     TextField("e.g. Grilled Chicken", text: $customName)
+                        .onChange(of: customName) { _, newValue in
+                            if newValue.count > NutritionManager.maxFoodNameLength {
+                                customName = String(newValue.prefix(NutritionManager.maxFoodNameLength))
+                            }
+                        }
+                    Text("\(customName.count)/\(NutritionManager.maxFoodNameLength)")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
                 }
                 Section("Category") {
                     Picker("Category", selection: $customCategory) {
@@ -279,12 +295,12 @@ struct NutritionView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Log") {
-                        guard !customName.isEmpty else { return }
+                        guard !customName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
                         nutrition.logMeal(customName, category: customCategory, context: context)
                         customName = ""
                         showCustomLog = false
                     }
-                    .disabled(customName.isEmpty)
+                    .disabled(customName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || !nutrition.canLog)
                 }
             }
         }

@@ -126,10 +126,17 @@ struct CaffeineView: View {
                 .font(.headline)
                 .padding(.horizontal)
 
+            if !caffeine.canLog {
+                Text(caffeine.todayTotal >= CaffeineManager.maxDailyLogs ? "Daily limit reached (\(CaffeineManager.maxDailyLogs) drinks)" : "Wait a moment before logging again")
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+                    .padding(.horizontal)
+            }
+
             LazyVGrid(columns: [.init(.flexible()), .init(.flexible()), .init(.flexible())], spacing: 10) {
                 ForEach(CaffeineType.allCases, id: \.self) { type in
                     Button {
-                        caffeine.logCaffeine(type, context: context)
+                        caffeine.logCaffeine(type, context: context, profile: profile)
                     } label: {
                         VStack(spacing: 6) {
                             Image(systemName: iconFor(type))
@@ -143,6 +150,8 @@ struct CaffeineView: View {
                         .padding(.vertical, 10)
                     }
                     .buttonStyle(.glass)
+                    .disabled(!caffeine.canLog)
+                    .opacity(caffeine.canLog ? 1 : 0.5)
                 }
             }
             .padding(.horizontal)

@@ -14,17 +14,40 @@ public final class HydrationManager: ObservableObject {
     @Published public var todayTotal: Int = 0
     @Published public var dailyGoal: Int = 2500
     @Published public var logs: [WaterLog] = []
+    @Published public var lastLogTime: Date?
+
+    /// Minimum seconds between water logs to prevent accidental double-taps.
+    public static let logCooldownSeconds: TimeInterval = 30
+    /// Maximum daily intake in ml (safety cap: 5 liters).
+    public static let maxDailyMl: Int = 5000
 
     private init() {}
 
+    // MARK: - Validation
+
+    /// Whether a new log is allowed (cooldown + daily cap).
+    public var canLog: Bool {
+        if todayTotal >= Self.maxDailyMl { return false }
+        if let last = lastLogTime, Date.now.timeIntervalSince(last) < Self.logCooldownSeconds { return false }
+        return true
+    }
+
     // MARK: - Quick Log
 
-    /// Log a water intake (default 250ml).
-    public func logWater(_ amount: Int = 250, source: String = "ios", context: ModelContext) {
+    /// Log a water intake (default 250ml). Returns false if validation fails.
+    @discardableResult
+    public func logWater(_ amount: Int = 250, source: String = "ios", context: ModelContext, profile: UserProfile? = nil) -> Bool {
+        guard canLog else { return false }
         let log = WaterLog(amount: amount, timestamp: .now, source: source)
         context.insert(log)
         try? context.save()
+        lastLogTime = .now
         refresh(context: context)
+        // Auto-schedule next hydration reminder
+        if let profile, let nextMin = minutesUntilNextDrink(profile: profile) {
+            scheduleReminder(inMinutes: nextMin)
+        }
+        return true
     }
 
     // MARK: - Refresh

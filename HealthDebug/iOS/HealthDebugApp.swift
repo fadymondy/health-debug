@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import UserNotifications
 import HealthDebugKit
 
 @main
@@ -15,6 +16,12 @@ struct HealthDebugApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .onAppear {
+                    Task {
+                        let center = UNUserNotificationCenter.current()
+                        _ = try? await center.requestAuthorization(options: [.alert, .sound, .badge])
+                    }
+                }
         }
         .modelContainer(sharedModelContainer)
     }
@@ -59,6 +66,9 @@ struct RootView: View {
                     }
                     Tab("Shutdown", systemImage: "moon.fill") {
                         ShutdownView()
+                    }
+                    Tab("Analytics", systemImage: "brain.head.profile.fill") {
+                        AnalyticsView()
                     }
                 }
                 .transition(.opacity)

@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import UserNotifications
 
 /// Manages caffeine tracking with Red Bull deprecation protocol.
 /// - 90-120 min post-wake caffeine block (cortisol window)
@@ -12,6 +13,10 @@ public final class CaffeineManager: ObservableObject {
 
     /// Minutes after waking before caffeine is optimal (cortisol window).
     public static let caffeineBlockMinutes: Int = 90
+    /// Minimum seconds between caffeine logs.
+    public static let logCooldownSeconds: TimeInterval = 60
+    /// Maximum caffeine logs per day (safety cap).
+    public static let maxDailyLogs: Int = 8
 
     // MARK: - State
 
@@ -19,16 +24,36 @@ public final class CaffeineManager: ObservableObject {
     @Published public var todaySugarCount: Int = 0
     @Published public var todayCleanCount: Int = 0
     @Published public var todayTotal: Int = 0
+    @Published public var lastLogTime: Date?
 
     private init() {}
 
+    // MARK: - Validation
+
+    public var canLog: Bool {
+        if todayTotal >= Self.maxDailyLogs { return false }
+        if let last = lastLogTime, Date.now.timeIntervalSince(last) < Self.logCooldownSeconds { return false }
+        return true
+    }
+
     // MARK: - Log Caffeine
 
-    public func logCaffeine(_ type: CaffeineType, context: ModelContext) {
+    @discardableResult
+    public func logCaffeine(_ type: CaffeineType, context: ModelContext, profile: UserProfile? = nil) -> Bool {
+        guard canLog else { return false }
         let log = CaffeineLog(type: type)
         context.insert(log)
         try? context.save()
+        lastLogTime = .now
         refresh(context: context)
+        // Schedule caffeine block end notification if in block
+        if let profile, isInCaffeineBlock(profile: profile) {
+            let remaining = caffeineBlockMinutesRemaining(profile: profile)
+            if remaining > 0 {
+                scheduleCaffeineBlockEndNotification(inMinutes: remaining)
+            }
+        }
+        return true
     }
 
     // MARK: - Refresh
@@ -115,5 +140,27 @@ public final class CaffeineManager: ObservableObject {
             return "No sugar-based caffeine today. Liver is happy."
         }
         return "\(todaySugarCount) sugar-based drink\(todaySugarCount == 1 ? "" : "s") today. Switch to clean caffeine to protect your liver."
+    }
+
+    // MARK: - Notifications
+
+    /// Notify when caffeine block window ends.
+    public func scheduleCaffeineBlockEndNotification(inMinutes: Int) {
+        let center = UNUserNotificationCenter.current()
+        let content = UNMutableNotificationContent()
+        content.title = "Caffeine Window Open"
+        content.body = "Cortisol has dropped. You can have caffeine now — prefer clean sources over Red Bull."
+        content.sound = .default
+
+        let trigger = UNTimeIntervalNotificationTrigger(
+            timeInterval: TimeInterval(inMinutes * 60),
+            repeats: false
+        )
+        let request = UNNotificationRequest(
+            identifier: "io.threex1.HealthDebug.caffeineBlockEnd",
+            content: content,
+            trigger: trigger
+        )
+        center.add(request)
     }
 }

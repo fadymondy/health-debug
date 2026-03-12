@@ -116,7 +116,7 @@ struct HydrationView: View {
 
     private func quickLogButton(amount: Int, label: String, icon: String) -> some View {
         Button {
-            hydration.logWater(amount, source: "ios", context: context)
+            hydration.logWater(amount, source: "ios", context: context, profile: profile)
         } label: {
             VStack(spacing: 6) {
                 Image(systemName: icon)
@@ -130,6 +130,8 @@ struct HydrationView: View {
             .padding(.vertical, 8)
         }
         .buttonStyle(.glass)
+        .disabled(!hydration.canLog)
+        .opacity(hydration.canLog ? 1 : 0.5)
     }
 
     // MARK: - Schedule Card

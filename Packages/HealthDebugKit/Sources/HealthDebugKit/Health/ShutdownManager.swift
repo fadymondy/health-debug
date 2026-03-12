@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import UserNotifications
 
 /// Manages the GERD & Sinus "System Shutdown" timer.
 /// 4-hour pre-sleep fasting window. During shutdown: no food, only water/chamomile/anise tea.
@@ -76,6 +77,10 @@ public final class ShutdownManager: ObservableObject {
     public func startCountdown(config: SleepConfig?) {
         stopCountdown()
         refresh(config: config)
+        // Schedule shutdown start notification if still inactive
+        if state == .inactive, secondsUntilShutdown > 60 {
+            scheduleShutdownNotification(inSeconds: secondsUntilShutdown)
+        }
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
                 self?.refresh(config: config)
@@ -126,5 +131,30 @@ public final class ShutdownManager: ObservableObject {
             return String(format: "%d:%02d:%02d", hours, minutes, secs)
         }
         return String(format: "%d:%02d", minutes, secs)
+    }
+
+    // MARK: - Notifications
+
+    private func scheduleShutdownNotification(inSeconds: TimeInterval) {
+        let center = UNUserNotificationCenter.current()
+        // Remove any existing
+        center.removePendingNotificationRequests(withIdentifiers: ["io.threex1.HealthDebug.shutdownStart"])
+
+        let content = UNMutableNotificationContent()
+        content.title = "System Shutdown"
+        content.body = "GERD shutdown has started. No more food — only water, chamomile, or anise tea until sleep."
+        content.sound = .default
+        content.interruptionLevel = .timeSensitive
+
+        let trigger = UNTimeIntervalNotificationTrigger(
+            timeInterval: max(1, inSeconds),
+            repeats: false
+        )
+        let request = UNNotificationRequest(
+            identifier: "io.threex1.HealthDebug.shutdownStart",
+            content: content,
+            trigger: trigger
+        )
+        center.add(request)
     }
 }
