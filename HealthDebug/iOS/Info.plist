@@ -8,5 +8,24 @@
 	<string>Health Debug needs access to your health data to track metabolic metrics, steps, heart rate, and sleep patterns for personalized health insights.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Health Debug writes workout and hydration data to Apple Health to keep your health records complete.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>IBMPlexSans-Regular.ttf</string>
+		<string>IBMPlexSans-Italic.ttf</string>
+		<string>IBMPlexSans-Medium.ttf</string>
+		<string>IBMPlexSans-MediumItalic.ttf</string>
+		<string>IBMPlexSans-SemiBold.ttf</string>
+		<string>IBMPlexSans-SemiBoldItalic.ttf</string>
+		<string>IBMPlexSans-Bold.ttf</string>
+		<string>IBMPlexSans-BoldItalic.ttf</string>
+		<string>IBMPlexSansArabic-Regular.ttf</string>
+		<string>IBMPlexSansArabic-Medium.ttf</string>
+		<string>IBMPlexSansArabic-SemiBold.ttf</string>
+		<string>IBMPlexSansArabic-Bold.ttf</string>
+		<string>IBMPlexSansArabic-Light.ttf</string>
+		<string>IBMPlexSansArabic-ExtraLight.ttf</string>
+		<string>IBMPlexSansArabic-Text.ttf</string>
+		<string>IBMPlexSansArabic-Thin.ttf</string>
+	</array>
 </dict>
 </plist>

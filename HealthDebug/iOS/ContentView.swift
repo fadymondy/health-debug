@@ -22,6 +22,7 @@ struct ContentView: View {
                 if !health.isAuthorized {
                     authCard
                 } else {
+                    DailyFlowCard()
                     AIInsightCard(domain: .dashboard)
                     metricsGrid
                     NavigationLink(destination: HydrationDetailView()) {
@@ -119,10 +120,25 @@ struct ContentView: View {
 
     private var metricsGrid: some View {
         LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
-            MetricCard(icon: "figure.walk", title: "Steps", value: formatted(health.stepCount), color: AppTheme.primary)
-            MetricCard(icon: "flame.fill", title: "Active Energy", value: formatted(health.activeEnergy), unit: "kcal", color: .orange)
-            MetricCard(icon: "heart.fill", title: "Heart Rate", value: formatted(health.heartRate), unit: "bpm", color: .red)
-            MetricCard(icon: "moon.zzz.fill", title: "Sleep", value: String(format: "%.1f", health.sleepHours), unit: "hours", color: AppTheme.secondary)
+            NavigationLink(destination: StepsDetailView()) {
+                MetricCard(icon: "figure.walk", title: "Steps", value: formatted(health.stepCount), color: AppTheme.primary)
+            }
+            .buttonStyle(.plain)
+
+            NavigationLink(destination: EnergyDetailView()) {
+                MetricCard(icon: "flame.fill", title: "Active Energy", value: formatted(health.activeEnergy), unit: "kcal", color: .orange)
+            }
+            .buttonStyle(.plain)
+
+            NavigationLink(destination: HeartRateDetailView()) {
+                MetricCard(icon: "heart.fill", title: "Heart Rate", value: formatted(health.heartRate), unit: "bpm", color: .red)
+            }
+            .buttonStyle(.plain)
+
+            NavigationLink(destination: SleepDetailView()) {
+                MetricCard(icon: "moon.zzz.fill", title: "Sleep", value: String(format: "%.1f", health.sleepHours), unit: "hours", color: AppTheme.secondary)
+            }
+            .buttonStyle(.plain)
         }
         .padding(.horizontal)
     }
@@ -504,7 +520,7 @@ struct MetricCard: View {
                 .foregroundStyle(.secondary)
             HStack(spacing: 2) {
                 Text(verbatim: value)
-                    .font(.title3.bold())
+                    .font(.title2.bold())
                 if let unit {
                     Text(unit)
                         .font(.caption.bold())
@@ -514,7 +530,13 @@ struct MetricCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .glassEffect(.regular.tint(color.opacity(0.15)), in: RoundedRectangle(cornerRadius: 16))
+        .glassEffect(.regular.interactive(), in: RoundedRectangle(cornerRadius: 16))
+        .overlay(alignment: .topTrailing) {
+            Image(systemName: "chevron.right")
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+                .padding(8)
+        }
     }
 }
 
