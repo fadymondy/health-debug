@@ -151,12 +151,82 @@
         }
       }
     },
+    "Active": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نشط"
+          }
+        }
+      }
+    },
+    "Active Energy": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الطاقة النشطة"
+          }
+        }
+      }
+    },
+    "Active Energy Today": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الطاقة النشطة اليوم"
+          }
+        }
+      }
+    },
+    "Active Minutes": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الدقائق النشطة"
+          }
+        }
+      }
+    },
     "ACTIVE — No Food": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "نشط — ممنوع الأكل"
+          }
+        }
+      }
+    },
+    "Active — No food until sleep": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نشط — لا طعام حتى النوم"
+          }
+        }
+      }
+    },
+    "Activity": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "النشاط"
+          }
+        }
+      }
+    },
+    "Adequate hydration helps flush uric acid crystals from joints, reducing gout flare risk.": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الترطيب الكافي يساعد على تنظيف بلورات حمض اليوريك من المفاصل، مما يقلل خطر نوبات النقرس."
           }
         }
       }
@@ -211,82 +281,22 @@
         }
       }
     },
-    "Analyze my weight": {
+    "AI Tip": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "تحليل وزني"
+            "value": "نصيحة الذكاء الاصطناعي"
           }
         }
       }
     },
-    "Active": {
+    "All": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "نشط"
-          }
-        }
-      }
-    },
-    "Active Energy": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الطاقة النشطة"
-          }
-        }
-      }
-    },
-    "Active Energy Today": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الطاقة النشطة اليوم"
-          }
-        }
-      }
-    },
-    "Active Minutes": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الدقائق النشطة"
-          }
-        }
-      }
-    },
-    "Active — No food until sleep": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "نشط — لا طعام حتى النوم"
-          }
-        }
-      }
-    },
-    "Activity": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "النشاط"
-          }
-        }
-      }
-    },
-    "Adequate hydration helps flush uric acid crystals from joints, reducing gout flare risk.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الترطيب الكافي يساعد على تنظيف بلورات حمض اليوريك من المفاصل، مما يقلل خطر نوبات النقرس."
+            "value": "الكل"
           }
         }
       }
@@ -301,22 +311,22 @@
         }
       }
     },
-    "All Safe": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "كل شيء آمن"
-          }
-        }
-      }
-    },
     "All goals met": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "تم تحقيق جميع الأهداف"
+          }
+        }
+      }
+    },
+    "All Safe": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "كل شيء آمن"
           }
         }
       }
@@ -351,16 +361,6 @@
         }
       }
     },
-    "Analyze My Health": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "حلّل صحتي"
-          }
-        }
-      }
-    },
     "Analyze my caffeine habits": {
       "localizations": {
         "ar": {
@@ -371,12 +371,32 @@
         }
       }
     },
+    "Analyze My Health": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حلّل صحتي"
+          }
+        }
+      }
+    },
     "Analyze my sleep": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "حلّل نومي"
+          }
+        }
+      }
+    },
+    "Analyze my weight": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تحليل وزني"
           }
         }
       }
@@ -451,22 +471,22 @@
         }
       }
     },
-    "Ask AI": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اسأل الذكاء الاصطناعي"
-          }
-        }
-      }
-    },
     "Ask about your health...": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "اسأل عن صحتك..."
+          }
+        }
+      }
+    },
+    "Ask AI": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اسأل الذكاء الاصطناعي"
           }
         }
       }
@@ -511,26 +531,6 @@
         }
       }
     },
-    "BMI": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "مؤشر كتلة الجسم"
-          }
-        }
-      }
-    },
-    "BMR Estimate": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تقدير الأيض الأساسي"
-          }
-        }
-      }
-    },
     "Back": {
       "localizations": {
         "ar": {
@@ -561,6 +561,16 @@
         }
       }
     },
+    "before": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "قبل"
+          }
+        }
+      }
+    },
     "Behind": {
       "localizations": {
         "ar": {
@@ -577,6 +587,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "قهوة سوداء"
+          }
+        }
+      }
+    },
+    "BMI": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مؤشر كتلة الجسم"
+          }
+        }
+      }
+    },
+    "BMR Estimate": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تقدير الأيض الأساسي"
           }
         }
       }
@@ -621,6 +651,16 @@
         }
       }
     },
+    "bpm": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ن/د"
+          }
+        }
+      }
+    },
     "Brown Rice": {
       "localizations": {
         "ar": {
@@ -651,6 +691,16 @@
         }
       }
     },
+    "Caffeine advice": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نصيحة الكافيين"
+          }
+        }
+      }
+    },
     "Caffeine Block Active": {
       "localizations": {
         "ar": {
@@ -671,16 +721,6 @@
         }
       }
     },
-    "Caffeine Window Open": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "نافذة الكافيين مفتوحة"
-          }
-        }
-      }
-    },
     "Caffeine Today": {
       "localizations": {
         "ar": {
@@ -691,12 +731,12 @@
         }
       }
     },
-    "Caffeine advice": {
+    "Caffeine Window Open": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "نصيحة الكافيين"
+            "value": "نافذة الكافيين مفتوحة"
           }
         }
       }
@@ -707,6 +747,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "إلغاء"
+          }
+        }
+      }
+    },
+    "carb": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "كربوهيدرات"
           }
         }
       }
@@ -741,22 +791,22 @@
         }
       }
     },
-    "Chamomile Tea": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "شاي بابونج"
-          }
-        }
-      }
-    },
     "Chamomile and anise teas are anti-inflammatory and safe for the digestive tract before sleep.": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "شاي البابونج واليانسون مضادان للالتهابات وآمنان للجهاز الهضمي قبل النوم."
+          }
+        }
+      }
+    },
+    "Chamomile Tea": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "شاي بابونج"
           }
         }
       }
@@ -802,12 +852,32 @@
         }
       }
     },
+    "clean": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نظيف"
+          }
+        }
+      }
+    },
     "Clear": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "مسح"
+          }
+        }
+      }
+    },
+    "Clear All": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مسح الكل"
           }
         }
       }
@@ -822,12 +892,42 @@
         }
       }
     },
+    "cm": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سم"
+          }
+        }
+      }
+    },
+    "Coffee": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "القهوة"
+          }
+        }
+      }
+    },
     "Cold Brew": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "قهوة باردة"
+          }
+        }
+      }
+    },
+    "complete": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مكتمل"
           }
         }
       }
@@ -872,22 +972,22 @@
         }
       }
     },
-    "Current BPM": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "النبضات الحالية"
-          }
-        }
-      }
-    },
     "Current body composition from Zepp scale": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "تكوين الجسم الحالي من ميزان Zepp"
+          }
+        }
+      }
+    },
+    "Current BPM": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "النبضات الحالية"
           }
         }
       }
@@ -912,16 +1012,6 @@
         }
       }
     },
-    "Daily Water Goal": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "هدف الماء اليومي"
-          }
-        }
-      }
-    },
     "Daily limit reached": {
       "localizations": {
         "ar": {
@@ -938,6 +1028,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "تم الوصول للحد اليومي (%d مشروبات)"
+          }
+        }
+      }
+    },
+    "Daily Water Goal": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هدف الماء اليومي"
           }
         }
       }
@@ -992,6 +1092,26 @@
         }
       }
     },
+    "Delete": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حذف"
+          }
+        }
+      }
+    },
+    "Dismiss": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تجاهل"
+          }
+        }
+      }
+    },
     "Distance": {
       "localizations": {
         "ar": {
@@ -1022,12 +1142,52 @@
         }
       }
     },
+    "drink": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مشروب"
+          }
+        }
+      }
+    },
+    "drinks": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مشروبات"
+          }
+        }
+      }
+    },
     "Duck": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "بط"
+          }
+        }
+      }
+    },
+    "e.g. Grilled Chicken": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مثال: دجاج مشوي"
+          }
+        }
+      }
+    },
+    "Earlier": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سابقاً"
           }
         }
       }
@@ -1142,6 +1302,16 @@
         }
       }
     },
+    "fat": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دهون"
+          }
+        }
+      }
+    },
     "Fats": {
       "localizations": {
         "ar": {
@@ -1162,6 +1332,16 @@
         }
       }
     },
+    "Focus": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تركيز"
+          }
+        }
+      }
+    },
     "Food Name": {
       "localizations": {
         "ar": {
@@ -1178,6 +1358,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "التحليل الكامل"
+          }
+        }
+      }
+    },
+    "Gemini": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جيميني"
           }
         }
       }
@@ -1208,26 +1398,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "خطر ارتجاع المريء/الجيوب الأنفية مرتفع. تجنب الاستلقاء لمدة ٣ ساعات على الأقل بعد الأكل."
-          }
-        }
-      }
-    },
-    "GPT": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GPT"
-          }
-        }
-      }
-    },
-    "Gemini": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "جيميني"
           }
         }
       }
@@ -1282,6 +1452,26 @@
         }
       }
     },
+    "goals": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أهداف"
+          }
+        }
+      }
+    },
+    "goals met": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أهداف محققة"
+          }
+        }
+      }
+    },
     "Good": {
       "localizations": {
         "ar": {
@@ -1298,6 +1488,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "النقرس"
+          }
+        }
+      }
+    },
+    "GPT": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GPT"
           }
         }
       }
@@ -1328,16 +1528,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "صدر دجاج مشوي"
-          }
-        }
-      }
-    },
-    "HRV": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تقلب معدل القلب"
           }
         }
       }
@@ -1452,6 +1642,16 @@
         }
       }
     },
+    "hours": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ساعة"
+          }
+        }
+      }
+    },
     "Hours Slept": {
       "localizations": {
         "ar": {
@@ -1512,6 +1712,26 @@
         }
       }
     },
+    "hrs": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ساعات"
+          }
+        }
+      }
+    },
+    "HRV": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تقلب معدل القلب"
+          }
+        }
+      }
+    },
     "Hydration": {
       "localizations": {
         "ar": {
@@ -1528,6 +1748,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "جدول الترطيب"
+          }
+        }
+      }
+    },
+    "Hygiene": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "النظافة"
           }
         }
       }
@@ -1572,6 +1802,16 @@
         }
       }
     },
+    "interrupted": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مقطوعة"
+          }
+        }
+      }
+    },
     "Is my calorie burn healthy?": {
       "localizations": {
         "ar": {
@@ -1592,6 +1832,16 @@
         }
       }
     },
+    "Jam": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مربى"
+          }
+        }
+      }
+    },
     "JSON": {
       "localizations": {
         "ar": {
@@ -1602,12 +1852,12 @@
         }
       }
     },
-    "Jam": {
+    "kcal": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "مربى"
+            "value": "سعرة"
           }
         }
       }
@@ -1638,6 +1888,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "تم تكوين المفتاح"
+          }
+        }
+      }
+    },
+    "kg": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "كجم"
           }
         }
       }
@@ -1678,6 +1938,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "عدس"
+          }
+        }
+      }
+    },
+    "level": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مستوى"
           }
         }
       }
@@ -1782,6 +2052,16 @@
         }
       }
     },
+    "Long Break": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "استراحة طويلة"
+          }
+        }
+      }
+    },
     "Long-press any pinned card or tap Edit to customize your dashboard. Pin up to 4 cards for the top grid.": {
       "localizations": {
         "ar": {
@@ -1802,6 +2082,26 @@
         }
       }
     },
+    "Mark All Read": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تحديد الكل كمقروء"
+          }
+        }
+      }
+    },
+    "Mark Read": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تحديد كمقروء"
+          }
+        }
+      }
+    },
     "Markdown": {
       "localizations": {
         "ar": {
@@ -1818,6 +2118,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "ماتشا"
+          }
+        }
+      }
+    },
+    "Meal": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الوجبة"
           }
         }
       }
@@ -1852,6 +2162,26 @@
         }
       }
     },
+    "min left": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دقيقة متبقية"
+          }
+        }
+      }
+    },
+    "minutes remaining. Cortisol is naturally high after waking — caffeine won't help yet.": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "دقيقة متبقية. الكورتيزول مرتفع طبيعياً بعد الاستيقاظ — الكافيين لن يفيد بعد."
+          }
+        }
+      }
+    },
     "Mixed Carbs": {
       "localizations": {
         "ar": {
@@ -1862,12 +2192,32 @@
         }
       }
     },
+    "ml": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مل"
+          }
+        }
+      }
+    },
     "Morning Hydration": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "ترطيب الصباح"
+          }
+        }
+      }
+    },
+    "Movement": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الحركة"
           }
         }
       }
@@ -1902,6 +2252,16 @@
         }
       }
     },
+    "New": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جديد"
+          }
+        }
+      }
+    },
     "Next": {
       "localizations": {
         "ar": {
@@ -1932,16 +2292,6 @@
         }
       }
     },
-    "No Meals": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "لا وجبات"
-          }
-        }
-      }
-    },
     "No food allowed. Only water, chamomile tea, or anise tea.": {
       "localizations": {
         "ar": {
@@ -1958,6 +2308,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "ممنوع الأكل حتى الغد. فقط ماء أو شاي بابونج أو يانسون."
+          }
+        }
+      }
+    },
+    "No Meals": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لا وجبات"
+          }
+        }
+      }
+    },
+    "No Notifications": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لا توجد إشعارات"
           }
         }
       }
@@ -2002,6 +2372,16 @@
         }
       }
     },
+    "Notifications": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الإشعارات"
+          }
+        }
+      }
+    },
     "Nutella": {
       "localizations": {
         "ar": {
@@ -2022,22 +2402,32 @@
         }
       }
     },
-    "OK": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "بخير"
-          }
-        }
-      }
-    },
     "Oats": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "شوفان"
+          }
+        }
+      }
+    },
+    "of": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "من"
+          }
+        }
+      }
+    },
+    "OK": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بخير"
           }
         }
       }
@@ -2082,12 +2472,12 @@
         }
       }
     },
-    "Other": {
+    "Open": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "أخرى"
+            "value": "فتح"
           }
         }
       }
@@ -2102,12 +2492,32 @@
         }
       }
     },
+    "Other": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أخرى"
+          }
+        }
+      }
+    },
     "Pinned": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "مثبّت"
+          }
+        }
+      }
+    },
+    "Pomodoro": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بومودورو"
           }
         }
       }
@@ -2132,6 +2542,16 @@
         }
       }
     },
+    "protein": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بروتين"
+          }
+        }
+      }
+    },
     "Proteins": {
       "localizations": {
         "ar": {
@@ -2152,6 +2572,16 @@
         }
       }
     },
+    "Quick action": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إجراء سريع"
+          }
+        }
+      }
+    },
     "Quick Actions": {
       "localizations": {
         "ar": {
@@ -2168,16 +2598,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "تسجيل سريع (أطعمة آمنة)"
-          }
-        }
-      }
-    },
-    "Quick action": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "إجراء سريع"
           }
         }
       }
@@ -2272,12 +2692,32 @@
         }
       }
     },
+    "Remaining": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "متبقّية"
+          }
+        }
+      }
+    },
     "Remove": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "حذف"
+          }
+        }
+      }
+    },
+    "Rest well": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "استرح جيدًا"
           }
         }
       }
@@ -2302,17 +2742,17 @@
         }
       }
     },
-    "SUGAR": {
+    "Safe": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "سكر"
+            "value": "آمن"
           }
         }
       }
     },
-    "Safe": {
+    "safe": {
       "localizations": {
         "ar": {
           "stringUnit": {
@@ -2352,12 +2792,42 @@
         }
       }
     },
+    "Session Complete!": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "انتهت الجلسة!"
+          }
+        }
+      }
+    },
     "Sessions": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "الجلسات"
+          }
+        }
+      }
+    },
+    "sessions": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جلسات"
+          }
+        }
+      }
+    },
+    "Sets": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أطقم"
           }
         }
       }
@@ -2382,6 +2852,16 @@
         }
       }
     },
+    "Short Break": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "استراحة قصيرة"
+          }
+        }
+      }
+    },
     "Shutdown": {
       "localizations": {
         "ar": {
@@ -2398,6 +2878,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "ملتزم بالإغلاق"
+          }
+        }
+      }
+    },
+    "Shutdown in": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الإغلاق خلال"
           }
         }
       }
@@ -2422,22 +2912,32 @@
         }
       }
     },
-    "Shutdown in": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الإغلاق خلال"
-          }
-        }
-      }
-    },
     "Skip": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "تخطي"
+          }
+        }
+      }
+    },
+    "Skip Break": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تخطّ الاستراحة"
+          }
+        }
+      }
+    },
+    "skipped": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تم التخطي"
           }
         }
       }
@@ -2512,6 +3012,16 @@
         }
       }
     },
+    "snack": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "وجبة خفيفة"
+          }
+        }
+      }
+    },
     "Stand": {
       "localizations": {
         "ar": {
@@ -2552,6 +3062,16 @@
         }
       }
     },
+    "Stand Up!": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "قف الآن!"
+          }
+        }
+      }
+    },
     "Stand!": {
       "localizations": {
         "ar": {
@@ -2582,12 +3102,22 @@
         }
       }
     },
-    "Start Timer": {
+    "Start Break": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "بدء المؤقت"
+            "value": "ابدأ الاستراحة"
+          }
+        }
+      }
+    },
+    "Start Focus": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ابدأ التركيز"
           }
         }
       }
@@ -2598,6 +3128,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "بدء مؤقت الوقوف"
+          }
+        }
+      }
+    },
+    "Start Timer": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بدء المؤقت"
           }
         }
       }
@@ -2622,12 +3162,32 @@
         }
       }
     },
+    "Stay focused": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ابقَ مركّزًا"
+          }
+        }
+      }
+    },
     "Steps": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "الخطوات"
+          }
+        }
+      }
+    },
+    "steps": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خطوات"
           }
         }
       }
@@ -2652,6 +3212,16 @@
         }
       }
     },
+    "Stop": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إيقاف"
+          }
+        }
+      }
+    },
     "Stop Timer": {
       "localizations": {
         "ar": {
@@ -2662,7 +3232,37 @@
         }
       }
     },
+    "Stretch & breathe": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تمدّد وتنفّس"
+          }
+        }
+      }
+    },
+    "SUGAR": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سكر"
+          }
+        }
+      }
+    },
     "Sugar": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سكر"
+          }
+        }
+      }
+    },
+    "sugar": {
       "localizations": {
         "ar": {
           "stringUnit": {
@@ -2688,6 +3288,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "مزامَن"
+          }
+        }
+      }
+    },
+    "System": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "النظام"
           }
         }
       }
@@ -2728,6 +3338,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "قم بمشي ٣ دقائق"
+          }
+        }
+      }
+    },
+    "Take a 5-min short break before your next session.": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خذ استراحة قصيرة مدّتها ٥ دقائق قبل الجلسة القادمة."
+          }
+        }
+      }
+    },
+    "Take Break": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "خذ استراحة"
           }
         }
       }
@@ -2862,12 +3492,42 @@
         }
       }
     },
+    "Time for a 15-min long break — you earned it.": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حان وقت استراحة طويلة مدّتها ١٥ دقيقة — لقد استحققتها."
+          }
+        }
+      }
+    },
+    "Time to move": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "وقت الحركة"
+          }
+        }
+      }
+    },
     "Time to Stand!": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "وقت الوقوف!"
+          }
+        }
+      }
+    },
+    "Today": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اليوم"
           }
         }
       }
@@ -2908,6 +3568,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "تقدم اليوم"
+          }
+        }
+      }
+    },
+    "Today's Sessions": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "جلسات اليوم"
           }
         }
       }
@@ -2962,6 +3632,16 @@
         }
       }
     },
+    "unsafe": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "غير آمن"
+          }
+        }
+      }
+    },
     "Until next stand break": {
       "localizations": {
         "ar": {
@@ -2983,6 +3663,16 @@
       }
     },
     "Until sleep": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حتى النوم"
+          }
+        }
+      }
+    },
+    "until sleep": {
       "localizations": {
         "ar": {
           "stringUnit": {
@@ -3252,22 +3942,22 @@
         }
       }
     },
-    "Why Shutdown?": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "لماذا الإغلاق؟"
-          }
-        }
-      }
-    },
     "Why am I behind on steps?": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
             "value": "لماذا خطواتي أقل من الهدف؟"
+          }
+        }
+      }
+    },
+    "Why Shutdown?": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لماذا الإغلاق؟"
           }
         }
       }
@@ -3308,6 +3998,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "نافذة العمل"
+          }
+        }
+      }
+    },
+    "years": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سنة"
           }
         }
       }
@@ -3372,6 +4072,16 @@
         }
       }
     },
+    "Your health alerts and AI tips will appear here.": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ستظهر هنا تنبيهات صحتك ونصائح الذكاء الاصطناعي."
+          }
+        }
+      }
+    },
     "Your health score today": {
       "localizations": {
         "ar": {
@@ -3412,312 +4122,62 @@
         }
       }
     },
-    "before": {
+    "Focus Session Complete": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "قبل"
+            "value": "انتهت جلسة التركيز"
           }
         }
       }
     },
-    "bpm": {
+    "Great work! Time for a break.": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "ن/د"
+            "value": "عمل رائع! وقت للاستراحة."
           }
         }
       }
     },
-    "carb": {
+    "Break Over": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "كربوهيدرات"
+            "value": "انتهت الاستراحة"
           }
         }
       }
     },
-    "clean": {
+    "Ready for the next focus session?": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "نظيف"
+            "value": "هل أنت مستعد لجلسة التركيز التالية؟"
           }
         }
       }
     },
-    "cm": {
+    "Long Break Over": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "سم"
+            "value": "انتهت الاستراحة الطويلة"
           }
         }
       }
     },
-    "complete": {
+    "Fully recharged — let's get back to work!": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "مكتمل"
-          }
-        }
-      }
-    },
-    "drink": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "مشروب"
-          }
-        }
-      }
-    },
-    "drinks": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "مشروبات"
-          }
-        }
-      }
-    },
-    "e.g. Grilled Chicken": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "مثال: دجاج مشوي"
-          }
-        }
-      }
-    },
-    "fat": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "دهون"
-          }
-        }
-      }
-    },
-    "goals": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "أهداف"
-          }
-        }
-      }
-    },
-    "goals met": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "أهداف محققة"
-          }
-        }
-      }
-    },
-    "hours": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ساعة"
-          }
-        }
-      }
-    },
-    "hrs": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ساعات"
-          }
-        }
-      }
-    },
-    "kcal": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "سعرة"
-          }
-        }
-      }
-    },
-    "kg": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "كجم"
-          }
-        }
-      }
-    },
-    "level": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "مستوى"
-          }
-        }
-      }
-    },
-    "min left": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "دقيقة متبقية"
-          }
-        }
-      }
-    },
-    "minutes remaining. Cortisol is naturally high after waking — caffeine won't help yet.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "دقيقة متبقية. الكورتيزول مرتفع طبيعياً بعد الاستيقاظ — الكافيين لن يفيد بعد."
-          }
-        }
-      }
-    },
-    "ml": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "مل"
-          }
-        }
-      }
-    },
-    "of": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "من"
-          }
-        }
-      }
-    },
-    "protein": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "بروتين"
-          }
-        }
-      }
-    },
-    "safe": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "آمن"
-          }
-        }
-      }
-    },
-    "sessions": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "جلسات"
-          }
-        }
-      }
-    },
-    "skipped": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تم التخطي"
-          }
-        }
-      }
-    },
-    "snack": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "وجبة خفيفة"
-          }
-        }
-      }
-    },
-    "steps": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "خطوات"
-          }
-        }
-      }
-    },
-    "sugar": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "سكر"
-          }
-        }
-      }
-    },
-    "unsafe": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "غير آمن"
-          }
-        }
-      }
-    },
-    "until sleep": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "حتى النوم"
-          }
-        }
-      }
-    },
-    "years": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "سنة"
+            "value": "شحنت طاقتك كاملاً — لنعد إلى العمل!"
           }
         }
       }
