@@ -69,6 +69,7 @@ struct MacDashboardView: View {
     @StateObject private var shutdownMgr = ShutdownManager.shared
     @StateObject private var ai = AIService.shared
     @StateObject private var analytics = AnalyticsEngine.shared
+    @StateObject private var watcher = SharedStoreWatcher.shared
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
 
@@ -202,6 +203,10 @@ struct MacDashboardView: View {
                 }
             }
             .onAppear { refreshAll() }
+            .onReceive(watcher.didChange) {
+                try? context.save()  // triggers @Query re-fetch after remote change merge
+                refreshAll()
+            }
         }
     }
 
