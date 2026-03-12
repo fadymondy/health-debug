@@ -34,6 +34,10 @@ public final class UserProfile {
     public var weightAlertMinute: Int      // default: 0
     public var weightAlertDelayMinutes: Int // delay after wake time, default: 5
 
+    // Notification: Post-Meal Hygiene Reminder
+    public var hygieneAlertEnabled: Bool       // default: true
+    public var hygieneAlertDelayMinutes: Int   // delay after meal log, default: 5
+
     // Metadata
     public var onboardingCompleted: Bool
     public var lastUpdated: Date
@@ -58,6 +62,8 @@ public final class UserProfile {
         weightAlertHour: Int = 7,
         weightAlertMinute: Int = 0,
         weightAlertDelayMinutes: Int = 5,
+        hygieneAlertEnabled: Bool = true,
+        hygieneAlertDelayMinutes: Int = 5,
         onboardingCompleted: Bool = false,
         lastUpdated: Date = .now
     ) {
@@ -80,6 +86,8 @@ public final class UserProfile {
         self.weightAlertHour = weightAlertHour
         self.weightAlertMinute = weightAlertMinute
         self.weightAlertDelayMinutes = weightAlertDelayMinutes
+        self.hygieneAlertEnabled = hygieneAlertEnabled
+        self.hygieneAlertDelayMinutes = hygieneAlertDelayMinutes
         self.onboardingCompleted = onboardingCompleted
         self.lastUpdated = lastUpdated
     }

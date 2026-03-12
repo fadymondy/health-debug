@@ -1772,6 +1772,26 @@
         }
       }
     },
+    "Hygiene Alert": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تنبيه النظافة"
+          }
+        }
+      }
+    },
+    "Hygiene Reminder": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تذكير النظافة"
+          }
+        }
+      }
+    },
     "IBS/GERD": {
       "localizations": {
         "ar": {
@@ -2542,6 +2562,16 @@
         }
       }
     },
+    "Post-Meal Hygiene Reminder": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تذكير النظافة بعد الوجبة"
+          }
+        }
+      }
+    },
     "Private, on-device, free": {
       "localizations": {
         "ar": {
@@ -2738,6 +2768,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "يذكّرك بالوقوف على الميزان الذكي كل صباح."
+          }
+        }
+      }
+    },
+    "Reminds you to wash hands and brush teeth after each meal.": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يذكّرك بغسل اليدين وتنظيف الأسنان بعد كل وجبة."
           }
         }
       }
@@ -3838,6 +3878,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "المشي"
+          }
+        }
+      }
+    },
+    "Wash your hands and brush your teeth — your body will thank you.": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اغسل يديك واستَنَّ — جسمك سيشكرك."
           }
         }
       }

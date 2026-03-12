@@ -46,19 +46,20 @@ public final class NutritionManager: ObservableObject {
 
     /// Log a meal from the whitelist (safe, no triggers).
     @discardableResult
-    public func logSafeMeal(_ name: String, category: FoodCategory, context: ModelContext) -> Bool {
+    public func logSafeMeal(_ name: String, category: FoodCategory, context: ModelContext, profile: UserProfile? = nil) -> Bool {
         guard canLog else { return false }
         let meal = MealLog(name: name, category: category, isSafe: true, triggers: [])
         context.insert(meal)
         try? context.save()
         lastLogTime = .now
         refresh(context: context)
+        Task { await HygieneAlertScheduler.shared.scheduleAfterMeal(profile: profile) }
         return true
     }
 
     /// Log a custom meal with auto-classification.
     @discardableResult
-    public func logMeal(_ name: String, category: FoodCategory, notes: String = "", context: ModelContext) -> Bool {
+    public func logMeal(_ name: String, category: FoodCategory, notes: String = "", context: ModelContext, profile: UserProfile? = nil) -> Bool {
         guard canLog else { return false }
         guard let validName = Self.validateFoodName(name) else { return false }
         let result = FoodRegistry.classify(validName)
@@ -67,6 +68,7 @@ public final class NutritionManager: ObservableObject {
         try? context.save()
         lastLogTime = .now
         refresh(context: context)
+        Task { await HygieneAlertScheduler.shared.scheduleAfterMeal(profile: profile) }
         return true
     }
 

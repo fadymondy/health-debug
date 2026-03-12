@@ -84,6 +84,28 @@ struct ProfileSettingsView: View {
                         .font(.caption)
                 }
 
+                Section {
+                    Toggle(isOn: $profile.hygieneAlertEnabled) {
+                        Label(String(localized: "Post-Meal Hygiene Reminder"), systemImage: "hand.raised.fill")
+                    }
+                    if profile.hygieneAlertEnabled {
+                        Stepper(value: $profile.hygieneAlertDelayMinutes, in: 1...30) {
+                            HStack(spacing: 4) {
+                                Text(String(localized: "Remind after"))
+                                Text(verbatim: "\(profile.hygieneAlertDelayMinutes)")
+                                    .foregroundStyle(.secondary)
+                                Text(String(localized: "min"))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                } header: {
+                    Text(String(localized: "Hygiene Alert"))
+                } footer: {
+                    Text(String(localized: "Reminds you to wash hands and brush teeth after each meal."))
+                        .font(.caption)
+                }
+
                 Section("Sleep") {
                     DatePicker("Bedtime", selection: $sleepTime, displayedComponents: .hourAndMinute)
                     Stepper(value: $shutdownHours, in: 1...6) {
