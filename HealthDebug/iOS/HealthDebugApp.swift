@@ -67,7 +67,10 @@ struct RootView: View {
                     Tab("Shutdown", systemImage: "moon.fill") {
                         ShutdownView()
                     }
-                    Tab("Analytics", systemImage: "brain.head.profile.fill") {
+                    Tab("AI Chat", systemImage: "brain.head.profile.fill") {
+                        AIChatView()
+                    }
+                    Tab("Analytics", systemImage: "chart.bar.fill") {
                         AnalyticsView()
                     }
                 }

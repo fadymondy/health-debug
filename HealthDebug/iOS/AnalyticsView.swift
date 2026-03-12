@@ -141,8 +141,7 @@ struct AnalyticsView: View {
                     .foregroundStyle(.secondary)
             }
             Divider()
-            Text(analytics.lastAnalysis)
-                .font(.subheadline)
+            MarkdownView(content: analytics.lastAnalysis)
                 .textSelection(.enabled)
         }
         .padding()
@@ -200,14 +199,26 @@ struct AnalyticsView: View {
 
     private var exportCard: some View {
         GlassEffectContainer {
-            Button {
-                exportJSON()
-            } label: {
-                Label("Export JSON", systemImage: "square.and.arrow.up")
-                    .frame(maxWidth: .infinity)
+            HStack(spacing: 12) {
+                Button {
+                    exportPDF()
+                } label: {
+                    Label("Export PDF", systemImage: "doc.richtext.fill")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.glassProminent)
+                .tint(AppTheme.primary)
+                .controlSize(.large)
+
+                Button {
+                    exportJSON()
+                } label: {
+                    Label("JSON", systemImage: "curlybraces")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.glass)
+                .controlSize(.large)
             }
-            .buttonStyle(.glass)
-            .controlSize(.large)
         }
         .padding(.horizontal)
     }
@@ -232,6 +243,28 @@ struct AnalyticsView: View {
                 analytics.lastAnalysis = "Error: \(error.localizedDescription)"
                 analytics.isAnalyzing = false
             }
+        }
+    }
+
+    private func exportPDF() {
+        let healthContext = analytics.buildContext(
+            context: context,
+            profile: profile,
+            sleepConfig: sleepConfigs.first
+        )
+        let pdfData = PDFReportGenerator.shared.generateReport(
+            healthContext: healthContext,
+            aiAnalysis: analytics.lastAnalysis.isEmpty ? nil : analytics.lastAnalysis,
+            profile: profile
+        )
+        let fileName = "HealthDebug-Report-\(Date.now.formatted(.iso8601.dateSeparator(.dash))).pdf"
+        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+        try? pdfData.write(to: tempURL)
+
+        let activityVC = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootVC = windowScene.windows.first?.rootViewController {
+            rootVC.present(activityVC, animated: true)
         }
     }
 
