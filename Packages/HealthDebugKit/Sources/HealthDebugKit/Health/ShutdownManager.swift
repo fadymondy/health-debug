@@ -77,10 +77,12 @@ public final class ShutdownManager: ObservableObject {
     public func startCountdown(config: SleepConfig?) {
         stopCountdown()
         refresh(config: config)
-        // Schedule shutdown start notification if still inactive
+        // Schedule shutdown start notification if still inactive (iOS/watchOS only)
+        #if os(iOS) || os(watchOS)
         if state == .inactive, secondsUntilShutdown > 60 {
             scheduleShutdownNotification(inSeconds: secondsUntilShutdown)
         }
+        #endif
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
                 self?.refresh(config: config)
@@ -133,11 +135,11 @@ public final class ShutdownManager: ObservableObject {
         return String(format: "%d:%02d", minutes, secs)
     }
 
-    // MARK: - Notifications
+    // MARK: - Notifications (iOS/watchOS only — macOS ad-hoc signing blocks XPC to usernotificationsd)
 
+    #if os(iOS) || os(watchOS)
     private func scheduleShutdownNotification(inSeconds: TimeInterval) {
         let center = UNUserNotificationCenter.current()
-        // Remove any existing
         center.removePendingNotificationRequests(withIdentifiers: ["io.threex1.HealthDebug.shutdownStart"])
 
         let content = UNMutableNotificationContent()
@@ -157,4 +159,5 @@ public final class ShutdownManager: ObservableObject {
         )
         center.add(request)
     }
+    #endif
 }
