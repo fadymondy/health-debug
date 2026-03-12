@@ -2,8 +2,17 @@ import Foundation
 import SwiftData
 
 /// Centralized ModelContainer creation for all platforms.
-/// Uses CloudKit on device, local-only on simulator.
+///
+/// All targets (iOS, macOS, watchOS, Widgets) share the same SQLite file stored in
+/// the App Group shared container: group.io.3x1.HealthDebug
+/// This gives free, zero-latency cross-target sync without requiring CloudKit.
+///
+/// CloudKit upgrade path: change `cloudKitDatabase: .none` → `.automatic` once
+/// a paid Apple Developer account is active and the iCloud entitlement is provisioned.
 public enum ModelContainerFactory {
+
+    public static let appGroupID = "group.io.3x1.HealthDebug"
+    public static let storeFileName = "HealthDebug.sqlite"
 
     public static let allModels: [any PersistentModel.Type] = [
         WaterLog.self,
@@ -19,18 +28,37 @@ public enum ModelContainerFactory {
         Schema(allModels)
     }
 
-    /// Creates the shared ModelContainer.
-    /// CloudKit is disabled until paid Apple Developer account is active.
-    /// Change `.none` to `.automatic` once iCloud entitlement is available.
+    /// The SQLite file URL inside the App Group shared container.
+    /// Falls back to the app's own Documents directory if the App Group
+    /// container is unavailable (e.g. simulator without entitlements).
+    public static var sharedStoreURL: URL {
+        if let groupURL = FileManager.default.containerURL(
+            forSecurityApplicationGroupIdentifier: appGroupID
+        ) {
+            return groupURL.appendingPathComponent(storeFileName)
+        }
+        // Fallback: app sandbox Documents (single-target only)
+        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        return docs.appendingPathComponent(storeFileName)
+    }
+
+    /// Creates the shared ModelContainer backed by the App Group SQLite store.
+    /// All app targets call this and point at the same file.
     public static func create(inMemory: Bool = false) throws -> ModelContainer {
-        let cloudKit: ModelConfiguration.CloudKitDatabase = .none
+        if inMemory {
+            let config = ModelConfiguration(
+                schema: schema,
+                isStoredInMemoryOnly: true,
+                cloudKitDatabase: .none
+            )
+            return try ModelContainer(for: schema, configurations: [config])
+        }
 
         let config = ModelConfiguration(
             schema: schema,
-            isStoredInMemoryOnly: inMemory,
-            cloudKitDatabase: cloudKit
+            url: sharedStoreURL,
+            cloudKitDatabase: .none
         )
-
         return try ModelContainer(for: schema, configurations: [config])
     }
 
