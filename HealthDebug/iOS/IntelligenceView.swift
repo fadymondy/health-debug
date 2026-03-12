@@ -33,7 +33,7 @@ struct HealthFeedCard: View {
                 Text(verbatim: title)
                     .font(.subheadline.weight(.semibold))
                 Spacer()
-                Text(verbatim: statusLabel)
+                Text(LocalizedStringKey(statusLabel))
                     .font(.caption2.bold())
                     .foregroundStyle(statusColor)
                     .padding(.horizontal, 8).padding(.vertical, 3)

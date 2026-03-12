@@ -30,7 +30,7 @@ struct NutritionView: View {
                 }
                 .padding(.vertical)
             }
-            .navigationTitle("Nutrition")
+            .navigationTitle(LocalizedStringKey("Nutrition"))
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -101,7 +101,7 @@ struct NutritionView: View {
                     .font(.caption.bold())
                     .foregroundStyle(safetyColor)
 
-                Text("\(nutrition.todaySafeCount) safe / \(nutrition.todayUnsafeCount) unsafe")
+                Text("\(nutrition.todaySafeCount) \(NSLocalizedString("safe", comment: "")) / \(nutrition.todayUnsafeCount) \(NSLocalizedString("unsafe", comment: ""))")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
@@ -140,17 +140,17 @@ struct NutritionView: View {
             .padding(.horizontal)
 
             // Proteins
-            quickLogRow(title: "Proteins", items: FoodRegistry.safeProteins, category: .protein, icon: "fish.fill", color: AppTheme.primary)
+            quickLogRow(title: LocalizedStringKey("Proteins"), items: FoodRegistry.safeProteins, category: .protein, icon: "fish.fill", color: AppTheme.primary)
 
             // Carbs
-            quickLogRow(title: "Carbs", items: FoodRegistry.safeCarbs, category: .carb, icon: "leaf.fill", color: AppTheme.accent)
+            quickLogRow(title: LocalizedStringKey("Carbs"), items: FoodRegistry.safeCarbs, category: .carb, icon: "leaf.fill", color: AppTheme.accent)
 
             // Fats
-            quickLogRow(title: "Fats", items: FoodRegistry.safeFats, category: .fat, icon: "drop.halffull", color: AppTheme.secondary)
+            quickLogRow(title: LocalizedStringKey("Fats"), items: FoodRegistry.safeFats, category: .fat, icon: "drop.halffull", color: AppTheme.secondary)
         }
     }
 
-    private func quickLogRow(title: String, items: [String], category: FoodCategory, icon: String, color: Color) -> some View {
+    private func quickLogRow(title: LocalizedStringKey, items: [String], category: FoodCategory, icon: String, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Label(title, systemImage: icon)
                 .font(.subheadline.bold())

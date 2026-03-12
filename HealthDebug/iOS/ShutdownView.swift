@@ -218,9 +218,9 @@ struct ShutdownView: View {
 
     private var subtitleText: String {
         switch shutdown.state {
-        case .inactive: return "Until shutdown"
-        case .active: return "Until sleep"
-        case .violated: return "Until sleep (violated)"
+        case .inactive: return NSLocalizedString("Until shutdown", comment: "")
+        case .active: return NSLocalizedString("Until sleep", comment: "")
+        case .violated: return NSLocalizedString("Until sleep (violated)", comment: "")
         }
     }
 

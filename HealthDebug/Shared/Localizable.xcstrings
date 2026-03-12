@@ -211,6 +211,16 @@
         }
       }
     },
+    "Analyze my weight": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تحليل وزني"
+          }
+        }
+      }
+    },
     "Active": {
       "localizations": {
         "ar": {
@@ -227,6 +237,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "الطاقة النشطة"
+          }
+        }
+      }
+    },
+    "Active Energy Today": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الطاقة النشطة اليوم"
           }
         }
       }
@@ -661,6 +681,16 @@
         }
       }
     },
+    "Caffeine Today": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الكافيين اليوم"
+          }
+        }
+      }
+    },
     "Caffeine advice": {
       "localizations": {
         "ar": {
@@ -898,6 +928,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "تم الوصول للحد اليومي"
+          }
+        }
+      }
+    },
+    "Daily limit reached (%d drinks)": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تم الوصول للحد اليومي (%d مشروبات)"
           }
         }
       }
@@ -1702,6 +1742,16 @@
         }
       }
     },
+    "Log 250ml Water": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سجّل 250مل ماء"
+          }
+        }
+      }
+    },
     "Log 500ml": {
       "localizations": {
         "ar": {
@@ -2042,6 +2092,16 @@
         }
       }
     },
+    "Open screen": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فتح الشاشة"
+          }
+        }
+      }
+    },
     "Pinned": {
       "localizations": {
         "ar": {
@@ -2112,6 +2172,16 @@
         }
       }
     },
+    "Quick action": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إجراء سريع"
+          }
+        }
+      }
+    },
     "Raw Garlic": {
       "localizations": {
         "ar": {
@@ -2148,6 +2218,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "الأخيرة"
+          }
+        }
+      }
+    },
+    "Recent Screens": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الشاشات الأخيرة"
           }
         }
       }
@@ -2372,6 +2452,16 @@
         }
       }
     },
+    "Sleep Last Night": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "النوم الليلة الماضية"
+          }
+        }
+      }
+    },
     "Sleep Quality": {
       "localizations": {
         "ar": {
@@ -2502,6 +2592,16 @@
         }
       }
     },
+    "Start Stand Timer": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بدء مؤقت الوقوف"
+          }
+        }
+      }
+    },
     "Start Walk": {
       "localizations": {
         "ar": {
@@ -2538,6 +2638,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "الخطوات والطاقة"
+          }
+        }
+      }
+    },
+    "Steps Today": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الخطوات اليوم"
           }
         }
       }
@@ -2988,6 +3098,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "الماء"
+          }
+        }
+      }
+    },
+    "Water Log": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سجل الماء"
           }
         }
       }

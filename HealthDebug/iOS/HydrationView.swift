@@ -27,7 +27,7 @@ struct HydrationView: View {
                 }
                 .padding(.vertical)
             }
-            .navigationTitle("Hydration")
+            .navigationTitle(LocalizedStringKey("Hydration"))
             .onAppear {
                 hydration.refresh(context: context)
                 if let profile {
@@ -107,15 +107,15 @@ struct HydrationView: View {
     private var quickLogButtons: some View {
         GlassEffectContainer {
             HStack(spacing: 12) {
-                quickLogButton(amount: 150, label: "Small", icon: "drop")
-                quickLogButton(amount: 250, label: "Glass", icon: "drop.fill")
-                quickLogButton(amount: 500, label: "Bottle", icon: "waterbottle.fill")
+                quickLogButton(amount: 150, label: LocalizedStringKey("Small"), icon: "drop")
+                quickLogButton(amount: 250, label: LocalizedStringKey("Glass"), icon: "drop.fill")
+                quickLogButton(amount: 500, label: LocalizedStringKey("Bottle"), icon: "waterbottle.fill")
             }
         }
         .padding(.horizontal)
     }
 
-    private func quickLogButton(amount: Int, label: String, icon: String) -> some View {
+    private func quickLogButton(amount: Int, label: LocalizedStringKey, icon: String) -> some View {
         Button {
             hydration.logWater(amount, source: "ios", context: context, profile: profile)
         } label: {

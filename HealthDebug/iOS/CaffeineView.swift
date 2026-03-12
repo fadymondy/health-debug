@@ -134,14 +134,10 @@ struct CaffeineView: View {
 
             if !caffeine.canLog {
                 if caffeine.todayTotal >= CaffeineManager.maxDailyLogs {
-                    HStack(spacing: 4) {
-                        Text("Daily limit reached")
-                        Text("(\(CaffeineManager.maxDailyLogs)")
-                        Text("drinks)")
-                    }
-                    .font(.caption)
-                    .foregroundStyle(.orange)
-                    .padding(.horizontal)
+                    Text(String(format: NSLocalizedString("Daily limit reached (%d drinks)", comment: "Caffeine daily limit message"), CaffeineManager.maxDailyLogs))
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                        .padding(.horizontal)
                 } else {
                     Text("Wait a moment before logging again")
                         .font(.caption)

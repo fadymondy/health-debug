@@ -162,7 +162,7 @@ struct StandTimerView: View {
             HStack {
                 Text("\(timer.todayCompleted)")
                     .font(.system(size: 36, weight: .bold, design: .rounded))
-                Text("/ \(StandTimerManager.dailyTarget) sessions")
+                Text("/ \(StandTimerManager.dailyTarget) \(NSLocalizedString("sessions", comment: ""))")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -258,7 +258,7 @@ struct StandTimerView: View {
         case .sitting:
             return formatTime(Int(timer.sitSecondsRemaining))
         case .standAlert:
-            return "Stand!"
+            return NSLocalizedString("Stand!", comment: "")
         case .walking:
             return formatTime(timer.walkSecondsRemaining)
         }
@@ -266,10 +266,10 @@ struct StandTimerView: View {
 
     private var timerSubtext: String {
         switch timer.state {
-        case .idle: return "Tap to start"
-        case .sitting: return "Until next stand break"
-        case .standAlert: return "Take a 3-min walk"
-        case .walking: return "Keep walking"
+        case .idle: return NSLocalizedString("Tap to start", comment: "")
+        case .sitting: return NSLocalizedString("Until next stand break", comment: "")
+        case .standAlert: return NSLocalizedString("Take a 3-min walk", comment: "")
+        case .walking: return NSLocalizedString("Keep walking", comment: "")
         }
     }
 
