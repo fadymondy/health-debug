@@ -8,6 +8,7 @@ struct ContentView: View {
     @StateObject private var standTimer = StandTimerManager.shared
     @StateObject private var hydration = HydrationManager.shared
     @StateObject private var shutdownMgr = ShutdownManager.shared
+    @StateObject private var caffeineMgr = CaffeineManager.shared
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
     @State private var showSettings = false
@@ -21,6 +22,7 @@ struct ContentView: View {
                     } else {
                         metricsGrid
                         hydrationCard
+                        caffeineCard
                         shutdownCard
                         standTimerCard
                         zeppCard
@@ -136,6 +138,46 @@ struct ContentView: View {
             if let profile = profiles.first {
                 hydration.dailyGoal = profile.dailyWaterGoalMl
             }
+        }
+    }
+
+    // MARK: - Caffeine Card
+
+    private var caffeineCard: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Caffeine", systemImage: "cup.and.saucer.fill")
+                .font(.headline)
+                .foregroundStyle(caffeineMgr.fattyLiverAlert ? .red : AppTheme.primary)
+            Divider()
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(caffeineMgr.transitionStatus.rawValue)
+                        .font(.title3.bold())
+                        .foregroundStyle(caffeineStatusColor)
+                    Text("\(caffeineMgr.todayCleanCount) clean, \(caffeineMgr.todaySugarCount) sugar")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                Text(String(format: "%.0f%%", caffeineMgr.cleanTransitionPercent))
+                    .font(.title2.bold())
+                    .foregroundStyle(caffeineStatusColor)
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassEffect(.regular.tint((caffeineMgr.fattyLiverAlert ? Color.red : AppTheme.primary).opacity(0.15)), in: RoundedRectangle(cornerRadius: 20))
+        .padding(.horizontal)
+        .onAppear {
+            caffeineMgr.refresh(context: context)
+        }
+    }
+
+    private var caffeineStatusColor: Color {
+        switch caffeineMgr.transitionStatus {
+        case .clean, .noIntake: return AppTheme.primary
+        case .transitioning: return .orange
+        case .redBullDependent: return .red
         }
     }
 
