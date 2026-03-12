@@ -347,14 +347,11 @@ struct WidgetDetailSheet: View {
                         lockScreenStepsCard
                     }
 
-                    // Open widget picker button
-                    // Note: `widgetkit://add` is a placeholder custom scheme.
-                    // iOS does not natively support this URL — it will silently fail,
-                    // but is kept here as a deep-link hook for future implementation
-                    // (e.g. a custom URL scheme registered by a companion app or
-                    // a WidgetKit intent extension).
+                    // Open iOS widget picker — works on iOS 16+
                     Button {
-                        openURL(URL(string: "widgetkit://add")!)
+                        if let url = URL(string: "apple-widget-settings://") {
+                            openURL(url)
+                        }
                     } label: {
                         Label(LocalizedStringKey("Open Widget Picker"), systemImage: "plus.circle.fill")
                             .font(.headline)

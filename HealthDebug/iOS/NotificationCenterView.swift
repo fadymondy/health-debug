@@ -319,7 +319,6 @@ struct NotificationBellButton: View {
         } label: {
             ZStack(alignment: .topTrailing) {
                 Image(systemName: manager.unreadCount > 0 ? "bell.badge.fill" : "bell.fill")
-                    .symbolRenderingMode(.multicolor)
                     .font(.system(size: 18))
                     .foregroundStyle(manager.unreadCount > 0 ? AppTheme.primary : .primary)
 
@@ -329,7 +328,7 @@ struct NotificationBellButton: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 4)
                         .padding(.vertical, 2)
-                        .background(Color.red)
+                        .background(AppTheme.primary)
                         .clipShape(Capsule())
                         .offset(x: 8, y: -8)
                 }

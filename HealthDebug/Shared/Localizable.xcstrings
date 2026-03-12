@@ -5003,6 +5003,176 @@
       "localizations": {
         "ar": { "stringUnit": { "state": "translated", "value": "حاول تقليل تناول الكافيين." } }
       }
+    },
+    "Good morning,": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "صباح الخير،" } }
+      }
+    },
+    "Good afternoon,": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "مساء الخير،" } }
+      }
+    },
+    "Good evening,": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "مساء النور،" } }
+      }
+    },
+    "Good night,": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "تصبح على خير،" } }
+      }
+    },
+    "Stand Timer": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "مؤقت الوقوف" } }
+      }
+    },
+    "Daily Flow": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "التدفق اليومي" } }
+      }
+    },
+    "Track your daily step count and goal.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "تابع عدد خطواتك اليومية وهدفك." } }
+      }
+    },
+    "Monitor active energy burned.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "راقب الطاقة النشطة المحروقة." } }
+      }
+    },
+    "View your latest BPM and zone.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "شاهد آخر معدل نبض ونطاقك." } }
+      }
+    },
+    "See how many hours you slept.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "شاهد كم ساعة نمت." } }
+      }
+    },
+    "Track water intake toward your goal.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "تابع شرب الماء نحو هدفك." } }
+      }
+    },
+    "Monitor Pomodoro sessions and phase.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "راقب جلسات بومودورو ومرحلتها." } }
+      }
+    },
+    "View meal safety score and meal count.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "شاهد نقاط سلامة الوجبات وعددها." } }
+      }
+    },
+    "Track caffeine and clean drink status.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "تابع الكافيين وحالة المشروبات النظيفة." } }
+      }
+    },
+    "Monitor GERD shutdown timer.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "راقب مؤقت إيقاف الارتجاع." } }
+      }
+    },
+    "View latest weight and body fat.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "شاهد آخر وزن ونسبة الدهون." } }
+      }
+    },
+    "See your daily health goals score.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "شاهد نقاط أهدافك الصحية اليومية." } }
+      }
+    },
+    "Small": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "صغير" } }
+      }
+    },
+    "Medium": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "متوسط" } }
+      }
+    },
+    "Large": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "كبير" } }
+      }
+    },
+    "Lock Screen": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "شاشة القفل" } }
+      }
+    },
+    "Widget Gallery": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "معرض الويدجت" } }
+      }
+    },
+    "Home Screen Widgets": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "ويدجت الشاشة الرئيسية" } }
+      }
+    },
+    "Lock Screen Widgets": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "ويدجت شاشة القفل" } }
+      }
+    },
+    "How to Add": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "كيفية الإضافة" } }
+      }
+    },
+    "Open Widget Picker": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "فتح اختيار الويدجت" } }
+      }
+    },
+    "Sizes Supported": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "الأحجام المتاحة" } }
+      }
+    },
+    "Add to Home Screen": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "أضف إلى الشاشة الرئيسية" } }
+      }
+    },
+    "Add to Lock Screen": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "أضف إلى شاشة القفل" } }
+      }
+    },
+    "Long-press your home screen, then tap the + button": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "اضغط مطولاً على الشاشة الرئيسية، ثم اضغط على زر +" } }
+      }
+    },
+    "Search for Health Debug": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "ابحث عن Health Debug" } }
+      }
+    },
+    "Choose this widget and size": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "اختر هذا الويدجت والحجم المناسب" } }
+      }
+    },
+    "Tap Add Widget, then Done": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "اضغط إضافة ويدجت، ثم تم" } }
+      }
+    },
+    "For lock screen, swipe up on your lock screen and tap Customize": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "لشاشة القفل، اسحب لأعلى وانقر تخصيص" } }
+      }
     }
   },
   "version": "1.0"
