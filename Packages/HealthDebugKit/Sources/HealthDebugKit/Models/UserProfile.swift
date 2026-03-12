@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-public final class UserProfile: @unchecked Sendable {
+public final class UserProfile {
     // Physical Metrics
     public var weightKg: Double // Baseline: 108
     public var heightCm: Double // 179

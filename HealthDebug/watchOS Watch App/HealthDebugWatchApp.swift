@@ -5,11 +5,24 @@ import HealthDebugKit
 @main
 struct HealthDebugWatchApp: App {
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([])
+        let schema = Schema([
+            WaterLog.self,
+            MealLog.self,
+            StandSession.self,
+            CaffeineLog.self,
+            SleepConfig.self,
+            UserProfile.self,
+        ])
+        #if targetEnvironment(simulator)
+        let cloudKit: ModelConfiguration.CloudKitDatabase = .none
+        #else
+        let cloudKit: ModelConfiguration.CloudKitDatabase = .automatic
+        #endif
+
         let modelConfiguration = ModelConfiguration(
             schema: schema,
             isStoredInMemoryOnly: false,
-            cloudKitDatabase: .automatic
+            cloudKitDatabase: cloudKit
         )
 
         do {

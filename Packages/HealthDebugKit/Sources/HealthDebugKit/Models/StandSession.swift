@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-public final class StandSession: @unchecked Sendable {
+public final class StandSession {
     public var startTime: Date
     public var durationSeconds: Int // target: 180 (3 minutes)
     public var completed: Bool

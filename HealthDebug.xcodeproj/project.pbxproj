@@ -15,15 +15,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A1100001 /* HealthDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1100002 /* HealthDebugMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthDebugMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1100003 /* HealthDebug Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HealthDebug Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1000008 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		A100000A /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		A1100001 /* HealthDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1100002 /* HealthDebugMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = HealthDebugMac.app; path = "Health Debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1100003 /* HealthDebug Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HealthDebug Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		A1200001 /* Exceptions for "iOS" */ = {
+		A1200001 /* Exceptions for "HealthDebug/iOS" folder in "HealthDebug iOS" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -33,25 +33,25 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		A1400001 /* iOS */ = {
+		A1400001 /* HealthDebug/iOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				A1200001 /* Exceptions for "iOS" */,
+				A1200001 /* Exceptions for "HealthDebug/iOS" folder in "HealthDebug iOS" target */,
 			);
 			path = HealthDebug/iOS;
 			sourceTree = "<group>";
 		};
-		A1400002 /* macOS */ = {
+		A1400002 /* HealthDebug/macOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = HealthDebug/macOS;
 			sourceTree = "<group>";
 		};
-		A1400003 /* watchOS Watch App */ = {
+		A1400003 /* HealthDebug/watchOS Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "HealthDebug/watchOS Watch App";
 			sourceTree = "<group>";
 		};
-		A1400004 /* Shared */ = {
+		A1400004 /* HealthDebug/Shared */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = HealthDebug/Shared;
 			sourceTree = "<group>";
@@ -88,13 +88,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A1600001 /* Root */ = {
+		A1600001 = {
 			isa = PBXGroup;
 			children = (
-				A1400001 /* iOS */,
-				A1400002 /* macOS */,
-				A1400003 /* watchOS Watch App */,
-				A1400004 /* Shared */,
+				A1400001 /* HealthDebug/iOS */,
+				A1400002 /* HealthDebug/macOS */,
+				A1400003 /* HealthDebug/watchOS Watch App */,
+				A1400004 /* HealthDebug/Shared */,
 				A1600002 /* Packages */,
 				A1600003 /* Frameworks */,
 				A1600004 /* Products */,
@@ -143,8 +143,8 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				A1400001 /* iOS */,
-				A1400004 /* Shared */,
+				A1400001 /* HealthDebug/iOS */,
+				A1400004 /* HealthDebug/Shared */,
 			);
 			name = "HealthDebug iOS";
 			packageProductDependencies = (
@@ -167,8 +167,8 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				A1400002 /* macOS */,
-				A1400004 /* Shared */,
+				A1400002 /* HealthDebug/macOS */,
+				A1400004 /* HealthDebug/Shared */,
 			);
 			name = "HealthDebug macOS";
 			packageProductDependencies = (
@@ -191,8 +191,8 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				A1400003 /* watchOS Watch App */,
-				A1400004 /* Shared */,
+				A1400003 /* HealthDebug/watchOS Watch App */,
+				A1400004 /* HealthDebug/Shared */,
 			);
 			name = "HealthDebug watchOS";
 			packageProductDependencies = (
@@ -231,7 +231,7 @@
 				ar,
 				Base,
 			);
-			mainGroup = A1600001 /* Root */;
+			mainGroup = A1600001;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				A1B00001 /* XCLocalSwiftPackageReference "Packages/HealthDebugKit" */,
@@ -297,7 +297,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		/* Debug - iOS */
 		A1C00001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -306,7 +305,7 @@
 				CODE_SIGN_ENTITLEMENTS = HealthDebug/iOS/HealthDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = JW9HJH86GC;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HealthDebug/iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -329,7 +328,6 @@
 			};
 			name = Debug;
 		};
-		/* Release - iOS */
 		A1C00002 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -338,7 +336,7 @@
 				CODE_SIGN_ENTITLEMENTS = HealthDebug/iOS/HealthDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = JW9HJH86GC;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HealthDebug/iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -362,7 +360,6 @@
 			};
 			name = Release;
 		};
-		/* Debug - macOS */
 		A1C00003 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -385,7 +382,6 @@
 			};
 			name = Debug;
 		};
-		/* Release - macOS */
 		A1C00004 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -409,7 +405,6 @@
 			};
 			name = Release;
 		};
-		/* Debug - watchOS */
 		A1C00005 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -433,7 +428,6 @@
 			};
 			name = Debug;
 		};
-		/* Release - watchOS */
 		A1C00006 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -458,7 +452,6 @@
 			};
 			name = Release;
 		};
-		/* Debug - Project */
 		A1C00007 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -521,7 +514,6 @@
 			};
 			name = Debug;
 		};
-		/* Release - Project */
 		A1C00008 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {

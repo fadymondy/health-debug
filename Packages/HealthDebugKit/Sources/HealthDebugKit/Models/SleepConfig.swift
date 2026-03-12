@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-public final class SleepConfig: @unchecked Sendable {
+public final class SleepConfig {
     public var targetSleepHour: Int // 0-23
     public var targetSleepMinute: Int // 0-59
     public var shutdownWindowHours: Int // default: 4

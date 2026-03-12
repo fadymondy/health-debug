@@ -15,7 +15,20 @@
       "mcp__orchestra__get_feature",
       "Bash(git config user.name)",
       "Bash(git config user.email)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git push origin master)",
+      "mcp__orchestra__request_review",
+      "Bash(xcrun simctl list devices available)",
+      "Bash(xcodebuild -project /Users/fadymondy/Sites/health-debug/HealthDebug.xcodeproj -list)",
+      "Bash(xcodebuild -project /Users/fadymondy/Sites/health-debug/HealthDebug.xcodeproj -scheme \"HealthDebug iOS\" -destination \"platform=iOS Simulator,id=F09B0A1C-D45F-40F1-BB14-7D7214BF2EE9\" -configuration Debug build)",
+      "Bash(xcrun simctl boot F09B0A1C-D45F-40F1-BB14-7D7214BF2EE9)",
+      "Bash(open -a Simulator)",
+      "Bash(xcrun simctl install F09B0A1C-D45F-40F1-BB14-7D7214BF2EE9 /Users/fadymondy/Library/Developer/Xcode/DerivedData/HealthDebug-eqhtsorvaraaolfkrztjpprppsky/Build/Products/Debug-iphonesimulator/HealthDebug.app)",
+      "Bash(xcrun simctl launch F09B0A1C-D45F-40F1-BB14-7D7214BF2EE9 io.threex1.HealthDebug)",
+      "Bash(xcrun simctl io F09B0A1C-D45F-40F1-BB14-7D7214BF2EE9 screenshot /tmp/health-debug-screenshot.png)",
+      "Bash(xcrun simctl io F09B0A1C-D45F-40F1-BB14-7D7214BF2EE9 screenshot /tmp/health-debug-screenshot2.png)",
+      "Bash(xcrun simctl io F09B0A1C-D45F-40F1-BB14-7D7214BF2EE9 screenshot /tmp/health-debug-screenshot3.png)",
+      "mcp__orchestra__submit_review"
     ],
     "additionalDirectories": [
       "/Users/fadymondy/Sites/health-debug"

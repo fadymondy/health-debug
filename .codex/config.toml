@@ -1,3 +1,0 @@
-[mcp_servers.orchestra]
-command = "/usr/local/bin/orchestra"
-args = ["serve", "--workspace", "/Users/fadymondy/Sites/health-debug"]

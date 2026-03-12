@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-public final class WaterLog: @unchecked Sendable {
+public final class WaterLog {
     public var amount: Int // milliliters
     public var timestamp: Date
     public var source: String // "watch", "menubar", "ios"

@@ -16,7 +16,7 @@ public enum TriggerType: String, Codable, Sendable, CaseIterable {
 }
 
 @Model
-public final class MealLog: @unchecked Sendable {
+public final class MealLog {
     public var name: String
     public var category: String // FoodCategory rawValue
     public var isSafe: Bool

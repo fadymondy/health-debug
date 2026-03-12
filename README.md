@@ -82,6 +82,14 @@ swift test
 - **Light Mode:** Clinical white/grey with green highlights
 - **Localization:** English + Arabic (RTL)
 
+## Documentation
+
+See the [docs/](docs/) folder for detailed documentation:
+
+- [Architecture](docs/architecture.md) — Project structure, platforms, and shared package design
+- [Models](docs/models.md) — SwiftData models and CloudKit sync
+- [Setup](docs/setup.md) — Build requirements and configuration
+
 ## License
 
 All rights reserved.

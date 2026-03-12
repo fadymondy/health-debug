@@ -26,7 +26,7 @@ public enum CaffeineType: String, Codable, Sendable, CaseIterable {
 }
 
 @Model
-public final class CaffeineLog: @unchecked Sendable {
+public final class CaffeineLog {
     public var type: String // CaffeineType rawValue
     public var isSugarBased: Bool
     public var timestamp: Date
