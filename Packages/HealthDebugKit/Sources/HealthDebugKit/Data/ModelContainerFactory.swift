@@ -8,10 +8,11 @@ public enum ModelContainerFactory {
     public static let allModels: [any PersistentModel.Type] = [
         WaterLog.self,
         MealLog.self,
-        StandSession.self,
+        PomodoroSession.self,
         CaffeineLog.self,
         SleepConfig.self,
         UserProfile.self,
+        NotificationItem.self,
     ]
 
     public static var schema: Schema {

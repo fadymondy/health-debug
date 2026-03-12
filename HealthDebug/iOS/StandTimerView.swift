@@ -4,278 +4,349 @@ import HealthDebugKit
 
 struct StandTimerView: View {
     @Environment(\.modelContext) private var context
-    @StateObject private var timer = StandTimerManager.shared
-    @Query(StandSession.todayDescriptor()) private var todaySessions: [StandSession]
+    @StateObject private var pomodoro = PomodoroManager.shared
+    @Query(PomodoroSession.todayDescriptor()) private var todaySessions: [PomodoroSession]
 
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
+                cycleDotsRow
                 timerRing
-                statusCard
-                todayProgressCard
+                phaseLabel
+                actionButtons
+                statsRow
                 if !todaySessions.isEmpty {
                     sessionHistoryCard
                 }
             }
             .padding(.vertical)
         }
-        .navigationTitle(LocalizedStringKey("Stand Timer"))
+        .navigationTitle(LocalizedStringKey("Pomodoro"))
         .navigationBarTitleDisplayMode(.large)
         .onAppear {
-            timer.refreshTodayCount(context: context)
-            Task { await timer.requestNotificationPermission() }
+            pomodoro.refreshTodayCount(context: context)
+            Task { await pomodoro.requestNotificationPermission() }
         }
+    }
+
+    // MARK: - Cycle Dots
+
+    private var cycleDotsRow: some View {
+        HStack(spacing: 8) {
+            ForEach(0..<PomodoroManager.cyclesBeforeLongBreak, id: \.self) { idx in
+                Circle()
+                    .fill(idx < pomodoro.cyclePosition ? AppTheme.primary : Color.secondary.opacity(0.2))
+                    .frame(width: 10, height: 10)
+                    .animation(.easeInOut, value: pomodoro.cyclePosition)
+            }
+            Image(systemName: "bolt.fill")
+                .font(.caption)
+                .foregroundStyle(AppTheme.accent.opacity(0.7))
+        }
+        .padding(.top, 4)
     }
 
     // MARK: - Timer Ring
 
     private var timerRing: some View {
         ZStack {
-            // Background ring
             Circle()
-                .stroke(Color.secondary.opacity(0.15), lineWidth: 12)
-                .frame(width: 220, height: 220)
+                .stroke(Color.secondary.opacity(0.15), lineWidth: 14)
+                .frame(width: 230, height: 230)
 
-            // Progress ring
             Circle()
                 .trim(from: 0, to: ringProgress)
-                .stroke(ringColor.gradient, style: StrokeStyle(lineWidth: 12, lineCap: .round))
-                .frame(width: 220, height: 220)
+                .stroke(ringColor.gradient, style: StrokeStyle(lineWidth: 14, lineCap: .round))
+                .frame(width: 230, height: 230)
                 .rotationEffect(.degrees(-90))
-                .animation(.easeInOut(duration: 0.5), value: ringProgress)
+                .animation(.easeInOut(duration: 0.4), value: ringProgress)
 
-            // Center content
             VStack(spacing: 6) {
-                Image(systemName: timerIcon)
-                    .font(.system(size: 28))
+                Image(systemName: phaseIcon)
+                    .font(.system(size: 26))
                     .foregroundStyle(ringColor)
-                    .symbolEffect(.pulse, isActive: timer.state == .standAlert)
+                    .symbolEffect(.pulse, isActive: pomodoro.phase == .idle && pomodoro.secondsRemaining == 0)
 
                 Text(timerText)
-                    .font(.system(size: 40, weight: .bold, design: .rounded))
+                    .font(.system(size: 44, weight: .bold, design: .rounded))
                     .monospacedDigit()
+                    .contentTransition(.numericText())
 
-                Text(timerSubtext)
+                Text(phaseSubtext)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
         }
-        .padding(.top, 8)
+        .padding(.top, 4)
     }
 
-    // MARK: - Status Card
+    // MARK: - Phase Label
 
-    private var statusCard: some View {
-        VStack(spacing: 12) {
-            switch timer.state {
-            case .idle:
+    private var phaseLabel: some View {
+        Text(phaseName)
+            .font(.title3.weight(.semibold))
+            .foregroundStyle(ringColor)
+            .animation(.easeInOut, value: pomodoro.phase)
+    }
+
+    // MARK: - Action Buttons
+
+    @ViewBuilder
+    private var actionButtons: some View {
+        switch pomodoro.phase {
+        case .idle:
+            if pomodoro.secondsRemaining == 0 && pomodoro.completedCycles > 0 {
+                // Work session just ended — show break choice
+                breakPrompt
+            } else {
+                // True idle — start
                 GlassEffectContainer {
-                    Button {
-                        timer.startCycle()
-                    } label: {
-                        Label("Start Timer", systemImage: "play.fill")
+                    Button { pomodoro.startCycle() } label: {
+                        Label("Start Focus", systemImage: "play.fill")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.glassProminent)
                     .tint(AppTheme.primary)
                     .controlSize(.large)
                 }
+                .padding(.horizontal)
+            }
 
-            case .sitting:
-                GlassEffectContainer {
-                    Button {
-                        timer.stopCycle()
-                    } label: {
-                        Label("Stop Timer", systemImage: "stop.fill")
+        case .work:
+            GlassEffectContainer {
+                HStack(spacing: 16) {
+                    Button { pomodoro.stopCycle() } label: {
+                        Label("Stop", systemImage: "stop.fill")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.glass)
+                    .controlSize(.large)
+
+                    Button { pomodoro.beginWalk(context: context) } label: {
+                        Label("Take Break", systemImage: "pause.fill")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.glassProminent)
+                    .tint(AppTheme.secondary)
+                    .controlSize(.large)
+                }
+            }
+            .padding(.horizontal)
+
+        case .shortBreak, .longBreak:
+            GlassEffectContainer {
+                HStack(spacing: 16) {
+                    Button { pomodoro.skipBreak() } label: {
+                        Label("Skip Break", systemImage: "forward.fill")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.glass)
                     .controlSize(.large)
                 }
-
-            case .standAlert:
-                VStack(spacing: 8) {
-                    Text("Time to Stand!")
-                        .font(.title2.bold())
-                        .foregroundStyle(AppTheme.primary)
-
-                    Text("90 minutes of sitting completed.\nTake a 3-minute walk for insulin sensitivity.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .glassEffect(.regular.tint(AppTheme.primary.opacity(0.2)), in: RoundedRectangle(cornerRadius: 20))
-                .padding(.horizontal)
-
-                GlassEffectContainer {
-                    HStack(spacing: 16) {
-                        Button {
-                            timer.skipStand()
-                        } label: {
-                            Label("Skip", systemImage: "forward.fill")
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(.glass)
-                        .controlSize(.large)
-
-                        Button {
-                            timer.beginWalk(context: context)
-                        } label: {
-                            Label("Start Walk", systemImage: "figure.walk")
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(.glassProminent)
-                        .tint(AppTheme.primary)
-                        .controlSize(.large)
-                    }
-                }
-
-            case .walking:
-                VStack(spacing: 8) {
-                    Text("Walking...")
-                        .font(.title2.bold())
-                        .foregroundStyle(AppTheme.accent)
-
-                    Text("Keep moving! Your body is thanking you.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .glassEffect(.regular.tint(AppTheme.accent.opacity(0.2)), in: RoundedRectangle(cornerRadius: 20))
-                .padding(.horizontal)
             }
+            .padding(.horizontal)
+
+        case .standAlert:
+            breakPrompt
         }
-        .padding(.horizontal, timer.state == .standAlert || timer.state == .walking ? 0 : 16)
     }
 
-    // MARK: - Today Progress
-
-    private var todayProgressCard: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Label("Today's Progress", systemImage: "figure.stand")
-                .font(.headline)
+    private var breakPrompt: some View {
+        VStack(spacing: 12) {
+            Text("Session Complete!")
+                .font(.title2.bold())
                 .foregroundStyle(AppTheme.primary)
-            Divider()
-            HStack {
-                Text("\(timer.todayCompleted)")
-                    .font(.system(size: 36, weight: .bold, design: .rounded))
-                Text("/ \(StandTimerManager.dailyTarget) \(NSLocalizedString("sessions", comment: ""))")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                progressRing
+
+            let isLong = pomodoro.cyclePosition == 0 && pomodoro.completedCycles > 0
+            Text(isLong ? "Time for a 15-min long break — you earned it." : "Take a 5-min short break before your next session.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+
+            GlassEffectContainer {
+                HStack(spacing: 16) {
+                    Button { pomodoro.skipBreak() } label: {
+                        Label("Skip", systemImage: "forward.fill")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.glass)
+                    .controlSize(.large)
+
+                    Button {
+                        let isLongBreak = pomodoro.cyclePosition == 0 && pomodoro.completedCycles > 0
+                        if isLongBreak {
+                            // start long break
+                        } else {
+                            pomodoro.startCycle()
+                        }
+                    } label: {
+                        Label("Start Break", systemImage: "cup.and.heat.waves.fill")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.glassProminent)
+                    .tint(AppTheme.accent)
+                    .controlSize(.large)
+                }
             }
+            .padding(.horizontal)
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .glassEffect(.regular.tint(AppTheme.primary.opacity(0.15)), in: RoundedRectangle(cornerRadius: 20))
+    }
+
+    // MARK: - Stats Row
+
+    private var statsRow: some View {
+        HStack(spacing: 12) {
+            statPill(
+                value: "\(pomodoro.todayCompleted)",
+                label: "Today",
+                icon: "checkmark.circle.fill",
+                color: AppTheme.primary
+            )
+            statPill(
+                value: "\(pomodoro.completedCycles)",
+                label: "Sets",
+                icon: "bolt.circle.fill",
+                color: AppTheme.accent
+            )
+            statPill(
+                value: "\(PomodoroManager.dailyTarget - pomodoro.todayCompleted)",
+                label: "Remaining",
+                icon: "target",
+                color: AppTheme.secondary
+            )
+        }
         .padding(.horizontal)
     }
 
-    private var progressRing: some View {
-        let progress = min(Double(timer.todayCompleted) / Double(StandTimerManager.dailyTarget), 1.0)
-        return ZStack {
-            Circle()
-                .stroke(AppTheme.primary.opacity(0.15), lineWidth: 6)
-            Circle()
-                .trim(from: 0, to: progress)
-                .stroke(AppTheme.primary.gradient, style: StrokeStyle(lineWidth: 6, lineCap: .round))
-                .rotationEffect(.degrees(-90))
-            Text("\(Int(progress * 100))%")
-                .font(.caption2.bold())
-                .foregroundStyle(AppTheme.primary)
+    private func statPill(value: String, label: String, icon: String, color: Color) -> some View {
+        VStack(spacing: 4) {
+            Image(systemName: icon)
+                .foregroundStyle(color)
+            Text(value)
+                .font(.title2.bold())
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
-        .frame(width: 50, height: 50)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 12)
+        .glassEffect(.regular.tint(color.opacity(0.1)), in: RoundedRectangle(cornerRadius: 16))
     }
 
     // MARK: - Session History
 
     private var sessionHistoryCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Sessions", systemImage: "clock.arrow.circlepath")
+            Label("Today's Sessions", systemImage: "clock.arrow.circlepath")
                 .font(.headline)
                 .foregroundStyle(AppTheme.secondary)
             Divider()
-            ForEach(todaySessions.prefix(6)) { session in
+            ForEach(todaySessions.prefix(8)) { session in
                 HStack {
-                    Image(systemName: session.completed ? "checkmark.circle.fill" : "circle")
-                        .foregroundStyle(session.completed ? AppTheme.primary : .secondary)
+                    Image(systemName: phaseIcon(for: session.phase))
+                        .foregroundStyle(phaseColor(for: session.phase))
                     Text(session.startTime.formatted(date: .omitted, time: .shortened))
                         .font(.subheadline)
                     Spacer()
-                    Text(session.completed ? "3 min walk" : "skipped")
+                    Text(session.completed ? phaseDisplayName(for: session.phase) : "interrupted")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(session.completed ? phaseColor(for: session.phase) : .secondary)
                 }
             }
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .glassEffect(.regular.tint(AppTheme.secondary.opacity(0.15)), in: RoundedRectangle(cornerRadius: 20))
+        .glassEffect(.regular.tint(AppTheme.secondary.opacity(0.1)), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal)
     }
 
-    // MARK: - Computed Properties
+    // MARK: - Computed helpers
 
     private var ringProgress: CGFloat {
-        switch timer.state {
-        case .idle:
-            return 0
-        case .sitting:
-            return 1.0 - CGFloat(timer.sitSecondsRemaining / StandTimerManager.sitIntervalSeconds)
-        case .standAlert:
-            return 1.0
-        case .walking:
-            return CGFloat(StandTimerManager.walkDurationSeconds - timer.walkSecondsRemaining) / CGFloat(StandTimerManager.walkDurationSeconds)
+        let total: TimeInterval
+        switch pomodoro.phase {
+        case .idle:         return pomodoro.secondsRemaining == 0 && pomodoro.completedCycles > 0 ? 1.0 : 0
+        case .work:         total = PomodoroManager.workDurationSeconds
+        case .standAlert:   return 1.0
+        case .shortBreak:   total = PomodoroManager.shortBreakSeconds
+        case .longBreak:    total = PomodoroManager.longBreakSeconds
         }
+        let elapsed = total - pomodoro.secondsRemaining
+        return CGFloat(max(0, min(1, elapsed / total)))
     }
 
     private var ringColor: Color {
-        switch timer.state {
-        case .idle: return .secondary
-        case .sitting: return AppTheme.secondary
-        case .standAlert: return .orange
-        case .walking: return AppTheme.accent
+        switch pomodoro.phase {
+        case .idle:         return .secondary
+        case .work:         return AppTheme.primary
+        case .standAlert:   return AppTheme.accent
+        case .shortBreak:   return AppTheme.accent
+        case .longBreak:    return AppTheme.secondary
         }
     }
 
-    private var timerIcon: String {
-        switch timer.state {
-        case .idle: return "figure.stand"
-        case .sitting: return "chair.fill"
-        case .standAlert: return "bell.fill"
-        case .walking: return "figure.walk"
+    private var phaseIcon: String {
+        switch pomodoro.phase {
+        case .idle:         return "timer"
+        case .work:         return "brain.head.profile"
+        case .standAlert:   return "figure.stand"
+        case .shortBreak:   return "cup.and.heat.waves.fill"
+        case .longBreak:    return "bed.double.fill"
+        }
+    }
+
+    private var phaseName: String {
+        switch pomodoro.phase {
+        case .idle:         return NSLocalizedString("Ready", comment: "")
+        case .work:         return NSLocalizedString("Focus", comment: "")
+        case .standAlert:   return NSLocalizedString("Stand Up!", comment: "")
+        case .shortBreak:   return NSLocalizedString("Short Break", comment: "")
+        case .longBreak:    return NSLocalizedString("Long Break", comment: "")
+        }
+    }
+
+    private var phaseSubtext: String {
+        switch pomodoro.phase {
+        case .idle:         return NSLocalizedString("Tap to start", comment: "")
+        case .work:         return NSLocalizedString("Stay focused", comment: "")
+        case .standAlert:   return NSLocalizedString("Time to move", comment: "")
+        case .shortBreak:   return NSLocalizedString("Stretch & breathe", comment: "")
+        case .longBreak:    return NSLocalizedString("Rest well", comment: "")
         }
     }
 
     private var timerText: String {
-        switch timer.state {
-        case .idle:
-            return formatTime(Int(StandTimerManager.sitIntervalSeconds))
-        case .sitting:
-            return formatTime(Int(timer.sitSecondsRemaining))
-        case .standAlert:
-            return NSLocalizedString("Stand!", comment: "")
-        case .walking:
-            return formatTime(timer.walkSecondsRemaining)
+        let secs = Int(pomodoro.secondsRemaining)
+        let m = secs / 60
+        let s = secs % 60
+        return String(format: "%d:%02d", m, s)
+    }
+
+    private func phaseIcon(for phase: String) -> String {
+        switch phase {
+        case "work":        return "brain.head.profile"
+        case "shortBreak":  return "cup.and.heat.waves.fill"
+        case "longBreak":   return "bed.double.fill"
+        default:            return "timer"
         }
     }
 
-    private var timerSubtext: String {
-        switch timer.state {
-        case .idle: return NSLocalizedString("Tap to start", comment: "")
-        case .sitting: return NSLocalizedString("Until next stand break", comment: "")
-        case .standAlert: return NSLocalizedString("Take a 3-min walk", comment: "")
-        case .walking: return NSLocalizedString("Keep walking", comment: "")
+    private func phaseColor(for phase: String) -> Color {
+        switch phase {
+        case "work":        return AppTheme.primary
+        case "shortBreak":  return AppTheme.accent
+        case "longBreak":   return AppTheme.secondary
+        default:            return .secondary
         }
     }
 
-    private func formatTime(_ totalSeconds: Int) -> String {
-        let minutes = totalSeconds / 60
-        let seconds = totalSeconds % 60
-        return String(format: "%d:%02d", minutes, seconds)
+    private func phaseDisplayName(for phase: String) -> String {
+        switch phase {
+        case "work":        return NSLocalizedString("Focus", comment: "")
+        case "shortBreak":  return NSLocalizedString("Short Break", comment: "")
+        case "longBreak":   return NSLocalizedString("Long Break", comment: "")
+        default:            return phase
+        }
     }
 }

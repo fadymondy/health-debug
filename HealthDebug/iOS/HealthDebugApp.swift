@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import UserNotifications
+import BackgroundTasks
 import HealthDebugKit
 
 @main
@@ -13,13 +14,21 @@ struct HealthDebugApp: App {
         }
     }()
 
+    init() {
+        // Register BGTaskScheduler identifiers before app finishes launching
+        NotificationManager.registerBackgroundTasks()
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()
                 .onAppear {
                     Task {
-                        let center = UNUserNotificationCenter.current()
-                        _ = try? await center.requestAuthorization(options: [.alert, .sound, .badge])
+                        await NotificationManager.shared.requestAuthorization()
+                        // Kick off initial background task schedules
+                        NotificationManager.scheduleBackgroundHealthCheck()
+                        NotificationManager.scheduleHydrationCheck()
+                        NotificationManager.scheduleAITipsTask()
                     }
                 }
         }

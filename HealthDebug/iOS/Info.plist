@@ -4,6 +4,18 @@
 <dict>
 	<key>CFBundleDisplayName</key>
 	<string>Health Debug</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>processing</string>
+		<string>remote-notification</string>
+	</array>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>io.threex1.HealthDebug.bg.healthCheck</string>
+		<string>io.threex1.HealthDebug.bg.aiTips</string>
+		<string>io.threex1.HealthDebug.bg.hydrationCheck</string>
+	</array>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Health Debug needs access to your health data to track metabolic metrics, steps, heart rate, and sleep patterns for personalized health insights.</string>
 	<key>NSHealthUpdateUsageDescription</key>

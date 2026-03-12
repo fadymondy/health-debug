@@ -60,8 +60,11 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { showSettings = true } label: {
-                        Image(systemName: "gearshape")
+                    HStack(spacing: 4) {
+                        NotificationBellButton()
+                        Button { showSettings = true } label: {
+                            Image(systemName: "gearshape")
+                        }
                     }
                 }
                 ToolbarItem(placement: .topBarLeading) {
