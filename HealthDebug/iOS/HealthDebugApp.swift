@@ -4,6 +4,10 @@ import UserNotifications
 import BackgroundTasks
 import HealthDebugKit
 import FirebaseCore
+import FirebaseCrashlytics
+import FirebaseAnalytics
+import FirebaseMessaging
+import GoogleSignIn
 
 @main
 struct HealthDebugApp: App {
@@ -16,11 +20,9 @@ struct HealthDebugApp: App {
     }()
 
     init() {
-        // Configure Firebase before any other setup
         FirebaseApp.configure()
-        // Apply IBM Plex Sans as global font before any views are rendered
+        Crashlytics.crashlytics().setCrashlyticsCollectionEnabled(true)
         IBMPlexFontSetup.apply()
-        // Register BGTaskScheduler identifiers before app finishes launching
         NotificationManager.registerBackgroundTasks()
     }
 
@@ -28,16 +30,20 @@ struct HealthDebugApp: App {
         WindowGroup {
             RootView()
                 .font(Font.ibm(.body))
+                .environmentObject(AuthManager.shared)
+                .environmentObject(BiometricAuth.shared)
                 .onAppear {
                     Task {
                         await NotificationManager.shared.requestAuthorization()
-                        // Kick off initial background task schedules
                         NotificationManager.scheduleBackgroundHealthCheck()
                         NotificationManager.scheduleHydrationCheck()
                         NotificationManager.scheduleAITipsTask()
-                        // Register background check handlers
                         registerNotificationHandlers()
                     }
+                }
+                .onOpenURL { url in
+                    // Handle Google Sign-In redirect
+                    GIDSignIn.sharedInstance.handle(url)
                 }
         }
         .modelContainer(sharedModelContainer)
@@ -47,7 +53,8 @@ struct HealthDebugApp: App {
 struct RootView: View {
     @Environment(\.modelContext) private var context
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
-    @StateObject private var auth = AuthManager.shared
+    @EnvironmentObject private var auth: AuthManager
+    @EnvironmentObject private var biometric: BiometricAuth
     @State private var showOnboarding = false
     @State private var showSplash = true
 
@@ -63,6 +70,9 @@ struct RootView: View {
             } else if !auth.isSignedIn {
                 AuthView()
                     .transition(.opacity)
+            } else if auth.isSignedIn && !biometric.isUnlocked {
+                BiometricLockView()
+                    .transition(.opacity)
             } else if needsOnboarding || showOnboarding {
                 OnboardingView {
                     showOnboarding = false
@@ -75,11 +85,20 @@ struct RootView: View {
         }
         .animation(.easeInOut(duration: 0.6), value: showSplash)
         .animation(.easeInOut(duration: 0.4), value: auth.isSignedIn)
+        .animation(.easeInOut(duration: 0.3), value: biometric.isUnlocked)
         .onAppear {
             showOnboarding = needsOnboarding
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
-                showSplash = false
+                withAnimation { showSplash = false }
+                if auth.isSignedIn { biometric.lock() }
             }
+        }
+        .onChange(of: auth.isSignedIn) { _, signedIn in
+            if signedIn { biometric.lock() }
+            else { biometric.isUnlocked = false }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            if auth.isSignedIn { biometric.lock() }
         }
     }
 }

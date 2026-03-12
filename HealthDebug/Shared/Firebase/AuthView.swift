@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AuthView: View {
-    @StateObject private var auth = AuthManager.shared
+    @EnvironmentObject private var auth: AuthManager
     @State private var email = ""
     @State private var password = ""
     @State private var isSignUp = false
@@ -62,6 +62,28 @@ struct AuthView: View {
             .tint(.red)
             .controlSize(.large)
             .disabled(email.isEmpty || password.count < 6 || auth.isLoading)
+
+            // Divider
+            HStack {
+                Rectangle().fill(.secondary.opacity(0.3)).frame(height: 1)
+                Text("or").font(.caption).foregroundStyle(.secondary)
+                Rectangle().fill(.secondary.opacity(0.3)).frame(height: 1)
+            }
+
+            // Google Sign-In
+            Button {
+                Task { await auth.signInWithGoogle() }
+            } label: {
+                HStack(spacing: 10) {
+                    Image(systemName: "g.circle.fill").font(.title3)
+                    Text("Continue with Google").font(.headline)
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.glassProminent)
+            .tint(.blue)
+            .controlSize(.large)
+            .disabled(auth.isLoading)
 
             Button(isSignUp ? "Already have an account? Sign In" : "No account? Sign Up") {
                 isSignUp.toggle()

@@ -14,13 +14,17 @@ struct MacContentView: View {
     @Environment(\.modelContext) private var context
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
-    @StateObject private var auth = AuthManager.shared
+    @EnvironmentObject private var auth: AuthManager
+    @EnvironmentObject private var biometric: BiometricAuth
     @State private var selectedTab = "feed"
 
     var body: some View {
         Group {
             if !auth.isSignedIn {
                 AuthView()
+                    .frame(minWidth: 500, minHeight: 400)
+            } else if !biometric.isUnlocked {
+                BiometricLockView()
                     .frame(minWidth: 500, minHeight: 400)
             } else {
                 mainTabs
@@ -38,7 +42,11 @@ struct MacContentView: View {
             }
         }
         .animation(.easeInOut(duration: 0.4), value: auth.isSignedIn)
+        .animation(.easeInOut(duration: 0.3), value: biometric.isUnlocked)
         .frame(minWidth: 900, minHeight: 640)
+        .onChange(of: auth.isSignedIn) { _, signedIn in
+            if signedIn { biometric.lock() }
+        }
     }
 
     @ViewBuilder
@@ -1119,6 +1127,7 @@ struct MacCreateProfileView: View {
 struct MacProfileView: View {
     @Bindable var profile: UserProfile
     var sleepConfig: SleepConfig?
+    @EnvironmentObject private var auth: AuthManager
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -1127,7 +1136,7 @@ struct MacProfileView: View {
                     VStack(spacing: 8) {
                         Image(systemName: "person.crop.circle.fill").font(.system(size: 72)).foregroundStyle(AppTheme.primary)
                         Text(profile.name.isEmpty ? "Your Name" : profile.name).font(.title2.bold())
-                        Text(profile.email).font(.subheadline).foregroundStyle(.secondary)
+                        Text(auth.user?.email ?? profile.email).font(.subheadline).foregroundStyle(.secondary)
                     }
                     Spacer()
                 }
@@ -1147,6 +1156,17 @@ struct MacProfileView: View {
                     settingSection(title: "Sleep", icon: "moon.fill", color: AppTheme.secondary) {
                         MacSettingRow(label: "Bedtime") { Text("\(config.targetSleepHour):\(String(format: "%02d", config.targetSleepMinute))").font(.subheadline.bold()) }
                         MacSettingRow(label: "Shutdown Window") { Text("\(config.shutdownWindowHours) hours").font(.subheadline.bold()) }
+                    }
+                }
+                // Account section with logout
+                settingSection(title: "Account", icon: "person.badge.key.fill", color: .red) {
+                    MacSettingRow(label: auth.user?.email ?? "Signed in") {
+                        Button("Sign Out") {
+                            SharedStoreWatcher.shared.stopFirebaseListener()
+                            auth.signOut()
+                        }
+                        .buttonStyle(.glass)
+                        .foregroundStyle(.red)
                     }
                 }
             }.padding()

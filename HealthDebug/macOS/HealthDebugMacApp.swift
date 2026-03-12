@@ -3,8 +3,19 @@ import SwiftData
 import AppKit
 import HealthDebugKit
 import FirebaseCore
+import FirebaseCrashlytics
+import FirebaseAnalytics
+import FirebaseMessaging
+import GoogleSignIn
 
-// Shared container — created once at process start, reused by all targets.
+// Configure Firebase as a file-level once — guaranteed before any Auth.auth() access,
+// even before @main struct init or any SwiftUI WindowGroup rendering.
+private let _firebaseConfigured: Void = {
+    FirebaseApp.configure()
+    Crashlytics.crashlytics().setCrashlyticsCollectionEnabled(true)
+}()
+
+// Shared container — created once at process start, reused by all windows.
 private let sharedContainer: ModelContainer = {
     do { return try ModelContainerFactory.create() }
     catch { fatalError("Could not create ModelContainer: \(error)") }
@@ -14,13 +25,14 @@ private let sharedContainer: ModelContainer = {
 struct HealthDebugMacApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
+    init() {
+        _ = _firebaseConfigured  // force evaluation before any scene renders
+    }
+
     var body: some Scene {
-        WindowGroup(id: "main") {
-            MacContentView()
-                .modelContainer(sharedContainer)
-        }
-        .modelContainer(sharedContainer)
-        .restorationBehavior(.disabled)
+        // Window is managed entirely by AppDelegate/NSWindowController.
+        // Settings scene satisfies the @main App requirement without rendering views early.
+        Settings { EmptyView() }
     }
 }
 
@@ -32,7 +44,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var mainWindowController: NSWindowController?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        FirebaseApp.configure()
+        // Firebase already configured by _firebaseConfigured at file scope.
+        // AuthManager.shared is safe to access here.
         openMainWindow()
         setupStatusBarItem()
     }
@@ -41,7 +54,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @MainActor
     private func openMainWindow() {
-        let contentView = MacContentView().modelContainer(sharedContainer)
+        let contentView = MacContentView()
+            .modelContainer(sharedContainer)
+            .environmentObject(AuthManager.shared)
+            .environmentObject(BiometricAuth.shared)
         let hostingView = NSHostingView(rootView: contentView)
 
         let window = NSWindow(
@@ -80,7 +96,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         popover.behavior = .transient
         popover.animates = true
         popover.contentViewController = NSHostingController(
-            rootView: MenuBarView().modelContainer(sharedContainer)
+            rootView: MenuBarView()
+                .modelContainer(sharedContainer)
+                .environmentObject(AuthManager.shared)
         )
         self.popover = popover
     }
