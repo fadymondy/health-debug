@@ -144,10 +144,14 @@ struct MacDashboardView: View {
                 case .dailyFlow:  MacDailyFlowDetailView()
                 }
             }
-            .onAppear { refreshAll() }
+            .onAppear {
+                DispatchQueue.main.async { refreshAll() }
+            }
             .onReceive(watcher.didChange) {
-                try? context.save()
-                refreshAll()
+                DispatchQueue.main.async {
+                    try? context.save()
+                    refreshAll()
+                }
             }
         }
     }

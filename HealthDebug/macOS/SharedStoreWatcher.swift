@@ -167,7 +167,8 @@ final class SharedStoreWatcher: ObservableObject {
     func refreshSnapshot() {
         UserDefaults(suiteName: Self.appGroupID)?.synchronize()
         snapshot = WidgetDataStore.shared.read()
-        didChange.send()
+        // Do NOT send didChange here — this is called from the toolbar button
+        // and sending during a SwiftUI update causes a render-loop deadlock.
     }
 
     deinit {

@@ -17,24 +17,55 @@ struct HealthDebugMacApp: App {
         WindowGroup(id: "main") {
             MacContentView()
                 .modelContainer(sharedContainer)
-                .onAppear { NSApp.activate(ignoringOtherApps: true) }
         }
         .modelContainer(sharedContainer)
-        .defaultLaunchBehavior(.presented)
         .restorationBehavior(.disabled)
     }
 }
 
-// MARK: - App Delegate (owns the status bar item + popover)
+// MARK: - App Delegate
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
     private var popover: NSPopover?
+    private var mainWindowController: NSWindowController?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        NSApp.activate(ignoringOtherApps: true)
+        openMainWindow()
+        setupStatusBarItem()
+    }
 
-        // Status bar item
+    // MARK: - Main Window
+
+    @MainActor
+    private func openMainWindow() {
+        let contentView = MacContentView().modelContainer(sharedContainer)
+        let hostingView = NSHostingView(rootView: contentView)
+
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 1100, height: 720),
+            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "Health Debug"
+        window.contentView = hostingView
+        window.minSize = NSSize(width: 900, height: 640)
+        window.center()
+        window.setFrameAutosaveName("MainWindow")
+        window.makeKeyAndOrderFront(nil)
+
+        let wc = NSWindowController(window: window)
+        wc.showWindow(nil)
+        mainWindowController = wc
+
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    // MARK: - Status Bar
+
+    @MainActor
+    private func setupStatusBarItem() {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         item.button?.image = NSImage(systemSymbolName: "heart.text.clipboard", accessibilityDescription: "Health Debug")
         item.button?.image?.isTemplate = true
@@ -42,7 +73,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         item.button?.target = self
         self.statusItem = item
 
-        // Popover — reuse the shared container (no second create() call)
         let popover = NSPopover()
         popover.contentSize = NSSize(width: 320, height: 420)
         popover.behavior = .transient
@@ -55,7 +85,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         if !flag {
-            NSApp.windows.filter { $0.canBecomeMain }.forEach { $0.makeKeyAndOrderFront(nil) }
+            if let window = mainWindowController?.window {
+                window.makeKeyAndOrderFront(nil)
+            } else {
+                openMainWindow()
+            }
         }
         return true
     }
