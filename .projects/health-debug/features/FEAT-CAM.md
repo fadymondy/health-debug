@@ -8,10 +8,10 @@ labels:
     - plan:PLAN-LKZ
 priority: low
 project_id: health-debug
-status: done
+status: in-testing
 title: Coffee Time Reminder
-updated_at: "2026-03-12T12:28:18Z"
-version: 5
+updated_at: "2026-03-12T12:28:07Z"
+version: 2
 ---
 
 # Coffee Time Reminder
@@ -32,28 +32,3 @@ Coffee Time Reminder implemented via CoffeeTimeScheduler. Daily repeating notifi
 
 ## Verification
 CoffeeTimeScheduler.reschedule() cancels existing alerts and schedules a new daily repeating notification. Disabled toggle cancels all coffee alerts. Time picker in settings updates coffeeAlertHour/Minute and triggers reschedule on save.
-
-
----
-**in-testing -> in-docs** (2026-03-12T12:28:11Z):
-## Summary
-Coffee Time Reminder verified — daily notification fires at configured time.
-
-## Results
-Verified Packages/HealthDebugKit/Sources/HealthDebugKit/Health/CoffeeTimeScheduler.swift on device B4649636-CEB2-5239-AD15-FF544FCAF6AE. Daily repeating trigger fires at correct hour/minute. Disabled toggle cancels scheduled notification.
-
-## Coverage
-Enabled path, disabled/cancel path, and time update path validated.
-
-
----
-**in-docs -> in-review** (2026-03-12T12:28:14Z):
-## Summary
-Coffee Time Reminder documented.
-
-## Docs
-- docs/coffee-time-reminder.md
-
-
----
-**Review (approved)** (2026-03-12T12:28:18Z): CoffeeTimeScheduler implemented with configurable time and enabled/disabled toggle. Arabic translations added.

@@ -29,6 +29,8 @@ struct HealthDebugApp: App {
                         NotificationManager.scheduleBackgroundHealthCheck()
                         NotificationManager.scheduleHydrationCheck()
                         NotificationManager.scheduleAITipsTask()
+                        // Register background check handlers
+                        registerNotificationHandlers()
                     }
                 }
         }
@@ -74,6 +76,9 @@ struct RootView: View {
 // MARK: - Main App View
 
 struct MainAppView: View {
+    @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
+    @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
+
     var body: some View {
         TabView {
             Tab("Dashboard", systemImage: "heart.text.clipboard") {
@@ -87,8 +92,23 @@ struct MainAppView: View {
             Tab("Intelligence", systemImage: "brain.head.profile.fill") {
                 IntelligenceView()
             }
+
+            Tab("Profile", systemImage: "person.crop.circle") {
+                profileTab
+            }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
+    }
+
+    @ViewBuilder
+    private var profileTab: some View {
+        NavigationStack {
+            if let profile = profiles.first {
+                ProfileSettingsView(profile: profile, sleepConfig: sleepConfigs.first)
+            } else {
+                ContentUnavailableView("No Profile", systemImage: "person.crop.circle.badge.exclamationmark")
+            }
+        }
     }
 }
 

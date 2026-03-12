@@ -114,11 +114,11 @@ public final class UserProfile {
         movementAlertEnabled: Bool = true,
         movementAlertIntervalMinutes: Int = 60,
         gerdShutdownLeadMinutes: Int = 15,
+        onboardingCompleted: Bool = false,
         name: String = "",
         email: String = "",
         bio: String = "",
         avatarData: Data? = nil,
-        onboardingCompleted: Bool = false,
         lastUpdated: Date = .now
     ) {
         self.weightKg = weightKg
@@ -157,11 +157,11 @@ public final class UserProfile {
         self.movementAlertEnabled = movementAlertEnabled
         self.movementAlertIntervalMinutes = movementAlertIntervalMinutes
         self.gerdShutdownLeadMinutes = gerdShutdownLeadMinutes
+        self.onboardingCompleted = onboardingCompleted
         self.name = name
         self.email = email
         self.bio = bio
         self.avatarData = avatarData
-        self.onboardingCompleted = onboardingCompleted
         self.lastUpdated = lastUpdated
     }
 

@@ -25,7 +25,6 @@ struct ContentView: View {
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
 
-    @State private var showSettings = false
     @State private var showEditLayout = false
 
     var body: some View {
@@ -35,13 +34,17 @@ struct ContentView: View {
                     if !health.isAuthorized {
                         authCard
                     } else {
+                        welcomeHeader
                         pinnedSection
                         allCardsSection
                     }
                 }
                 .padding(.vertical)
             }
-            .refreshable { await health.refreshAll() }
+            .refreshable {
+                await health.refreshAll()
+                refreshWidgets()
+            }
             .navigationTitle(LocalizedStringKey("Dashboard"))
             .navigationDestination(for: HealthScreen.self) { screen in
                 switch screen {
@@ -60,12 +63,7 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    HStack(spacing: 4) {
-                        NotificationBellButton()
-                        Button { showSettings = true } label: {
-                            Image(systemName: "gearshape")
-                        }
-                    }
+                    NotificationBellButton()
                 }
                 ToolbarItem(placement: .topBarLeading) {
                     Button { showEditLayout = true } label: {
@@ -74,11 +72,6 @@ struct ContentView: View {
                             Text(LocalizedStringKey("Edit")).font(.subheadline)
                         }
                     }
-                }
-            }
-            .sheet(isPresented: $showSettings) {
-                if let profile = profiles.first {
-                    ProfileSettingsView(profile: profile, sleepConfig: sleepConfigs.first)
                 }
             }
             .sheet(isPresented: $showEditLayout) {
@@ -92,7 +85,84 @@ struct ContentView: View {
                 caffeineMgr.refresh(context: context)
                 shutdownMgr.startCountdown(config: sleepConfigs.first)
                 standTimer.refreshTodayCount(context: context)
+                refreshWidgets()
             }
+        }
+    }
+
+    // MARK: - Widget Refresh
+
+    private func refreshWidgets() {
+        let flowScore = [
+            hydration.todayTotal >= 500,
+            nutritionMgr.todayMeals.count >= 1,
+            standTimer.todayCompleted >= 2,
+            !caffeineMgr.fattyLiverAlert,
+            shutdownMgr.state != .violated,
+            health.sleepHours >= 6
+        ].filter { $0 }.count
+
+        WidgetRefresher.refresh(
+            steps: health.stepCount,
+            stepsGoal: 10000,
+            activeEnergy: health.activeEnergy,
+            energyGoal: 500,
+            heartRate: health.heartRate,
+            sleepHours: health.sleepHours,
+            sleepGoal: 8,
+            hydrationMl: hydration.todayTotal,
+            hydrationGoalMl: hydration.dailyGoal,
+            pomodoroCompleted: standTimer.todayCompleted,
+            pomodoroTarget: PomodoroManager.dailyTarget,
+            pomodoroPhase: standTimer.phase.rawValue,
+            nutritionSafetyScore: Int(nutritionMgr.safetyScore),
+            mealsLogged: nutritionMgr.todayMeals.count,
+            caffeineIsClean: !caffeineMgr.fattyLiverAlert,
+            caffeineDrinksToday: caffeineMgr.todayTotal,
+            shutdownActive: shutdownMgr.state == .active,
+            shutdownSecondsRemaining: shutdownMgr.secondsUntilSleep,
+            weightKg: health.zeppMetrics.weight,
+            weightBodyFat: health.zeppMetrics.bodyFatPercent,
+            dailyFlowScore: flowScore
+        )
+    }
+
+    // MARK: - Welcome Header
+
+    private var welcomeHeader: some View {
+        HStack(spacing: 12) {
+            if let data = profiles.first?.avatarData, let uiImg = UIImage(data: data) {
+                Image(uiImage: uiImg)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 44, height: 44)
+                    .clipShape(Circle())
+            } else {
+                Image(systemName: "person.crop.circle.fill")
+                    .font(.system(size: 40))
+                    .foregroundStyle(AppTheme.primary.opacity(0.7))
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(greetingText)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Text(profiles.first?.name.isEmpty == false ? profiles.first!.name : NSLocalizedString("Health Debug", comment: ""))
+                    .font(.title3.bold())
+            }
+            Spacer()
+        }
+        .padding(.horizontal)
+        .padding(.top, 4)
+    }
+
+    private var greetingText: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        switch hour {
+        case 5..<12:  return NSLocalizedString("Good morning,", comment: "")
+        case 12..<17: return NSLocalizedString("Good afternoon,", comment: "")
+        case 17..<21: return NSLocalizedString("Good evening,", comment: "")
+        default:      return NSLocalizedString("Good night,", comment: "")
         }
     }
 
@@ -581,6 +651,13 @@ struct DashboardEditSheet: View {
                     }
                     .onMove { source, destination in
                         layout.move(from: source, to: destination)
+                    }
+                }
+
+                Section {
+                    NavigationLink(destination: WidgetGalleryView()) {
+                        Label(LocalizedStringKey("Widget Gallery"), systemImage: "square.grid.2x2")
+                            .font(.subheadline)
                     }
                 }
             }
