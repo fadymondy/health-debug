@@ -73,17 +73,25 @@ struct MacDashboardView: View {
     private var profile: UserProfile? { profiles.first }
     private var snap: WidgetSnapshot { watcher.snapshot }
 
-    // MARK: Health Score (mirrors iOS exactly)
+    // MARK: Health Score — all 5 components sourced from WidgetSnapshot (written by iOS)
+    // Guarantees macOS score is identical to iOS in real-time.
 
     private var healthScore: Int {
-        var s = 0.0; var t = 0.0
-        let h = profile.map { min(1.0, Double(hydration.todayTotal) / Double(max(1, $0.dailyWaterGoalMl))) } ?? min(1.0, Double(hydration.todayTotal) / 2500.0)
-        s += h * 20; t += 20
-        s += (nutrition.safetyScore / 100.0) * 20; t += 20
-        s += (caffeine.cleanTransitionPercent / 100.0) * 20; t += 20
-        s += min(1.0, Double(standTimer.todayCompleted) / Double(StandTimerManager.dailyTarget)) * 20; t += 20
-        s += min(1.0, snap.sleepHours / 8.0) * 20; t += 20
-        return t > 0 ? Int((s / t) * 100) : 0
+        var s = 0.0
+        // Hydration
+        s += min(1.0, Double(snap.hydrationMl) / Double(max(1, snap.hydrationGoalMl))) * 20
+        // Nutrition
+        s += (Double(snap.nutritionSafetyScore) / 100.0) * 20
+        // Caffeine: cleanTransitionPercent = cleanCount / total * 100
+        let caffeinePct: Double = snap.caffeineDrinksToday > 0
+            ? Double(snap.caffeineDrinksClean) / Double(snap.caffeineDrinksToday)
+            : 1.0
+        s += caffeinePct * 20
+        // Stand timer
+        s += min(1.0, Double(snap.pomodoroCompleted) / Double(max(1, snap.pomodoroTarget))) * 20
+        // Sleep
+        s += min(1.0, snap.sleepHours / max(1, snap.sleepGoal)) * 20
+        return Int(s)
     }
     private var scoreColor: Color { healthScore >= 80 ? AppTheme.primary : healthScore >= 50 ? .orange : .red }
     private var scoreLabel: String { healthScore >= 80 ? "Excellent" : healthScore >= 60 ? "Good" : healthScore >= 40 ? "Fair" : "Needs Attention" }

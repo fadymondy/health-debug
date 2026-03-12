@@ -35,6 +35,7 @@ public struct WidgetSnapshot: Codable, Sendable {
     // Caffeine
     public var caffeineIsClean: Bool
     public var caffeineDrinksToday: Int
+    public var caffeineDrinksClean: Int   // clean drinks count (for cleanTransitionPercent)
 
     // Shutdown
     public var shutdownActive: Bool
@@ -59,7 +60,7 @@ public struct WidgetSnapshot: Codable, Sendable {
         hydrationMl: Int = 0, hydrationGoalMl: Int = 2500,
         pomodoroCompleted: Int = 0, pomodoroTarget: Int = 8, pomodoroPhase: String = "idle",
         nutritionSafetyScore: Int = 0, mealsLogged: Int = 0,
-        caffeineIsClean: Bool = true, caffeineDrinksToday: Int = 0,
+        caffeineIsClean: Bool = true, caffeineDrinksToday: Int = 0, caffeineDrinksClean: Int = 0,
         shutdownActive: Bool = false, shutdownSecondsRemaining: TimeInterval = 0,
         weightKg: Double = 0, weightBodyFat: Double = 0,
         dailyFlowScore: Int = 0, dailyFlowTotal: Int = 6,
@@ -81,6 +82,7 @@ public struct WidgetSnapshot: Codable, Sendable {
         self.mealsLogged = mealsLogged
         self.caffeineIsClean = caffeineIsClean
         self.caffeineDrinksToday = caffeineDrinksToday
+        self.caffeineDrinksClean = caffeineDrinksClean
         self.shutdownActive = shutdownActive
         self.shutdownSecondsRemaining = shutdownSecondsRemaining
         self.weightKg = weightKg

@@ -502,6 +502,7 @@ struct ContentView: View {
             mealsLogged: nutritionMgr.todayMeals.count,
             caffeineIsClean: !caffeineMgr.fattyLiverAlert,
             caffeineDrinksToday: caffeineMgr.todayTotal,
+            caffeineDrinksClean: caffeineMgr.todayCleanCount,
             shutdownActive: shutdownMgr.state == .active,
             shutdownSecondsRemaining: shutdownMgr.secondsUntilSleep,
             weightKg: health.zeppMetrics.weight,
