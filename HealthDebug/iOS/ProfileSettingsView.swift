@@ -106,6 +106,42 @@ struct ProfileSettingsView: View {
                         .font(.caption)
                 }
 
+                Section {
+                    Toggle(isOn: $profile.pomodoroStartAlertEnabled) {
+                        Label(String(localized: "Work Start Alert"), systemImage: "play.circle.fill")
+                    }
+                    if profile.pomodoroStartAlertEnabled {
+                        Stepper(value: $profile.pomodoroStartLeadMinutes, in: 5...60, step: 5) {
+                            HStack(spacing: 4) {
+                                Text(String(localized: "Lead time"))
+                                Text(verbatim: "\(profile.pomodoroStartLeadMinutes)")
+                                    .foregroundStyle(.secondary)
+                                Text(String(localized: "min before"))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    Toggle(isOn: $profile.pomodoroEndAlertEnabled) {
+                        Label(String(localized: "Work End Alert"), systemImage: "stop.circle.fill")
+                    }
+                    if profile.pomodoroEndAlertEnabled {
+                        Stepper(value: $profile.pomodoroEndLeadMinutes, in: 5...60, step: 5) {
+                            HStack(spacing: 4) {
+                                Text(String(localized: "Lead time"))
+                                Text(verbatim: "\(profile.pomodoroEndLeadMinutes)")
+                                    .foregroundStyle(.secondary)
+                                Text(String(localized: "min before"))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                } header: {
+                    Text(String(localized: "Pomodoro Alerts"))
+                } footer: {
+                    Text(String(localized: "Alerts you before your work day starts and ends so you can prepare your Pomodoro cycle."))
+                        .font(.caption)
+                }
+
                 Section("Sleep") {
                     DatePicker("Bedtime", selection: $sleepTime, displayedComponents: .hourAndMinute)
                     Stepper(value: $shutdownHours, in: 1...6) {
@@ -210,6 +246,7 @@ struct ProfileSettingsView: View {
 
         Task {
             await WeightAlertScheduler.shared.reschedule(profile: profile)
+            await PomodoroAlertScheduler.shared.reschedule(profile: profile)
         }
 
         dismiss()

@@ -38,6 +38,12 @@ public final class UserProfile {
     public var hygieneAlertEnabled: Bool       // default: true
     public var hygieneAlertDelayMinutes: Int   // delay after meal log, default: 5
 
+    // Notification: Pomodoro Start/End Alerts
+    public var pomodoroStartAlertEnabled: Bool     // default: true
+    public var pomodoroStartLeadMinutes: Int       // minutes before work start, default: 15
+    public var pomodoroEndAlertEnabled: Bool       // default: true
+    public var pomodoroEndLeadMinutes: Int         // minutes before work end, default: 15
+
     // Metadata
     public var onboardingCompleted: Bool
     public var lastUpdated: Date
@@ -64,6 +70,10 @@ public final class UserProfile {
         weightAlertDelayMinutes: Int = 5,
         hygieneAlertEnabled: Bool = true,
         hygieneAlertDelayMinutes: Int = 5,
+        pomodoroStartAlertEnabled: Bool = true,
+        pomodoroStartLeadMinutes: Int = 15,
+        pomodoroEndAlertEnabled: Bool = true,
+        pomodoroEndLeadMinutes: Int = 15,
         onboardingCompleted: Bool = false,
         lastUpdated: Date = .now
     ) {
@@ -88,6 +98,10 @@ public final class UserProfile {
         self.weightAlertDelayMinutes = weightAlertDelayMinutes
         self.hygieneAlertEnabled = hygieneAlertEnabled
         self.hygieneAlertDelayMinutes = hygieneAlertDelayMinutes
+        self.pomodoroStartAlertEnabled = pomodoroStartAlertEnabled
+        self.pomodoroStartLeadMinutes = pomodoroStartLeadMinutes
+        self.pomodoroEndAlertEnabled = pomodoroEndAlertEnabled
+        self.pomodoroEndLeadMinutes = pomodoroEndLeadMinutes
         self.onboardingCompleted = onboardingCompleted
         self.lastUpdated = lastUpdated
     }
