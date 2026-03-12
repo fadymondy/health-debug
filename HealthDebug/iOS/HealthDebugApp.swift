@@ -56,6 +56,7 @@ struct RootView: View {
 }
 
 struct SplashView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @State private var logoScale: CGFloat = 0.5
     @State private var logoOpacity: Double = 0
     @State private var titleOffset: CGFloat = 30
@@ -65,47 +66,51 @@ struct SplashView: View {
 
     var body: some View {
         ZStack {
-            // Animated gradient background
-            AppTheme.gradient
+            // Clean adaptive background
+            Color(.systemBackground)
                 .ignoresSafeArea()
 
-            // Subtle radial pulse behind logo
+            // Subtle brand-colored radial pulse behind logo
             Circle()
-                .fill(.white.opacity(0.08))
+                .fill(AppTheme.primary.opacity(0.06))
                 .frame(width: 250, height: 250)
                 .scaleEffect(pulseScale)
                 .blur(radius: 40)
 
             VStack(spacing: 24) {
-                // Logo with glass effect and shimmer
+                // Logo with shimmer
                 Image("SplashLogo")
                     .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .frame(width: 130, height: 130)
-                    .clipShape(RoundedRectangle(cornerRadius: 30))
                     .overlay {
-                        RoundedRectangle(cornerRadius: 30)
+                        Rectangle()
                             .fill(
                                 LinearGradient(
-                                    colors: [.white.opacity(0.4), .clear, .white.opacity(0.2)],
+                                    colors: [.white.opacity(0.3), .clear, .white.opacity(0.15)],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 )
                             )
                             .offset(x: shimmerOffset)
-                            .mask(RoundedRectangle(cornerRadius: 30))
+                            .mask {
+                                Image("SplashLogo")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                            }
                     }
-                    .shadow(color: .black.opacity(0.25), radius: 25, y: 12)
+                    .shadow(color: AppTheme.primary.opacity(0.2), radius: 25, y: 12)
                     .scaleEffect(logoScale)
                     .opacity(logoOpacity)
 
                 VStack(spacing: 8) {
                     Text("Health Debug")
                         .font(.largeTitle.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(AppTheme.gradient)
 
                     Text("Your body. Optimized.")
                         .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.7))
+                        .foregroundStyle(.secondary)
                 }
                 .offset(y: titleOffset)
                 .opacity(titleOpacity)
