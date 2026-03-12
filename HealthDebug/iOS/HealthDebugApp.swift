@@ -32,6 +32,7 @@ struct HealthDebugApp: App {
                 .font(Font.ibm(.body))
                 .environmentObject(AuthManager.shared)
                 .environmentObject(BiometricAuth.shared)
+                .environmentObject(ProfileStore.shared)
                 .onAppear {
                     Task {
                         await NotificationManager.shared.requestAuthorization()
@@ -52,14 +53,15 @@ struct HealthDebugApp: App {
 
 struct RootView: View {
     @Environment(\.modelContext) private var context
-    @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
-    @EnvironmentObject private var auth: AuthManager
-    @EnvironmentObject private var biometric: BiometricAuth
-    @State private var showOnboarding = false
+    @ObservedObject private var auth = AuthManager.shared
+    @ObservedObject private var biometric = BiometricAuth.shared
+    @ObservedObject private var profileStore = ProfileStore.shared
     @State private var showSplash = true
+    @State private var showSignUp = false
+    @State private var healthKitSyncedThisSession = false
 
     private var needsOnboarding: Bool {
-        profiles.isEmpty || !(profiles.first?.onboardingCompleted ?? false)
+        !(profileStore.profile?.onboardingCompleted ?? false)
     }
 
     var body: some View {
@@ -67,17 +69,26 @@ struct RootView: View {
             if showSplash {
                 SplashView()
                     .transition(.opacity)
+
+            } else if showSignUp {
+                SignUpOnboardingView(
+                    onComplete: { withAnimation { showSignUp = false } },
+                    onSignIn:   { withAnimation { showSignUp = false } }
+                )
+                .transition(.opacity)
+
             } else if !auth.isSignedIn {
-                AuthView()
+                AuthView(onSignUp: { withAnimation { showSignUp = true } })
                     .transition(.opacity)
-            } else if auth.isSignedIn && !biometric.isUnlocked {
+
+            } else if !biometric.isUnlocked {
                 BiometricLockView()
                     .transition(.opacity)
-            } else if needsOnboarding || showOnboarding {
-                OnboardingView {
-                    showOnboarding = false
-                }
-                .transition(.opacity)
+
+            } else if needsOnboarding {
+                OnboardingView { }
+                    .transition(.opacity)
+
             } else {
                 MainAppView()
                     .transition(.opacity)
@@ -85,17 +96,32 @@ struct RootView: View {
         }
         .animation(.easeInOut(duration: 0.6), value: showSplash)
         .animation(.easeInOut(duration: 0.4), value: auth.isSignedIn)
+        .animation(.easeInOut(duration: 0.4), value: showSignUp)
         .animation(.easeInOut(duration: 0.3), value: biometric.isUnlocked)
         .onAppear {
-            showOnboarding = needsOnboarding
+            if auth.isSignedIn {
+                profileStore.startListening(uid: auth.uid, modelContext: context)
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
                 withAnimation { showSplash = false }
                 if auth.isSignedIn { biometric.lock() }
             }
         }
         .onChange(of: auth.isSignedIn) { _, signedIn in
-            if signedIn { biometric.lock() }
-            else { biometric.isUnlocked = false }
+            if signedIn {
+                profileStore.startListening(uid: auth.uid, modelContext: context)
+                if !showSignUp { biometric.lock() }
+            } else {
+                profileStore.stopListening()
+                biometric.isUnlocked = false
+                healthKitSyncedThisSession = false
+            }
+        }
+        .onChange(of: biometric.isUnlocked) { _, unlocked in
+            guard unlocked, auth.isSignedIn, !needsOnboarding, !healthKitSyncedThisSession else { return }
+            healthKitSyncedThisSession = true
+            let uid = auth.uid
+            Task { await FirestoreSyncService.shared.syncHealthKitSnapshot(uid: uid) }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
             if auth.isSignedIn { biometric.lock() }
@@ -106,8 +132,7 @@ struct RootView: View {
 // MARK: - Main App View
 
 struct MainAppView: View {
-    @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
-    @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
+    @ObservedObject private var profileStore = ProfileStore.shared
 
     @State private var selectedTab: String = "dashboard"
     @State private var deepLinkScreen: HealthScreen? = nil
@@ -154,8 +179,8 @@ struct MainAppView: View {
     @ViewBuilder
     private var profileTab: some View {
         NavigationStack {
-            if let profile = profiles.first {
-                ProfileSettingsView(profile: profile, sleepConfig: sleepConfigs.first)
+            if let profile = profileStore.profile {
+                ProfileSettingsView(profile: profile, sleepConfig: profileStore.sleepConfig)
             } else {
                 ContentUnavailableView("No Profile", systemImage: "person.crop.circle.badge.exclamationmark")
             }

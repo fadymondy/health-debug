@@ -5,6 +5,7 @@ import HealthDebugKit
 
 struct ProfileSettingsView: View {
     @Environment(\.modelContext) private var context
+    @EnvironmentObject private var auth: AuthManager
     @Bindable var profile: UserProfile
     var sleepConfig: SleepConfig?
 
@@ -15,6 +16,7 @@ struct ProfileSettingsView: View {
     @State private var weightAlertTime: Date
     @State private var photoItem: PhotosPickerItem?
     @State private var isSaving = false
+    @State private var showSignOutConfirm = false
 
     init(profile: UserProfile, sleepConfig: SleepConfig?) {
         self.profile = profile
@@ -39,12 +41,21 @@ struct ProfileSettingsView: View {
                 notificationsCard
                 sleepCard
                 computedCard
+                accountCard
             }
             .padding(.horizontal)
             .padding(.bottom, 40)
         }
         .navigationTitle(LocalizedStringKey("Profile"))
         .navigationBarTitleDisplayMode(.large)
+        .confirmationDialog("Sign Out", isPresented: $showSignOutConfirm, titleVisibility: .visible) {
+            Button("Sign Out", role: .destructive) {
+                auth.signOut()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Are you sure you want to sign out?")
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -487,6 +498,38 @@ struct ProfileSettingsView: View {
         }
     }
 
+    // MARK: - Account
+
+    private var accountCard: some View {
+        settingsCard(title: LocalizedStringKey("Account"), icon: "person.badge.key.fill", color: .red) {
+            VStack(spacing: 0) {
+                if let email = auth.user?.email {
+                    settingsRow {
+                        HStack {
+                            Text(email)
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                        }
+                    }
+                    Divider().padding(.leading)
+                }
+                settingsRow {
+                    Button {
+                        showSignOutConfirm = true
+                    } label: {
+                        HStack {
+                            Spacer()
+                            Text(LocalizedStringKey("Sign Out"))
+                                .fontWeight(.semibold)
+                                .foregroundStyle(.red)
+                            Spacer()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // MARK: - Helpers
 
     @ViewBuilder
@@ -563,6 +606,11 @@ struct ProfileSettingsView: View {
         }
         try? context.save()
         let savedSleep = (try? context.fetch(SleepConfig.currentDescriptor()).first)
+        // Mirror to Firestore for cross-platform sync
+        let uid = AuthManager.shared.uid
+        if !uid.isEmpty, let sleep = savedSleep {
+            FirestoreSyncService.shared.syncProfile(profile, sleepConfig: sleep, uid: uid)
+        }
         Task {
             await WeightAlertScheduler.shared.reschedule(profile: profile)
             await PomodoroAlertScheduler.shared.reschedule(profile: profile)
