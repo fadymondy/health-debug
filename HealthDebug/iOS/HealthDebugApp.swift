@@ -51,6 +51,9 @@ struct RootView: View {
                     Tab("Stand", systemImage: "figure.stand") {
                         StandTimerView()
                     }
+                    Tab("Nutrition", systemImage: "fork.knife") {
+                        NutritionView()
+                    }
                     Tab("Caffeine", systemImage: "cup.and.saucer.fill") {
                         CaffeineView()
                     }

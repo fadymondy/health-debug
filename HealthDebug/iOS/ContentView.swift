@@ -9,6 +9,7 @@ struct ContentView: View {
     @StateObject private var hydration = HydrationManager.shared
     @StateObject private var shutdownMgr = ShutdownManager.shared
     @StateObject private var caffeineMgr = CaffeineManager.shared
+    @StateObject private var nutritionMgr = NutritionManager.shared
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
     @State private var showSettings = false
@@ -22,6 +23,7 @@ struct ContentView: View {
                     } else {
                         metricsGrid
                         hydrationCard
+                        nutritionCard
                         caffeineCard
                         shutdownCard
                         standTimerCard
@@ -138,6 +140,56 @@ struct ContentView: View {
             if let profile = profiles.first {
                 hydration.dailyGoal = profile.dailyWaterGoalMl
             }
+        }
+    }
+
+    // MARK: - Nutrition Card
+
+    private var nutritionCard: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Nutrition", systemImage: "fork.knife")
+                .font(.headline)
+                .foregroundStyle(nutritionStatusColor)
+            Divider()
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(nutritionMgr.safetyStatus.rawValue)
+                        .font(.title3.bold())
+                        .foregroundStyle(nutritionStatusColor)
+                    Text("\(nutritionMgr.todaySafeCount) safe, \(nutritionMgr.todayUnsafeCount) unsafe")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                Text(String(format: "%.0f%%", nutritionMgr.safetyScore))
+                    .font(.title2.bold())
+                    .foregroundStyle(nutritionStatusColor)
+            }
+            if !nutritionMgr.todayTriggers.isEmpty {
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                        .font(.caption)
+                    Text(nutritionMgr.todayTriggers.sorted().joined(separator: ", "))
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassEffect(.regular.tint(nutritionStatusColor.opacity(0.15)), in: RoundedRectangle(cornerRadius: 20))
+        .padding(.horizontal)
+        .onAppear {
+            nutritionMgr.refresh(context: context)
+        }
+    }
+
+    private var nutritionStatusColor: Color {
+        switch nutritionMgr.safetyStatus {
+        case .allSafe, .noMeals: return AppTheme.primary
+        case .warning: return .orange
+        case .critical: return .red
         }
     }
 
