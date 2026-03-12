@@ -149,3 +149,63 @@ import Foundation
     #expect(TriggerType.gout.rawValue == "Gout")
     #expect(TriggerType.fattyLiver.rawValue == "Fatty Liver")
 }
+
+// MARK: - ZeppMetrics Tests
+
+@Test func zeppMetricsDefaults() {
+    let metrics = ZeppMetrics()
+    #expect(metrics.weight == 0)
+    #expect(metrics.bodyFatPercent == 0)
+    #expect(metrics.lastUpdated == nil)
+}
+
+@Test func zeppMetricsCustomValues() {
+    let date = Date.now
+    let metrics = ZeppMetrics(weight: 108.0, bodyFatPercent: 22.5, lastUpdated: date)
+    #expect(metrics.weight == 108.0)
+    #expect(metrics.bodyFatPercent == 22.5)
+    #expect(metrics.lastUpdated == date)
+}
+
+// MARK: - FoodRegistry Tests
+
+@Test func foodRegistryClassifiesSafeFood() {
+    let result = FoodRegistry.classify("Grilled Chicken Breast")
+    #expect(result.isSafe == true)
+    #expect(result.triggers.isEmpty)
+}
+
+@Test func foodRegistryClassifiesFalafel() {
+    let result = FoodRegistry.classify("Falafel")
+    #expect(result.isSafe == false)
+    #expect(result.triggers.contains(.ibsGerd))
+}
+
+@Test func foodRegistryClassifiesRedMeat() {
+    let result = FoodRegistry.classify("Red Meat")
+    #expect(result.isSafe == false)
+    #expect(result.triggers.contains(.gout))
+}
+
+@Test func foodRegistryClassifiesRefinedSugar() {
+    let result = FoodRegistry.classify("Refined Sugar")
+    #expect(result.isSafe == false)
+    #expect(result.triggers.contains(.fattyLiver))
+}
+
+@Test func foodRegistryBlacklistIsComplete() {
+    #expect(FoodRegistry.ibsGerdTriggers.count == 7)
+    #expect(FoodRegistry.goutTriggers.count == 6)
+    #expect(FoodRegistry.fattyLiverTriggers.count == 6)
+}
+
+@Test func foodRegistryWhitelistIsComplete() {
+    #expect(FoodRegistry.safeProteins.count == 4)
+    #expect(FoodRegistry.safeCarbs.count == 4)
+    #expect(FoodRegistry.safeFats.count == 2)
+    #expect(FoodRegistry.allWhitelist.count == 10)
+}
+
+@Test func foodRegistryMaxRiceSpoons() {
+    #expect(FoodRegistry.maxRiceSpoonsPerMeal == 5)
+}

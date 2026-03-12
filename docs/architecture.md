@@ -28,9 +28,33 @@ HealthDebugKit/
 │       └── UserProfile.swift
 └── Tests/HealthDebugKitTests/
     └── HealthDebugKitTests.swift
+│   ├── Health/
+│   │   └── HealthKitManager.swift     # HealthKit read/write
+│   └── Protocols/
+│       └── FoodRegistry.swift         # Safe/unsafe food classifier
+└── Tests/HealthDebugKitTests/
+    └── HealthDebugKitTests.swift
 ```
 
 All 3 platform targets depend on `HealthDebugKit` as a local Swift package.
+
+## HealthKit Integration
+
+`HealthKitManager` is a `@MainActor` singleton that reads health data on iOS and watchOS (not macOS):
+
+| Metric | HealthKit Type | Method |
+|--------|---------------|--------|
+| Steps | `.stepCount` | `fetchTodaySteps()` |
+| Active Energy | `.activeEnergyBurned` | `fetchTodayActiveEnergy()` |
+| Heart Rate | `.heartRate` | `fetchLatestHeartRate()` |
+| Sleep | `.sleepAnalysis` | `fetchLastNightSleep()` |
+| Weight | `.bodyMass` | `fetchZeppMetrics()` |
+| Body Fat | `.bodyFatPercentage` | `fetchZeppMetrics()` |
+
+- **Zepp Scale**: Weight and body fat from Zepp smart scale sync through Apple Health. Bundled in `ZeppMetrics` struct.
+- **Sleep**: Filters only asleep categories (core, deep, REM, unspecified) — excludes "inBed".
+- **Authorization**: Requests read-only access. All types in `readTypes` set.
+- **Refresh**: `refreshAll()` fetches all metrics in sequence with error logging.
 
 ## Data Sync
 
