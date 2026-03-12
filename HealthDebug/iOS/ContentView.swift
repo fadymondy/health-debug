@@ -2,6 +2,15 @@ import SwiftUI
 import SwiftData
 import HealthDebugKit
 
+// MARK: - Navigation Destinations
+
+enum HealthScreen: Hashable {
+    case steps, energy, heartRate, sleep
+    case hydration, standTimer, nutrition, caffeine, shutdown, weight
+}
+
+// MARK: - Content View
+
 struct ContentView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.layoutDirection) private var layoutDirection
@@ -33,6 +42,20 @@ struct ContentView: View {
             }
             .refreshable { await health.refreshAll() }
             .navigationTitle(LocalizedStringKey("Dashboard"))
+            .navigationDestination(for: HealthScreen.self) { screen in
+                switch screen {
+                case .steps: StepsDetailView()
+                case .energy: EnergyDetailView()
+                case .heartRate: HeartRateDetailView()
+                case .sleep: SleepDetailView()
+                case .hydration: HydrationDetailView()
+                case .standTimer: StandTimerDetailView()
+                case .nutrition: NutritionDetailView()
+                case .caffeine: CaffeineDetailView()
+                case .shutdown: ShutdownDetailView()
+                case .weight: ZeppDetailView()
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showSettings = true } label: {
@@ -43,8 +66,7 @@ struct ContentView: View {
                     Button { showDailyFlow = true } label: {
                         HStack(spacing: 5) {
                             Image(systemName: "checklist")
-                            Text(LocalizedStringKey("Daily Flow"))
-                                .font(.subheadline)
+                            Text(LocalizedStringKey("Daily Flow")).font(.subheadline)
                         }
                     }
                 }
@@ -55,8 +77,7 @@ struct ContentView: View {
                 }
             }
             .sheet(isPresented: $showDailyFlow) {
-                DailyFlowSheet()
-                    .presentationDetents([.medium, .large])
+                DailyFlowSheet().presentationDetents([.medium, .large])
             }
             .onAppear {
                 hydration.refresh(context: context)
@@ -90,56 +111,51 @@ struct ContentView: View {
         .padding(.horizontal)
     }
 
-    // MARK: - Metrics Grid (Apple Health style — 2×2)
+    // MARK: - Metrics Grid
 
     private var metricsGrid: some View {
         LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
-            NavigationLink(destination: StepsDetailView()) {
+            NavigationLink(value: HealthScreen.steps) {
                 HealthMetricCard(
                     icon: "figure.walk", title: "Steps",
-                    value: formatted(health.stepCount),
-                    unit: nil,
+                    value: formatted(health.stepCount), unit: nil,
                     caption: String(format: NSLocalizedString("%.0f%% of daily goal", comment: ""), min(100, health.stepCount / 10000 * 100)),
                     color: AppTheme.primary,
                     progress: min(1.0, health.stepCount / 10000)
                 )
-            }.buttonStyle(.plain)
+            }
 
-            NavigationLink(destination: EnergyDetailView()) {
+            NavigationLink(value: HealthScreen.energy) {
                 HealthMetricCard(
                     icon: "flame.fill", title: "Active Energy",
-                    value: formatted(health.activeEnergy),
-                    unit: "kcal",
+                    value: formatted(health.activeEnergy), unit: "kcal",
                     caption: String(format: NSLocalizedString("%.0f%% of 600 kcal", comment: ""), min(100, health.activeEnergy / 600 * 100)),
                     color: .orange,
                     progress: min(1.0, health.activeEnergy / 600)
                 )
-            }.buttonStyle(.plain)
+            }
 
-            NavigationLink(destination: HeartRateDetailView()) {
+            NavigationLink(value: HealthScreen.heartRate) {
                 HealthMetricCard(
                     icon: "heart.fill", title: "Heart Rate",
-                    value: formatted(health.heartRate),
-                    unit: "BPM",
+                    value: formatted(health.heartRate), unit: "BPM",
                     caption: heartZoneLabel,
                     color: .red,
-                    // Map BPM to 0–1 within normal range 40–160 bpm
                     progress: min(1.0, max(0, (health.heartRate - 40) / 120)),
                     statusColor: heartZoneColor
                 )
-            }.buttonStyle(.plain)
+            }
 
-            NavigationLink(destination: SleepDetailView()) {
+            NavigationLink(value: HealthScreen.sleep) {
                 HealthMetricCard(
                     icon: "moon.zzz.fill", title: "Sleep",
-                    value: String(format: "%.1f", health.sleepHours),
-                    unit: "hrs",
+                    value: String(format: "%.1f", health.sleepHours), unit: "hrs",
                     caption: sleepQualityLabel,
                     color: AppTheme.secondary,
                     progress: min(1.0, health.sleepHours / 8.0),
                     statusColor: sleepQualityColor
                 )
-            }.buttonStyle(.plain)
+            }
         }
         .padding(.horizontal)
     }
@@ -181,7 +197,7 @@ struct ContentView: View {
         VStack(spacing: 14) {
             sectionHeader("Activity")
 
-            NavigationLink(destination: HydrationDetailView()) {
+            NavigationLink(value: HealthScreen.hydration) {
                 HealthCard(
                     icon: "drop.fill", title: "Hydration",
                     color: AppTheme.secondary,
@@ -191,17 +207,17 @@ struct ContentView: View {
                     statusColor: hydrationStatusColor,
                     progress: min(1.0, Double(hydration.todayTotal) / Double(max(1, hydration.dailyGoal))),
                     quickActions: [
-                        .init(label: "Log 250ml", icon: "plus.circle.fill", color: AppTheme.secondary) {
+                        .init(label: NSLocalizedString("Log 250ml", comment: ""), icon: "plus.circle.fill", color: AppTheme.secondary) {
                             hydration.logWater(250, source: "quick", context: context, profile: profiles.first)
                         },
-                        .init(label: "Log 500ml", icon: "drop.circle.fill", color: AppTheme.secondary) {
+                        .init(label: NSLocalizedString("Log 500ml", comment: ""), icon: "drop.circle.fill", color: AppTheme.secondary) {
                             hydration.logWater(500, source: "quick", context: context, profile: profiles.first)
                         }
                     ]
                 )
-            }.buttonStyle(.plain)
+            }
 
-            NavigationLink(destination: StandTimerDetailView()) {
+            NavigationLink(value: HealthScreen.standTimer) {
                 HealthCard(
                     icon: "figure.stand", title: "Stand Timer",
                     color: AppTheme.accent,
@@ -216,7 +232,7 @@ struct ContentView: View {
                         }
                     ] : []
                 )
-            }.buttonStyle(.plain)
+            }
         }
     }
 
@@ -251,7 +267,7 @@ struct ContentView: View {
         VStack(spacing: 14) {
             sectionHeader("Health")
 
-            NavigationLink(destination: NutritionDetailView()) {
+            NavigationLink(value: HealthScreen.nutrition) {
                 HealthCard(
                     icon: "fork.knife", title: "Nutrition",
                     color: nutritionStatusColor,
@@ -265,9 +281,9 @@ struct ContentView: View {
                     ],
                     badge: nutritionMgr.todayUnsafeCount > 0 ? "\(nutritionMgr.todayUnsafeCount) ⚠" : nil
                 )
-            }.buttonStyle(.plain)
+            }
 
-            NavigationLink(destination: CaffeineDetailView()) {
+            NavigationLink(value: HealthScreen.caffeine) {
                 HealthCard(
                     icon: "cup.and.saucer.fill", title: "Caffeine",
                     color: caffeineStatusColor,
@@ -278,9 +294,9 @@ struct ContentView: View {
                     progress: caffeineMgr.cleanTransitionPercent / 100,
                     quickActions: []
                 )
-            }.buttonStyle(.plain)
+            }
 
-            NavigationLink(destination: ShutdownDetailView()) {
+            NavigationLink(value: HealthScreen.shutdown) {
                 let isActive = shutdownMgr.state == .active
                 HealthCard(
                     icon: "moon.fill", title: "System Shutdown",
@@ -296,9 +312,9 @@ struct ContentView: View {
                     progress: nil,
                     quickActions: []
                 )
-            }.buttonStyle(.plain)
+            }
 
-            NavigationLink(destination: ZeppDetailView()) {
+            NavigationLink(value: HealthScreen.weight) {
                 HealthCard(
                     icon: "scalemass.fill", title: "Weight",
                     color: AppTheme.primary,
@@ -311,9 +327,9 @@ struct ContentView: View {
                     progress: nil,
                     quickActions: []
                 )
-            }.buttonStyle(.plain)
+            }
 
-            NavigationLink(destination: SleepDetailView()) {
+            NavigationLink(value: HealthScreen.sleep) {
                 HealthCard(
                     icon: "bed.double.fill", title: "Last Night",
                     color: AppTheme.secondary,
@@ -324,7 +340,7 @@ struct ContentView: View {
                     progress: min(1.0, health.sleepHours / 8.0),
                     quickActions: []
                 )
-            }.buttonStyle(.plain)
+            }
         }
     }
 
@@ -347,13 +363,10 @@ struct ContentView: View {
 
     private func sectionHeader(_ title: String) -> some View {
         HStack {
-            Text(LocalizedStringKey(title))
-                .font(.title3.bold())
-                .foregroundStyle(.primary)
+            Text(LocalizedStringKey(title)).font(.title3.bold())
             Spacer()
         }
-        .padding(.horizontal)
-        .padding(.top, 4)
+        .padding(.horizontal).padding(.top, 4)
     }
 
     private func formatted(_ value: Double) -> String {
@@ -361,7 +374,7 @@ struct ContentView: View {
     }
 }
 
-// MARK: - Health Card (Apple Health inspired)
+// MARK: - Health Card
 
 struct HealthCardQuickAction: Identifiable {
     let id = UUID()
@@ -392,109 +405,83 @@ struct HealthCard: View {
                 Image(systemName: icon)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(color)
-
                 Text(LocalizedStringKey(title))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
-
                 Spacer()
-
                 if let badge {
                     Text(badge)
-                        .font(.caption2.bold())
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 7)
-                        .padding(.vertical, 3)
+                        .font(.caption2.bold()).foregroundStyle(.white)
+                        .padding(.horizontal, 7).padding(.vertical, 3)
                         .background(Color.red, in: Capsule())
                 }
-
-                // RTL-aware chevron
                 Image(systemName: layoutDirection == .rightToLeft ? "chevron.left" : "chevron.right")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.tertiary)
+                    .font(.caption.weight(.semibold)).foregroundStyle(.tertiary)
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 16)
-            .padding(.bottom, 8)
+            .padding(.horizontal, 16).padding(.top, 16).padding(.bottom, 8)
 
             // Primary metric
-            HStack(alignment: .lastTextBaseline, spacing: 0) {
-                Text(verbatim: primaryValue)
-                    .font(.system(size: 28, weight: .bold, design: .rounded))
-                    .foregroundStyle(.primary)
-            }
-            .padding(.horizontal, 16)
-
-            // Detail text
-            Text(LocalizedStringKey(detail))
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            Text(verbatim: primaryValue)
+                .font(.system(size: 28, weight: .bold, design: .rounded))
                 .padding(.horizontal, 16)
-                .padding(.top, 2)
+
+            // Detail
+            Text(LocalizedStringKey(detail))
+                .font(.caption).foregroundStyle(.secondary)
+                .padding(.horizontal, 16).padding(.top, 2)
 
             // Status pill
             if let statusText, !statusText.isEmpty {
                 Text(LocalizedStringKey(statusText))
-                    .font(.caption2.bold())
-                    .foregroundStyle(statusColor)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
+                    .font(.caption2.bold()).foregroundStyle(statusColor)
+                    .padding(.horizontal, 8).padding(.vertical, 3)
                     .glassEffect(.regular.tint(statusColor.opacity(0.2)), in: Capsule())
-                    .padding(.horizontal, 16)
-                    .padding(.top, 6)
+                    .padding(.horizontal, 16).padding(.top, 6)
             }
 
-            // Single line chart progress bar (Apple Health style)
+            // Progress bar
             if let progress {
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(color.opacity(0.12))
-                            .frame(height: 4)
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(color)
+                        RoundedRectangle(cornerRadius: 2).fill(color.opacity(0.12)).frame(height: 4)
+                        RoundedRectangle(cornerRadius: 2).fill(color)
                             .frame(width: geo.size.width * progress, height: 4)
                             .animation(.spring(response: 0.5), value: progress)
                     }
                 }
                 .frame(height: 4)
-                .padding(.horizontal, 16)
-                .padding(.top, 10)
+                .padding(.horizontal, 16).padding(.top, 10)
             }
 
-            // Quick actions row
+            // Quick actions
             if !quickActions.isEmpty {
-                Divider()
-                    .padding(.horizontal, 16)
-                    .padding(.top, progress != nil ? 10 : 12)
-
+                Divider().padding(.horizontal, 16).padding(.top, progress != nil ? 10 : 12)
                 HStack(spacing: 8) {
                     ForEach(quickActions) { action in
                         Button {
                             action.action()
                         } label: {
                             Label(LocalizedStringKey(action.label), systemImage: action.icon)
-                                .font(.caption.bold())
-                                .foregroundStyle(action.color)
+                                .font(.caption.bold()).foregroundStyle(action.color)
                         }
-                        .buttonStyle(.glass)
-                        .tint(action.color)
+                        .buttonStyle(.glass).tint(action.color)
                     }
                     Spacer()
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
+                .padding(.horizontal, 12).padding(.vertical, 8)
             } else {
                 Spacer().frame(height: 14)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .glassEffect(.regular.interactive().tint(color.opacity(0.07)), in: RoundedRectangle(cornerRadius: 20))
+        .glassEffect(.regular.tint(color.opacity(0.07)), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal)
+        // Prevent the card's own glass from absorbing the NavigationLink tap
+        .allowsHitTesting(false)
     }
 }
 
-// MARK: - Health Metric Card (small 2×2 grid)
+// MARK: - Health Metric Card (2×2 grid)
 
 struct HealthMetricCard: View {
     let icon: String
@@ -512,15 +499,12 @@ struct HealthMetricCard: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Image(systemName: icon)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(color)
+                    .font(.subheadline.weight(.semibold)).foregroundStyle(color)
                 Text(LocalizedStringKey(title))
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.secondary)
+                    .font(.caption.weight(.medium)).foregroundStyle(.secondary)
                 Spacer()
                 Image(systemName: layoutDirection == .rightToLeft ? "chevron.left" : "chevron.right")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                    .font(.caption2).foregroundStyle(.tertiary)
             }
 
             HStack(alignment: .lastTextBaseline, spacing: 2) {
@@ -528,8 +512,7 @@ struct HealthMetricCard: View {
                     .font(.system(size: 24, weight: .bold, design: .rounded))
                 if let unit {
                     Text(LocalizedStringKey(unit))
-                        .font(.caption.bold())
-                        .foregroundStyle(.secondary)
+                        .font(.caption.bold()).foregroundStyle(.secondary)
                 }
             }
 
@@ -541,11 +524,8 @@ struct HealthMetricCard: View {
             if let progress {
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(color.opacity(0.12))
-                            .frame(height: 3)
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(color)
+                        RoundedRectangle(cornerRadius: 2).fill(color.opacity(0.12)).frame(height: 3)
+                        RoundedRectangle(cornerRadius: 2).fill(color)
                             .frame(width: geo.size.width * progress, height: 3)
                             .animation(.spring(response: 0.5), value: progress)
                     }
@@ -555,7 +535,9 @@ struct HealthMetricCard: View {
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .glassEffect(.regular.interactive().tint(color.opacity(0.08)), in: RoundedRectangle(cornerRadius: 16))
+        .glassEffect(.regular.tint(color.opacity(0.08)), in: RoundedRectangle(cornerRadius: 16))
+        // Prevent card glass from stealing the NavigationLink tap
+        .allowsHitTesting(false)
     }
 }
 
@@ -564,12 +546,13 @@ struct HealthMetricCard: View {
 struct DailyFlowSheet: View {
     var body: some View {
         NavigationStack {
-            DailyFlowCard()
-                .padding(.top)
-            Spacer()
+            ScrollView {
+                DailyFlowCard().padding(.top)
+                Spacer()
+            }
+            .navigationTitle(LocalizedStringKey("Daily Flow"))
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .navigationTitle(LocalizedStringKey("Daily Flow"))
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

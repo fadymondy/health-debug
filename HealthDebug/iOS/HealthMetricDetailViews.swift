@@ -17,20 +17,14 @@ struct StepsDetailView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                // Hero ring
                 stepsRing
-
                 AIInsightCard(domain: .dashboard)
-
-                // Stats grid
                 statsGrid
-
-                // Smart actions
                 smartActionsCard
             }
             .padding(.vertical)
         }
-        .navigationTitle("Steps")
+        .navigationTitle(LocalizedStringKey("Steps"))
         .navigationBarTitleDisplayMode(.large)
         .onAppear { Task { await health.refreshAll() } }
     }
@@ -52,7 +46,7 @@ struct StepsDetailView: View {
                 Text(formatted(health.stepCount))
                     .font(.system(size: 30, weight: .bold, design: .rounded))
                     .foregroundStyle(color)
-                Text("steps")
+                Text(LocalizedStringKey("steps"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -65,9 +59,9 @@ struct StepsDetailView: View {
         let activeMinutes = Int(health.stepCount / 100)
         let statusText: String = {
             let pct = health.stepCount / stepGoal
-            if pct >= 1.0 { return "Goal Met" }
-            if pct >= 0.5 { return "On Track" }
-            return "Behind"
+            if pct >= 1.0 { return NSLocalizedString("Goal Met", comment: "") }
+            if pct >= 0.5 { return NSLocalizedString("On Track", comment: "") }
+            return NSLocalizedString("Behind", comment: "")
         }()
         let statusColor: Color = {
             let pct = health.stepCount / stepGoal
@@ -77,17 +71,17 @@ struct StepsDetailView: View {
         }()
 
         return LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
-            statCell(title: "Distance", value: distance, icon: "map.fill", color: AppTheme.primary)
-            statCell(title: "Active Minutes", value: "\(activeMinutes) min", icon: "clock.fill", color: .orange)
-            statCell(title: "Daily Goal", value: "10,000", icon: "flag.fill", color: AppTheme.secondary)
-            statCellStatus(title: "Status", value: statusText, color: statusColor)
+            statCell(title: NSLocalizedString("Distance", comment: ""), value: distance, icon: "map.fill", color: AppTheme.primary)
+            statCell(title: NSLocalizedString("Active Minutes", comment: ""), value: "\(activeMinutes) min", icon: "clock.fill", color: .orange)
+            statCell(title: NSLocalizedString("Daily Goal", comment: ""), value: "10,000", icon: "flag.fill", color: AppTheme.secondary)
+            statCellStatus(title: NSLocalizedString("Status", comment: ""), value: statusText, color: statusColor)
         }
         .padding(.horizontal)
     }
 
     private var smartActionsCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Smart Actions", systemImage: "sparkles")
+            Label(LocalizedStringKey("Smart Actions"), systemImage: "sparkles")
                 .font(.headline).foregroundStyle(AppTheme.primary)
             Divider()
             GlassEffectContainer {
@@ -100,12 +94,10 @@ struct StepsDetailView: View {
                             )
                         }
                     } label: {
-                        Label("Why am I behind on steps?", systemImage: "questionmark.circle")
+                        Label(LocalizedStringKey("Why am I behind on steps?"), systemImage: "questionmark.circle")
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.glassProminent)
-                    .tint(AppTheme.primary)
-                    .controlSize(.small)
+                    .buttonStyle(.glassProminent).tint(AppTheme.primary).controlSize(.small)
 
                     Button {
                         Task {
@@ -115,51 +107,38 @@ struct StepsDetailView: View {
                             )
                         }
                     } label: {
-                        Label("What's a good walk target now?", systemImage: "figure.walk")
+                        Label(LocalizedStringKey("What's a good walk target now?"), systemImage: "figure.walk")
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.glass)
-                    .controlSize(.small)
+                    .buttonStyle(.glass).controlSize(.small)
                 }
             }
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding().frame(maxWidth: .infinity, alignment: .leading)
         .glassEffect(.regular.tint(AppTheme.primary.opacity(0.1)), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal)
     }
 
     private func statCell(title: String, value: String, icon: String, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Label(title, systemImage: icon)
-                .font(.caption.bold())
-                .foregroundStyle(color)
-            Text(value)
-                .font(.title3.bold())
+            Label(title, systemImage: icon).font(.caption.bold()).foregroundStyle(color)
+            Text(value).font(.title3.bold())
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading).padding()
         .glassEffect(.regular.tint(color.opacity(0.1)), in: RoundedRectangle(cornerRadius: 16))
     }
 
     private func statCellStatus(title: String, value: String, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Label(title, systemImage: "chart.bar.fill")
-                .font(.caption.bold())
-                .foregroundStyle(color)
-            Text(value)
-                .font(.title3.bold())
-                .foregroundStyle(color)
+            Label(title, systemImage: "chart.bar.fill").font(.caption.bold()).foregroundStyle(color)
+            Text(value).font(.title3.bold()).foregroundStyle(color)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading).padding()
         .glassEffect(.regular.tint(color.opacity(0.1)), in: RoundedRectangle(cornerRadius: 16))
     }
 
     private func formatted(_ value: Double) -> String {
-        value >= 1000
-            ? String(format: "%.1fk", value / 1000)
-            : String(format: "%.0f", value)
+        value >= 1000 ? String(format: "%.1fk", value / 1000) : String(format: "%.0f", value)
     }
 }
 
@@ -185,7 +164,7 @@ struct EnergyDetailView: View {
             }
             .padding(.vertical)
         }
-        .navigationTitle("Active Energy")
+        .navigationTitle(LocalizedStringKey("Active Energy"))
         .navigationBarTitleDisplayMode(.large)
         .onAppear { Task { await health.refreshAll() } }
     }
@@ -207,22 +186,21 @@ struct EnergyDetailView: View {
                 Text(String(format: "%.0f", health.activeEnergy))
                     .font(.system(size: 30, weight: .bold, design: .rounded))
                     .foregroundStyle(color)
-                Text("kcal")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                Text(LocalizedStringKey("kcal"))
+                    .font(.caption).foregroundStyle(.secondary)
             }
         }
         .padding(.top, 8)
     }
 
     private var statsGrid: some View {
-        let burnRate = health.activeEnergy / 16.0 // rough kcal/hr over typical waking hours
+        let burnRate = health.activeEnergy / 16.0
         let bmr = (profile?.weightKg ?? 90) * 24.0
         let statusText: String = {
             let pct = health.activeEnergy / kcalGoal
-            if pct >= 1.0 { return "Goal Met" }
-            if pct >= 0.5 { return "On Track" }
-            return "Behind"
+            if pct >= 1.0 { return NSLocalizedString("Goal Met", comment: "") }
+            if pct >= 0.5 { return NSLocalizedString("On Track", comment: "") }
+            return NSLocalizedString("Behind", comment: "")
         }()
         let statusColor: Color = {
             let pct = health.activeEnergy / kcalGoal
@@ -232,17 +210,17 @@ struct EnergyDetailView: View {
         }()
 
         return LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
-            statCell(title: "Burn Rate", value: String(format: "%.0f kcal/hr", burnRate), icon: "flame.fill", color: .orange)
-            statCell(title: "Daily Goal", value: "600 kcal", icon: "flag.fill", color: AppTheme.primary)
-            statCellStatus(title: "Status", value: statusText, color: statusColor)
-            statCell(title: "BMR Estimate", value: String(format: "%.0f kcal", bmr), icon: "person.fill", color: AppTheme.secondary)
+            statCell(title: NSLocalizedString("Burn Rate", comment: ""), value: String(format: "%.0f kcal/hr", burnRate), icon: "flame.fill", color: .orange)
+            statCell(title: NSLocalizedString("Daily Goal", comment: ""), value: "600 kcal", icon: "flag.fill", color: AppTheme.primary)
+            statCellStatus(title: NSLocalizedString("Status", comment: ""), value: statusText, color: statusColor)
+            statCell(title: NSLocalizedString("BMR Estimate", comment: ""), value: String(format: "%.0f kcal", bmr), icon: "person.fill", color: AppTheme.secondary)
         }
         .padding(.horizontal)
     }
 
     private var smartActionsCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Smart Actions", systemImage: "sparkles")
+            Label(LocalizedStringKey("Smart Actions"), systemImage: "sparkles")
                 .font(.headline).foregroundStyle(AppTheme.primary)
             Divider()
             GlassEffectContainer {
@@ -255,12 +233,10 @@ struct EnergyDetailView: View {
                             )
                         }
                     } label: {
-                        Label("Is my calorie burn healthy?", systemImage: "heart.text.clipboard")
+                        Label(LocalizedStringKey("Is my calorie burn healthy?"), systemImage: "heart.text.clipboard")
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.glassProminent)
-                    .tint(.orange)
-                    .controlSize(.small)
+                    .buttonStyle(.glassProminent).tint(.orange).controlSize(.small)
 
                     Button {
                         Task {
@@ -270,44 +246,33 @@ struct EnergyDetailView: View {
                             )
                         }
                     } label: {
-                        Label("How can I increase activity?", systemImage: "figure.run")
+                        Label(LocalizedStringKey("How can I increase activity?"), systemImage: "figure.run")
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.glass)
-                    .controlSize(.small)
+                    .buttonStyle(.glass).controlSize(.small)
                 }
             }
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding().frame(maxWidth: .infinity, alignment: .leading)
         .glassEffect(.regular.tint(Color.orange.opacity(0.1)), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal)
     }
 
     private func statCell(title: String, value: String, icon: String, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Label(title, systemImage: icon)
-                .font(.caption.bold())
-                .foregroundStyle(color)
-            Text(value)
-                .font(.title3.bold())
+            Label(title, systemImage: icon).font(.caption.bold()).foregroundStyle(color)
+            Text(value).font(.title3.bold())
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading).padding()
         .glassEffect(.regular.tint(color.opacity(0.1)), in: RoundedRectangle(cornerRadius: 16))
     }
 
     private func statCellStatus(title: String, value: String, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Label(title, systemImage: "chart.bar.fill")
-                .font(.caption.bold())
-                .foregroundStyle(color)
-            Text(value)
-                .font(.title3.bold())
-                .foregroundStyle(color)
+            Label(title, systemImage: "chart.bar.fill").font(.caption.bold()).foregroundStyle(color)
+            Text(value).font(.title3.bold()).foregroundStyle(color)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading).padding()
         .glassEffect(.regular.tint(color.opacity(0.1)), in: RoundedRectangle(cornerRadius: 16))
     }
 }
@@ -333,41 +298,37 @@ struct HeartRateDetailView: View {
             }
             .padding(.vertical)
         }
-        .navigationTitle("Heart Rate")
+        .navigationTitle(LocalizedStringKey("Heart Rate"))
         .navigationBarTitleDisplayMode(.large)
         .onAppear { Task { await health.refreshAll() } }
     }
 
     private var zoneInfo: (label: String, color: Color) {
         let bpm = health.heartRate
-        if bpm < 60 { return ("Low", AppTheme.secondary) }
-        if bpm <= 100 { return ("Normal", AppTheme.primary) }
-        if bpm <= 120 { return ("Elevated", .orange) }
-        return ("High", .red)
+        if bpm < 60 { return (NSLocalizedString("Low", comment: ""), AppTheme.secondary) }
+        if bpm <= 100 { return (NSLocalizedString("Normal", comment: ""), AppTheme.primary) }
+        if bpm <= 120 { return (NSLocalizedString("Elevated", comment: ""), .orange) }
+        return (NSLocalizedString("High", comment: ""), .red)
     }
 
     private var heartHero: some View {
         let (_, zoneColor) = zoneInfo
         return VStack(spacing: 12) {
             Image(systemName: "heart.fill")
-                .font(.system(size: 56))
-                .foregroundStyle(zoneColor)
+                .font(.system(size: 56)).foregroundStyle(zoneColor)
                 .symbolEffect(.pulse, isActive: true)
 
             HStack(spacing: 6) {
                 Text(String(format: "%.0f", health.heartRate))
                     .font(.system(size: 48, weight: .bold, design: .rounded))
                     .foregroundStyle(zoneColor)
-                Text("bpm")
-                    .font(.title2.bold())
-                    .foregroundStyle(.secondary)
+                Text(LocalizedStringKey("bpm"))
+                    .font(.title2.bold()).foregroundStyle(.secondary)
             }
 
-            // Zone badge
             Text(zoneInfo.label)
                 .font(.caption.bold())
-                .padding(.horizontal, 16)
-                .padding(.vertical, 6)
+                .padding(.horizontal, 16).padding(.vertical, 6)
                 .glassEffect(.regular.tint(zoneColor.opacity(0.3)), in: Capsule())
                 .foregroundStyle(zoneColor)
         }
@@ -379,17 +340,17 @@ struct HeartRateDetailView: View {
         let (zoneName, zoneColor) = zoneInfo
 
         return LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
-            statCell(title: "Current BPM", value: String(format: "%.0f", health.heartRate), icon: "heart.fill", color: .red)
-            statCellColored(title: "Zone", value: zoneName, icon: "waveform.path.ecg", color: zoneColor)
-            statCell(title: "Resting Est.", value: String(format: "%.0f bpm", restingEst), icon: "bed.double.fill", color: AppTheme.secondary)
-            statCell(title: "HRV", value: "Varies", icon: "chart.xyaxis.line", color: AppTheme.accent)
+            statCell(title: NSLocalizedString("Current BPM", comment: ""), value: String(format: "%.0f", health.heartRate), icon: "heart.fill", color: .red)
+            statCellColored(title: NSLocalizedString("Zone", comment: ""), value: zoneName, icon: "waveform.path.ecg", color: zoneColor)
+            statCell(title: NSLocalizedString("Resting Est.", comment: ""), value: String(format: "%.0f bpm", restingEst), icon: "bed.double.fill", color: AppTheme.secondary)
+            statCell(title: NSLocalizedString("HRV", comment: ""), value: NSLocalizedString("Varies", comment: ""), icon: "chart.xyaxis.line", color: AppTheme.accent)
         }
         .padding(.horizontal)
     }
 
     private var smartActionsCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Smart Actions", systemImage: "sparkles")
+            Label(LocalizedStringKey("Smart Actions"), systemImage: "sparkles")
                 .font(.headline).foregroundStyle(AppTheme.primary)
             Divider()
             GlassEffectContainer {
@@ -402,12 +363,10 @@ struct HeartRateDetailView: View {
                             )
                         }
                     } label: {
-                        Label("Is my heart rate normal?", systemImage: "heart.text.clipboard")
+                        Label(LocalizedStringKey("Is my heart rate normal?"), systemImage: "heart.text.clipboard")
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.glassProminent)
-                    .tint(.red)
-                    .controlSize(.small)
+                    .buttonStyle(.glassProminent).tint(.red).controlSize(.small)
 
                     Button {
                         Task {
@@ -417,49 +376,38 @@ struct HeartRateDetailView: View {
                             )
                         }
                     } label: {
-                        Label("What affects heart rate?", systemImage: "questionmark.circle")
+                        Label(LocalizedStringKey("What affects heart rate?"), systemImage: "questionmark.circle")
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.glass)
-                    .controlSize(.small)
+                    .buttonStyle(.glass).controlSize(.small)
                 }
             }
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding().frame(maxWidth: .infinity, alignment: .leading)
         .glassEffect(.regular.tint(Color.red.opacity(0.1)), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal)
     }
 
     private func statCell(title: String, value: String, icon: String, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Label(title, systemImage: icon)
-                .font(.caption.bold())
-                .foregroundStyle(color)
-            Text(value)
-                .font(.title3.bold())
+            Label(title, systemImage: icon).font(.caption.bold()).foregroundStyle(color)
+            Text(value).font(.title3.bold())
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading).padding()
         .glassEffect(.regular.tint(color.opacity(0.1)), in: RoundedRectangle(cornerRadius: 16))
     }
 
     private func statCellColored(title: String, value: String, icon: String, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Label(title, systemImage: icon)
-                .font(.caption.bold())
-                .foregroundStyle(color)
-            Text(value)
-                .font(.title3.bold())
-                .foregroundStyle(color)
+            Label(title, systemImage: icon).font(.caption.bold()).foregroundStyle(color)
+            Text(value).font(.title3.bold()).foregroundStyle(color)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading).padding()
         .glassEffect(.regular.tint(color.opacity(0.1)), in: RoundedRectangle(cornerRadius: 16))
     }
 }
 
-// MARK: - Sleep Detail View (replaces the one in CardDetailViews)
+// MARK: - Sleep Detail View
 
 struct SleepDetailView: View {
     @StateObject private var health = HealthKitManager.shared
@@ -480,16 +428,16 @@ struct SleepDetailView: View {
             }
             .padding(.vertical)
         }
-        .navigationTitle("Sleep")
+        .navigationTitle(LocalizedStringKey("Sleep"))
         .navigationBarTitleDisplayMode(.large)
         .onAppear { Task { await health.refreshAll() } }
     }
 
     private var qualityInfo: (label: String, color: Color) {
         let h = health.sleepHours
-        if h >= 7 { return ("Good", AppTheme.primary) }
-        if h >= 5 { return ("Low", .orange) }
-        return ("Critical", .red)
+        if h >= 7 { return (NSLocalizedString("Good", comment: ""), AppTheme.primary) }
+        if h >= 5 { return (NSLocalizedString("Low", comment: ""), .orange) }
+        return (NSLocalizedString("Critical", comment: ""), .red)
     }
 
     private var sleepRing: some View {
@@ -509,14 +457,12 @@ struct SleepDetailView: View {
                 HStack(spacing: 2) {
                     Text(String(format: "%.1f", health.sleepHours))
                         .font(.system(size: 30, weight: .bold, design: .rounded))
-                    Text("h")
-                        .font(.title2.bold())
-                        .foregroundStyle(.secondary)
+                    Text(LocalizedStringKey("hours"))
+                        .font(.title2.bold()).foregroundStyle(.secondary)
                 }
                 Text(qualityInfo.label)
                     .font(.caption.bold())
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 3)
+                    .padding(.horizontal, 10).padding(.vertical, 3)
                     .glassEffect(.regular.tint(qualityColor.opacity(0.3)), in: Capsule())
                     .foregroundStyle(qualityColor)
             }
@@ -529,17 +475,17 @@ struct SleepDetailView: View {
         let (qualityLabel, qualityColor) = qualityInfo
 
         return LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
-            statCell(title: "Hours Slept", value: String(format: "%.1f h", health.sleepHours), icon: "moon.zzz.fill", color: AppTheme.secondary)
-            statCell(title: "Target", value: "8 h", icon: "flag.fill", color: AppTheme.primary)
-            statCell(title: "Quality Score", value: String(format: "%.0f%%", qualityScore), icon: "chart.bar.fill", color: qualityColor)
-            statCell(title: "Consistency", value: qualityLabel, icon: "repeat", color: qualityColor)
+            statCell(title: NSLocalizedString("Hours Slept", comment: ""), value: String(format: "%.1f h", health.sleepHours), icon: "moon.zzz.fill", color: AppTheme.secondary)
+            statCell(title: NSLocalizedString("Target", comment: ""), value: "8 h", icon: "flag.fill", color: AppTheme.primary)
+            statCell(title: NSLocalizedString("Quality Score", comment: ""), value: String(format: "%.0f%%", qualityScore), icon: "chart.bar.fill", color: qualityColor)
+            statCell(title: NSLocalizedString("Consistency", comment: ""), value: qualityLabel, icon: "repeat", color: qualityColor)
         }
         .padding(.horizontal)
     }
 
     private var smartActionsCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Smart Actions", systemImage: "sparkles")
+            Label(LocalizedStringKey("Smart Actions"), systemImage: "sparkles")
                 .font(.headline).foregroundStyle(AppTheme.primary)
             Divider()
             GlassEffectContainer {
@@ -552,12 +498,10 @@ struct SleepDetailView: View {
                             )
                         }
                     } label: {
-                        Label("How to improve my sleep?", systemImage: "moon.stars.fill")
+                        Label(LocalizedStringKey("How to improve my sleep?"), systemImage: "moon.stars.fill")
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.glassProminent)
-                    .tint(AppTheme.secondary)
-                    .controlSize(.small)
+                    .buttonStyle(.glassProminent).tint(AppTheme.secondary).controlSize(.small)
 
                     Button {
                         Task {
@@ -567,11 +511,10 @@ struct SleepDetailView: View {
                             )
                         }
                     } label: {
-                        Label("How does sleep affect my health today?", systemImage: "waveform.path.ecg")
+                        Label(LocalizedStringKey("How does sleep affect my health today?"), systemImage: "waveform.path.ecg")
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.glass)
-                    .controlSize(.small)
+                    .buttonStyle(.glass).controlSize(.small)
 
                     Button {
                         Task {
@@ -581,30 +524,24 @@ struct SleepDetailView: View {
                             )
                         }
                     } label: {
-                        Label("What time should I sleep tonight?", systemImage: "clock.badge.questionmark")
+                        Label(LocalizedStringKey("What time should I sleep tonight?"), systemImage: "clock.badge.questionmark")
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.glass)
-                    .controlSize(.small)
+                    .buttonStyle(.glass).controlSize(.small)
                 }
             }
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding().frame(maxWidth: .infinity, alignment: .leading)
         .glassEffect(.regular.tint(AppTheme.secondary.opacity(0.1)), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal)
     }
 
     private func statCell(title: String, value: String, icon: String, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Label(title, systemImage: icon)
-                .font(.caption.bold())
-                .foregroundStyle(color)
-            Text(value)
-                .font(.title3.bold())
+            Label(title, systemImage: icon).font(.caption.bold()).foregroundStyle(color)
+            Text(value).font(.title3.bold())
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading).padding()
         .glassEffect(.regular.tint(color.opacity(0.1)), in: RoundedRectangle(cornerRadius: 16))
     }
 }

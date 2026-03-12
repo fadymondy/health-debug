@@ -1284,6 +1284,361 @@
       "localizations" : {
         "ar" : { "stringUnit" : { "state" : "translated", "value" : "هدف الماء اليومي" } }
       }
+    },
+    "Daily Flow" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الروتين اليومي" } }
+      }
+    },
+    "Activity" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "النشاط" } }
+      }
+    },
+    "Health" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الصحة" } }
+      }
+    },
+    "Active Energy" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الطاقة النشطة" } }
+      }
+    },
+    "Heart Rate" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "معدل ضربات القلب" } }
+      }
+    },
+    "Sleep" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "النوم" } }
+      }
+    },
+    "Weight" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الوزن" } }
+      }
+    },
+    "Last Night" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الليلة الماضية" } }
+      }
+    },
+    "Smart Actions" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الإجراءات الذكية" } }
+      }
+    },
+    "Normal" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "طبيعي" } }
+      }
+    },
+    "Elevated" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "مرتفع" } }
+      }
+    },
+    "High" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "عالٍ" } }
+      }
+    },
+    "Goal Met" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "تم تحقيق الهدف" } }
+      }
+    },
+    "On Track" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "في المسار الصحيح" } }
+      }
+    },
+    "Behind" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "متأخر" } }
+      }
+    },
+    "Distance" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "المسافة" } }
+      }
+    },
+    "Active Minutes" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الدقائق النشطة" } }
+      }
+    },
+    "Daily Goal" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الهدف اليومي" } }
+      }
+    },
+    "Status" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الحالة" } }
+      }
+    },
+    "Burn Rate" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "معدل الحرق" } }
+      }
+    },
+    "BMR Estimate" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "تقدير الأيض الأساسي" } }
+      }
+    },
+    "Is my calorie burn healthy?" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "هل حرق السعرات صحي؟" } }
+      }
+    },
+    "How can I increase activity?" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "كيف أزيد نشاطي؟" } }
+      }
+    },
+    "Current BPM" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "النبضات الحالية" } }
+      }
+    },
+    "Zone" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "المنطقة" } }
+      }
+    },
+    "Resting Est." : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "تقدير الراحة" } }
+      }
+    },
+    "HRV" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "تقلب معدل القلب" } }
+      }
+    },
+    "Varies" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "متفاوت" } }
+      }
+    },
+    "Is my heart rate normal?" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "هل معدل قلبي طبيعي؟" } }
+      }
+    },
+    "What affects heart rate?" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "ما الذي يؤثر على معدل القلب؟" } }
+      }
+    },
+    "Hours Slept" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "ساعات النوم" } }
+      }
+    },
+    "Target" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الهدف" } }
+      }
+    },
+    "Quality Score" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "درجة الجودة" } }
+      }
+    },
+    "Consistency" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الانتظام" } }
+      }
+    },
+    "How to improve my sleep?" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "كيف أحسّن نومي؟" } }
+      }
+    },
+    "How does sleep affect my health today?" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "كيف يؤثر النوم على صحتي اليوم؟" } }
+      }
+    },
+    "What time should I sleep tonight?" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "متى يجب أن أنام الليلة؟" } }
+      }
+    },
+    "Why am I behind on steps?" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "لماذا خطواتي أقل من الهدف؟" } }
+      }
+    },
+    "What's a good walk target now?" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "ما هو هدف المشي الجيد الآن؟" } }
+      }
+    },
+    "%.0f%% of daily goal" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "%.0f%% من الهدف اليومي" } }
+      }
+    },
+    "%.0f%% of 600 kcal" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "%.0f%% من 600 سعرة" } }
+      }
+    },
+    "Log 250ml" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "سجّل 250مل" } }
+      }
+    },
+    "Log 500ml" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "سجّل 500مل" } }
+      }
+    },
+    "Active — No food until sleep" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "نشط — لا طعام حتى النوم" } }
+      }
+    },
+    "ACTIVE" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "نشط" } }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "بخير" } }
+      }
+    },
+    "Synced" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "مزامَن" } }
+      }
+    },
+    "Never synced" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "لم تتم المزامنة" } }
+      }
+    },
+    "/ 8 hours target" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "/ هدف 8 ساعات" } }
+      }
+    },
+    "%d min left" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "باقي %d دقيقة" } }
+      }
+    },
+    "Intelligence" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الذكاء الاصطناعي" } }
+      }
+    },
+    "How am I doing today?" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "كيف حالي اليوم؟" } }
+      }
+    },
+    "What should I eat now?" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "ماذا يجب أن آكل الآن؟" } }
+      }
+    },
+    "Analyze my sleep" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "حلّل نومي" } }
+      }
+    },
+    "Caffeine advice" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "نصيحة الكافيين" } }
+      }
+    },
+    "Ask your health AI..." : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "اسأل ذكاءك الصحي..." } }
+      }
+    },
+    "Thinking..." : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "جارٍ التفكير..." } }
+      }
+    },
+    "AI Insights" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "تحليلات الذكاء الاصطناعي" } }
+      }
+    },
+    "Full Analysis" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "التحليل الكامل" } }
+      }
+    },
+    "Analyze My Health" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "حلّل صحتي" } }
+      }
+    },
+    "Share PDF" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "مشاركة PDF" } }
+      }
+    },
+    "Markdown" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "Markdown" } }
+      }
+    },
+    "Morning Hydration" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "ترطيب الصباح" } }
+      }
+    },
+    "Meals Logged" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الوجبات المسجّلة" } }
+      }
+    },
+    "Stand Sessions" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "جلسات الوقوف" } }
+      }
+    },
+    "Caffeine Clean" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "الكافيين نظيف" } }
+      }
+    },
+    "Shutdown Compliant" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "ملتزم بالإغلاق" } }
+      }
+    },
+    "Sleep Quality" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "جودة النوم" } }
+      }
+    },
+    "Get AI Daily Briefing" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "احصل على تقرير ذكي يومي" } }
+      }
+    },
+    "goals met" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "أهداف محققة" } }
+      }
+    },
+    "of" : {
+      "localizations" : {
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "من" } }
+      }
     }
   },
   "version" : "1.0"
