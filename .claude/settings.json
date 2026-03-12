@@ -212,7 +212,8 @@
       "Bash(git -C /Users/fadymondy/Sites/health-debug stash)",
       "Bash(xcrun devicectl device process launch --device 00008140-000E712926F1801C io.threex1.HealthDebug)",
       "Bash(git add Packages/HealthDebugKit/Sources/HealthDebugKit/Models/UserProfile.swift)",
-      "Bash(git add .claude/settings.json)"
+      "Bash(git add .claude/settings.json)",
+      "Bash(git stash drop)"
     ],
     "additionalDirectories": [
       "/Users/fadymondy/Sites/health-debug",
