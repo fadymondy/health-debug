@@ -61,7 +61,6 @@ struct MacContentView: View {
 
 struct MacDashboardView: View {
     @Environment(\.modelContext) private var context
-    @StateObject private var health = HealthKitManager.shared
     @StateObject private var hydration = HydrationManager.shared
     @StateObject private var nutrition = NutritionManager.shared
     @StateObject private var caffeine = CaffeineManager.shared
@@ -84,7 +83,7 @@ struct MacDashboardView: View {
         s += (nutrition.safetyScore / 100.0) * 20; t += 20
         s += (caffeine.cleanTransitionPercent / 100.0) * 20; t += 20
         s += min(1.0, Double(standTimer.todayCompleted) / Double(StandTimerManager.dailyTarget)) * 20; t += 20
-        s += min(1.0, health.sleepHours / 8.0) * 20; t += 20
+        s += min(1.0, watcher.snapshot.sleepHours / 8.0) * 20; t += 20
         return t > 0 ? Int((s / t) * 100) : 0
     }
     private var scoreColor: Color { healthScore >= 80 ? .green : healthScore >= 50 ? .orange : .red }
@@ -132,8 +131,9 @@ struct MacDashboardView: View {
 
                         MacFeedCard(
                             icon: "figure.walk", color: AppTheme.primary, title: "Steps & Energy",
-                            value: "\(health.stepCount >= 1000 ? String(format: "%.1fk", health.stepCount/1000) : "\(Int(health.stepCount))") steps · \(String(format: "%.0f kcal", health.activeEnergy))",
-                            status: health.stepCount >= 10000 ? "Goal Met" : "In Progress", statusColor: health.stepCount >= 10000 ? .green : .orange,
+                            value: "\(watcher.snapshot.steps >= 1000 ? String(format: "%.1fk", watcher.snapshot.steps/1000) : "\(Int(watcher.snapshot.steps))") steps · \(String(format: "%.0f kcal", watcher.snapshot.activeEnergy))",
+                            status: watcher.snapshot.steps >= 10000 ? "Goal Met" : "In Progress",
+                            statusColor: watcher.snapshot.steps >= 10000 ? .green : .orange,
                             actionLabel: "View Detail", aiQuery: "How are my activity levels?"
                         ) {
                             navPath.append(.steps)
@@ -141,9 +141,9 @@ struct MacDashboardView: View {
 
                         MacFeedCard(
                             icon: "moon.zzz.fill", color: .indigo, title: "Sleep",
-                            value: String(format: "%.1f hrs", health.sleepHours),
-                            status: health.sleepHours >= 7 ? "Good" : health.sleepHours >= 5 ? "Low" : "Critical",
-                            statusColor: health.sleepHours >= 7 ? .green : .orange,
+                            value: String(format: "%.1f hrs", watcher.snapshot.sleepHours),
+                            status: watcher.snapshot.sleepHours >= 7 ? "Good" : watcher.snapshot.sleepHours >= 5 ? "Low" : "Critical",
+                            statusColor: watcher.snapshot.sleepHours >= 7 ? .green : .orange,
                             actionLabel: "View Detail", aiQuery: "Analyze my sleep quality"
                         ) {
                             navPath.append(.sleep)
@@ -183,7 +183,8 @@ struct MacDashboardView: View {
             .toolbar {
                 ToolbarItem(placement: .automatic) {
                     Button {
-                        Task { await health.refreshAll(); refreshAll() }
+                        watcher.refreshSnapshot()
+                        refreshAll()
                     } label: { Image(systemName: "arrow.clockwise") }
                     .help("Refresh")
                 }
@@ -259,7 +260,7 @@ struct MacDashboardView: View {
                     scoreComponent(icon: "cup.and.saucer.fill", color: .brown, value: caffeine.cleanTransitionPercent / 100)
                     scoreComponent(icon: "timer", color: .orange,
                         value: min(1, Double(standTimer.todayCompleted) / Double(StandTimerManager.dailyTarget)))
-                    scoreComponent(icon: "moon.zzz.fill", color: .indigo, value: min(1, health.sleepHours / 8))
+                    scoreComponent(icon: "moon.zzz.fill", color: .indigo, value: min(1, watcher.snapshot.sleepHours / 8))
                 }
             }
             Spacer()
@@ -304,6 +305,7 @@ struct MacDashboardView: View {
     }
 
     private func refreshAll() {
+        watcher.refreshSnapshot()
         hydration.refresh(context: context)
         if let p = profile { hydration.dailyGoal = p.dailyWaterGoalMl }
         nutrition.refresh(context: context)
@@ -538,49 +540,66 @@ struct MacHydrationDetailView: View {
 }
 
 struct MacStepsDetailView: View {
-    @StateObject private var health = HealthKitManager.shared
+    @StateObject private var watcher = SharedStoreWatcher.shared
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                statCard(value: health.stepCount >= 1000 ? String(format: "%.1fk", health.stepCount/1000) : "\(Int(health.stepCount))",
-                         label: "Steps Today", caption: String(format: "%.0f%% of 10,000", min(100, health.stepCount/100)), color: .teal)
+                statCard(
+                    value: watcher.snapshot.steps >= 1000 ? String(format: "%.1fk", watcher.snapshot.steps/1000) : "\(Int(watcher.snapshot.steps))",
+                    label: "Steps Today",
+                    caption: String(format: "%.0f%% of 10,000", min(100, watcher.snapshot.steps / 100)),
+                    color: .teal
+                )
                 HStack(spacing: 12) {
-                    statCard(value: String(format: "%.0f kcal", health.activeEnergy), label: "Active Energy", caption: "of 600 kcal goal", color: .orange)
-                    statCard(value: String(format: "%.0f BPM", health.heartRate), label: "Heart Rate", caption: heartZone, color: .red)
+                    statCard(value: String(format: "%.0f kcal", watcher.snapshot.activeEnergy), label: "Active Energy", caption: "of \(Int(watcher.snapshot.energyGoal)) kcal goal", color: .orange)
+                    statCard(value: String(format: "%.0f BPM", watcher.snapshot.heartRate), label: "Heart Rate", caption: heartZone, color: .red)
                 }
-                progressBar(value: min(1, health.stepCount / 10000), color: .teal, label: "Step Goal")
+                progressBar(value: min(1, watcher.snapshot.steps / watcher.snapshot.stepsGoal), color: .teal, label: "Step Goal")
             }.padding()
         }
         .navigationTitle("Movement")
+        .onAppear { watcher.refreshSnapshot() }
     }
     private var heartZone: String {
-        switch health.heartRate { case 0..<50: "Low"; case 50..<100: "Normal"; case 100..<140: "Elevated"; default: "High" }
+        switch watcher.snapshot.heartRate { case 0..<50: "Low"; case 50..<100: "Normal"; case 100..<140: "Elevated"; default: "High" }
     }
 }
 
 struct MacHeartRateDetailView: View {
-    @StateObject private var health = HealthKitManager.shared
+    @StateObject private var watcher = SharedStoreWatcher.shared
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                statCard(value: String(format: "%.0f BPM", health.heartRate), label: "Current Heart Rate", caption: "Resting zone", color: .red)
+                statCard(value: String(format: "%.0f BPM", watcher.snapshot.heartRate), label: "Heart Rate (from iPhone)", caption: heartZone, color: .red)
+                statCard(value: String(format: "%.1f kg", watcher.snapshot.weightKg), label: "Weight", caption: String(format: "%.1f%% body fat", watcher.snapshot.weightBodyFat), color: .purple)
             }.padding()
         }
         .navigationTitle("Heart Rate")
+        .onAppear { watcher.refreshSnapshot() }
+    }
+    private var heartZone: String {
+        switch watcher.snapshot.heartRate { case 0..<50: "Low"; case 50..<100: "Normal"; case 100..<140: "Elevated"; default: "High" }
     }
 }
 
 struct MacSleepDetailView: View {
-    @StateObject private var health = HealthKitManager.shared
+    @StateObject private var watcher = SharedStoreWatcher.shared
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                statCard(value: String(format: "%.1f hrs", health.sleepHours), label: "Last Night",
-                         caption: health.sleepHours >= 7 ? "Good" : health.sleepHours >= 5 ? "Low" : "Critical", color: .indigo)
-                progressBar(value: min(1, health.sleepHours / 8), color: .indigo, label: "Sleep Goal (8h)")
+                statCard(
+                    value: String(format: "%.1f hrs", watcher.snapshot.sleepHours),
+                    label: "Last Night",
+                    caption: watcher.snapshot.sleepHours >= 7 ? "Good" : watcher.snapshot.sleepHours >= 5 ? "Low" : "Critical",
+                    color: .indigo
+                )
+                progressBar(value: min(1, watcher.snapshot.sleepHours / watcher.snapshot.sleepGoal), color: .indigo, label: "Sleep Goal (\(Int(watcher.snapshot.sleepGoal))h)")
+                Text("Last updated: \(watcher.snapshot.updatedAt.formatted(date: .omitted, time: .shortened))")
+                    .font(.caption).foregroundStyle(.secondary).padding(.horizontal)
             }.padding()
         }
         .navigationTitle("Sleep")
+        .onAppear { watcher.refreshSnapshot() }
     }
 }
 

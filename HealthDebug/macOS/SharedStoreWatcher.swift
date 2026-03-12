@@ -3,39 +3,62 @@ import Combine
 import SwiftData
 import HealthDebugKit
 
-/// Detects writes to the shared App Group SQLite file made by other processes (iOS, watchOS).
-/// Uses two complementary mechanisms:
-///   1. `NSPersistentStoreRemoteChangeNotification` — fires when SQLite WAL checkpoints
-///   2. `DispatchSource` file-system watcher on the WAL file — catches writes before checkpoint
+/// Watches the shared App Group store for changes written by iOS/watchOS.
+/// - Observes UserDefaults (widget snapshot) for HealthKit metrics (steps, HR, sleep, energy)
+/// - Observes SQLite WAL writes + NSPersistentStoreRemoteChange for SwiftData records
 ///
-/// Both publish via `didChange` on the main queue so views can call `refreshAll()`.
-final class SharedStoreWatcher: ObservableObject, @unchecked Sendable {
+/// On macOS, HealthKit is unavailable — this is the source of truth for those metrics.
+@MainActor
+final class SharedStoreWatcher: ObservableObject {
 
     static let shared = SharedStoreWatcher()
+
+    // MARK: - Published snapshot (HealthKit metrics from iOS)
+
+    @Published var snapshot: WidgetSnapshot = WidgetDataStore.shared.read()
+
+    // MARK: - Change signal for SwiftData refresh
 
     let didChange = PassthroughSubject<Void, Never>()
 
     private var fileSource: DispatchSourceFileSystemObject?
     private var fd: Int32 = -1
-    private var notificationToken: NSObjectProtocol?
+    nonisolated(unsafe) private var tokens: [NSObjectProtocol] = []
 
     private init() {
-        startFileWatcher()
-        startRemoteChangeObserver()
+        startUserDefaultsObserver()   // HealthKit metrics (UserDefaults)
+        startFileWatcher()            // SQLite WAL writes
+        startRemoteChangeObserver()   // NSPersistentStoreRemoteChange
     }
 
-    // MARK: - File-system watcher (WAL writes)
+    // MARK: - UserDefaults observer (widget_snapshot_v1 key)
+
+    private func startUserDefaultsObserver() {
+        let token = NotificationCenter.default.addObserver(
+            forName: UserDefaults.didChangeNotification,
+            object: UserDefaults(suiteName: "group.io.3x1.HealthDebug"),
+            queue: .main
+        ) { [weak self] _ in
+            guard let self else { return }
+            let fresh = WidgetDataStore.shared.read()
+            // Only update if the snapshot is actually newer
+            if fresh.updatedAt > self.snapshot.updatedAt {
+                self.snapshot = fresh
+                self.didChange.send()
+            }
+        }
+        tokens.append(token)
+    }
+
+    // MARK: - File-system watcher (SQLite WAL)
 
     private func startFileWatcher() {
-        let walURL = ModelContainerFactory.sharedStoreURL
-            .deletingPathExtension()
-            .appendingPathExtension("sqlite-wal")
+        // SQLite WAL file path: HealthDebug.sqlite-wal
+        let base = ModelContainerFactory.sharedStoreURL.path   // …/HealthDebug.sqlite
+        let walPath = base + "-wal"
+        let watchPath = FileManager.default.fileExists(atPath: walPath) ? walPath : base
 
-        // Open whichever file exists; WAL is created on first write
-        let watchURL = FileManager.default.fileExists(atPath: walURL.path)
-            ? walURL : ModelContainerFactory.sharedStoreURL
-
-        fd = open(watchURL.path, O_EVTONLY)
+        fd = open(watchPath, O_EVTONLY)
         guard fd >= 0 else { return }
 
         let src = DispatchSource.makeFileSystemObjectSource(
@@ -56,19 +79,26 @@ final class SharedStoreWatcher: ObservableObject, @unchecked Sendable {
     // MARK: - NSPersistentStoreRemoteChange (WAL checkpoint)
 
     private func startRemoteChangeObserver() {
-        notificationToken = NotificationCenter.default.addObserver(
+        let token = NotificationCenter.default.addObserver(
             forName: .NSPersistentStoreRemoteChange,
             object: nil,
             queue: .main
         ) { [weak self] _ in
             self?.didChange.send()
         }
+        tokens.append(token)
+    }
+
+    // MARK: - Manual refresh
+
+    func refreshSnapshot() {
+        let fresh = WidgetDataStore.shared.read()
+        snapshot = fresh
     }
 
     deinit {
         fileSource?.cancel()
-        if let token = notificationToken {
-            NotificationCenter.default.removeObserver(token)
-        }
+        // tokens are NSObjectProtocol — removeObserver is safe to call from deinit
+        for token in tokens { NotificationCenter.default.removeObserver(token) }
     }
 }
