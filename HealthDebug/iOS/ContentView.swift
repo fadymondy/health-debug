@@ -123,7 +123,8 @@ struct ContentView: View {
                     unit: "BPM",
                     caption: heartZoneLabel,
                     color: .red,
-                    progress: nil,
+                    // Map BPM to 0–1 within normal range 40–160 bpm
+                    progress: min(1.0, max(0, (health.heartRate - 40) / 120)),
                     statusColor: heartZoneColor
                 )
             }.buttonStyle(.plain)
