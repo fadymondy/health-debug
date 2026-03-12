@@ -47,10 +47,16 @@ struct CaffeineView: View {
                         .font(.title3.bold())
                         .foregroundStyle(.orange)
                 }
-                Text("\(remaining) minutes remaining. Cortisol is naturally high after waking — caffeine won't help yet.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
+                VStack(spacing: 2) {
+                    HStack(spacing: 4) {
+                        Text("\(remaining)")
+                        Text("min left")
+                    }
+                    Text("Cortisol is naturally high after waking — caffeine won't help yet.")
+                }
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
             } else {
                 HStack {
                     Image(systemName: "checkmark.circle.fill")
@@ -95,7 +101,7 @@ struct CaffeineView: View {
                 Text(String(format: "%.0f%%", caffeine.cleanTransitionPercent))
                     .font(.system(size: 32, weight: .bold, design: .rounded))
 
-                Text(caffeine.transitionStatus.rawValue)
+                Text(LocalizedStringKey(caffeine.transitionStatus.rawValue))
                     .font(.caption.bold())
                     .foregroundStyle(transitionColor)
             }
@@ -128,10 +134,21 @@ struct CaffeineView: View {
                 .padding(.horizontal)
 
             if !caffeine.canLog {
-                Text(caffeine.todayTotal >= CaffeineManager.maxDailyLogs ? "Daily limit reached (\(CaffeineManager.maxDailyLogs) drinks)" : "Wait a moment before logging again")
+                if caffeine.todayTotal >= CaffeineManager.maxDailyLogs {
+                    HStack(spacing: 4) {
+                        Text("Daily limit reached")
+                        Text("(\(CaffeineManager.maxDailyLogs)")
+                        Text("drinks)")
+                    }
                     .font(.caption)
                     .foregroundStyle(.orange)
                     .padding(.horizontal)
+                } else {
+                    Text("Wait a moment before logging again")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                        .padding(.horizontal)
+                }
             }
 
             LazyVGrid(columns: [.init(.flexible()), .init(.flexible()), .init(.flexible())], spacing: 10) {
@@ -143,7 +160,7 @@ struct CaffeineView: View {
                             Image(systemName: iconFor(type))
                                 .font(.title2)
                                 .foregroundStyle(type.isSugarBased ? .red : AppTheme.primary)
-                            Text(type.rawValue)
+                            Text(LocalizedStringKey(type.rawValue))
                                 .font(.caption2)
                                 .lineLimit(1)
                         }
@@ -211,7 +228,7 @@ struct CaffeineView: View {
                     Image(systemName: log.isSugarBased ? "exclamationmark.circle.fill" : "checkmark.circle.fill")
                         .foregroundStyle(log.isSugarBased ? .red : AppTheme.primary)
                         .font(.caption)
-                    Text(log.type)
+                    Text(LocalizedStringKey(log.type))
                         .font(.subheadline)
                     Spacer()
                     if log.isSugarBased {

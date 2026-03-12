@@ -76,8 +76,14 @@ public final class AIInsightEngine: ObservableObject {
 
     // MARK: - Domain Prompts
 
+    /// Returns a language instruction if the device language is Arabic.
+    private var languageInstruction: String {
+        let code = Locale.current.language.languageCode?.identifier ?? "en"
+        return code == "ar" ? "\nRespond in Arabic (العربية). Use natural, simple Arabic." : ""
+    }
+
     private func buildDomainPrompt(domain: Domain, healthContext: HealthContext, profile: UserProfile?) -> String {
-        let base = "You are a health AI for the Health Debug app. Give ONE short insight (2-3 sentences max). Be specific using the data. No greetings or filler."
+        let base = "You are a health AI for the Health Debug app. Give ONE short insight (2-3 sentences max). Be specific using the data. No greetings or filler.\(languageInstruction)"
 
         switch domain {
         case .dashboard:

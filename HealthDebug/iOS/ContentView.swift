@@ -88,9 +88,9 @@ struct ContentView: View {
     private var metricsGrid: some View {
         LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
             MetricCard(icon: "figure.walk", title: "Steps", value: formatted(health.stepCount), color: AppTheme.primary)
-            MetricCard(icon: "flame.fill", title: "Active Energy", value: "\(formatted(health.activeEnergy)) kcal", color: .orange)
-            MetricCard(icon: "heart.fill", title: "Heart Rate", value: "\(formatted(health.heartRate)) bpm", color: .red)
-            MetricCard(icon: "moon.zzz.fill", title: "Sleep", value: String(format: "%.1fh", health.sleepHours), color: AppTheme.secondary)
+            MetricCard(icon: "flame.fill", title: "Active Energy", value: formatted(health.activeEnergy), unit: "kcal", color: .orange)
+            MetricCard(icon: "heart.fill", title: "Heart Rate", value: formatted(health.heartRate), unit: "bpm", color: .red)
+            MetricCard(icon: "moon.zzz.fill", title: "Sleep", value: String(format: "%.1f", health.sleepHours), unit: "hours", color: AppTheme.secondary)
         }
         .padding(.horizontal)
     }
@@ -121,7 +121,7 @@ struct ContentView: View {
                         case .dehydrated: return .red
                         }
                     }()
-                    Text(status.rawValue)
+                    Text(LocalizedStringKey(status.rawValue))
                         .font(.caption.bold())
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
@@ -154,12 +154,20 @@ struct ContentView: View {
             Divider()
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(nutritionMgr.safetyStatus.rawValue)
+                    Text(LocalizedStringKey(nutritionMgr.safetyStatus.rawValue))
                         .font(.title3.bold())
                         .foregroundStyle(nutritionStatusColor)
-                    Text("\(nutritionMgr.todaySafeCount) safe, \(nutritionMgr.todayUnsafeCount) unsafe")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    HStack(spacing: 4) {
+                        Text("\(nutritionMgr.todaySafeCount)")
+                            .foregroundStyle(AppTheme.primary)
+                        Text("safe")
+                        Text("·").foregroundStyle(.tertiary)
+                        Text("\(nutritionMgr.todayUnsafeCount)")
+                            .foregroundStyle(nutritionMgr.todayUnsafeCount > 0 ? .red : .secondary)
+                        Text("unsafe")
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 }
                 Spacer()
                 Text(String(format: "%.0f%%", nutritionMgr.safetyScore))
@@ -171,9 +179,16 @@ struct ContentView: View {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(.red)
                         .font(.caption)
-                    Text(nutritionMgr.todayTriggers.sorted().joined(separator: ", "))
-                        .font(.caption)
-                        .foregroundStyle(.red)
+                    HStack(spacing: 4) {
+                        ForEach(nutritionMgr.todayTriggers.sorted(), id: \.self) { trigger in
+                            Text(LocalizedStringKey(trigger))
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.red.opacity(0.1), in: Capsule())
+                        }
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.red)
                 }
             }
         }
@@ -204,12 +219,20 @@ struct ContentView: View {
             Divider()
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(caffeineMgr.transitionStatus.rawValue)
+                    Text(LocalizedStringKey(caffeineMgr.transitionStatus.rawValue))
                         .font(.title3.bold())
                         .foregroundStyle(caffeineStatusColor)
-                    Text("\(caffeineMgr.todayCleanCount) clean, \(caffeineMgr.todaySugarCount) sugar")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    HStack(spacing: 4) {
+                        Text("\(caffeineMgr.todayCleanCount)")
+                            .foregroundStyle(AppTheme.primary)
+                        Text("clean")
+                        Text("·").foregroundStyle(.tertiary)
+                        Text("\(caffeineMgr.todaySugarCount)")
+                            .foregroundStyle(caffeineMgr.todaySugarCount > 0 ? .red : .secondary)
+                        Text("sugar")
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 }
                 Spacer()
                 Text(String(format: "%.0f%%", caffeineMgr.cleanTransitionPercent))
@@ -248,12 +271,18 @@ struct ContentView: View {
                         Text("ACTIVE — No Food")
                             .font(.title3.bold())
                             .foregroundStyle(.orange)
-                        Text(ShutdownManager.formatCountdown(shutdownMgr.secondsUntilSleep) + " until sleep")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        HStack(spacing: 4) {
+                            Text(ShutdownManager.formatCountdown(shutdownMgr.secondsUntilSleep))
+                            Text("until sleep")
+                        }
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                     } else {
-                        Text("Shutdown in " + ShutdownManager.formatCountdown(shutdownMgr.secondsUntilShutdown))
-                            .font(.title3.bold())
+                        HStack(spacing: 4) {
+                            Text("Shutdown in")
+                            Text(ShutdownManager.formatCountdown(shutdownMgr.secondsUntilShutdown))
+                        }
+                        .font(.title3.bold())
                         Text("You can eat normally")
                             .font(.caption)
                             .foregroundStyle(.secondary)
@@ -290,8 +319,11 @@ struct ContentView: View {
                             .font(.title3.bold())
                     case .sitting:
                         let mins = Int(standTimer.sitSecondsRemaining) / 60
-                        Text("\(mins) min left")
-                            .font(.title3.bold())
+                        HStack(spacing: 4) {
+                            Text("\(mins)")
+                            Text("min left")
+                        }
+                        .font(.title3.bold())
                     case .standAlert:
                         Text("Stand Now!")
                             .font(.title3.bold())
@@ -303,8 +335,11 @@ struct ContentView: View {
                             .font(.title3.bold())
                             .foregroundStyle(AppTheme.accent)
                     }
-                    Text("\(standTimer.todayCompleted) / \(StandTimerManager.dailyTarget) sessions")
-                        .font(.caption)
+                    HStack(spacing: 4) {
+                        Text("\(standTimer.todayCompleted) / \(StandTimerManager.dailyTarget)")
+                        Text("sessions")
+                    }
+                    .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
@@ -335,27 +370,20 @@ struct ContentView: View {
                 .font(.headline)
                 .foregroundStyle(AppTheme.primary)
             Divider()
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("Weight")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text(String(format: "%.1f kg", health.zeppMetrics.weight))
-                        .font(.title3.bold())
-                }
-                Spacer()
-                VStack(alignment: .trailing) {
-                    Text("Body Fat")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text(String(format: "%.1f%%", health.zeppMetrics.bodyFatPercent))
-                        .font(.title3.bold())
-                }
+            HStack(spacing: 4) {
+                Text(String(format: "%.1f", health.zeppMetrics.weight))
+                    .font(.title3.bold())
+                Text("kg")
+                    .font(.caption.bold())
+                    .foregroundStyle(.secondary)
             }
             if let date = health.zeppMetrics.lastUpdated {
-                Text("Last synced: \(date.formatted(.relative(presentation: .named)))")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                HStack(spacing: 4) {
+                    Text("Last synced")
+                    Text(date.formatted(.relative(presentation: .named)))
+                }
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
             }
         }
         .padding()
@@ -373,8 +401,11 @@ struct ContentView: View {
                 .foregroundStyle(AppTheme.secondary)
             Divider()
             HStack {
-                Text(String(format: "%.1f hours", health.sleepHours))
-                    .font(.title3.bold())
+                HStack(spacing: 4) {
+                    Text(String(format: "%.1f", health.sleepHours))
+                    Text("hours")
+                }
+                .font(.title3.bold())
                 Spacer()
                 sleepQualityBadge
             }
@@ -412,9 +443,18 @@ struct ContentView: View {
 
 struct MetricCard: View {
     let icon: String
-    let title: String
+    let title: LocalizedStringKey
     let value: String
+    let unit: LocalizedStringKey?
     let color: Color
+
+    init(icon: String, title: LocalizedStringKey, value: String, unit: LocalizedStringKey? = nil, color: Color) {
+        self.icon = icon
+        self.title = title
+        self.value = value
+        self.unit = unit
+        self.color = color
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -424,8 +464,15 @@ struct MetricCard: View {
             Text(title)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text(value)
-                .font(.title3.bold())
+            HStack(spacing: 2) {
+                Text(verbatim: value)
+                    .font(.title3.bold())
+                if let unit {
+                    Text(unit)
+                        .font(.caption.bold())
+                        .foregroundStyle(.secondary)
+                }
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()

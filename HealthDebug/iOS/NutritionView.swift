@@ -97,7 +97,7 @@ struct NutritionView: View {
                 Text(String(format: "%.0f%%", score))
                     .font(.system(size: 32, weight: .bold, design: .rounded))
 
-                Text(nutrition.safetyStatus.rawValue)
+                Text(LocalizedStringKey(nutrition.safetyStatus.rawValue))
                     .font(.caption.bold())
                     .foregroundStyle(safetyColor)
 
@@ -163,7 +163,7 @@ struct NutritionView: View {
                         Button {
                             nutrition.logSafeMeal(item, category: category, context: context)
                         } label: {
-                            Text(item)
+                            Text(LocalizedStringKey(item))
                                 .font(.caption)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 8)
@@ -202,9 +202,13 @@ struct NutritionView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Spacer()
-                    Text(meal.triggers.joined(separator: ", "))
-                        .font(.caption2)
-                        .foregroundStyle(.red)
+                    HStack(spacing: 2) {
+                        ForEach(meal.triggers, id: \.self) { t in
+                            Text(LocalizedStringKey(t))
+                        }
+                    }
+                    .font(.caption2)
+                    .foregroundStyle(.red)
                 }
             }
         }
@@ -264,7 +268,7 @@ struct NutritionView: View {
                 Section("Category") {
                     Picker("Category", selection: $customCategory) {
                         ForEach(FoodCategory.allCases, id: \.self) { cat in
-                            Text(cat.rawValue.capitalized).tag(cat)
+                            Text(LocalizedStringKey(cat.rawValue)).tag(cat)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -281,7 +285,7 @@ struct NutritionView: View {
                         }
                         if !result.triggers.isEmpty {
                             ForEach(result.triggers, id: \.self) { trigger in
-                                Label(trigger.rawValue, systemImage: "exclamationmark.triangle.fill")
+                                Label { Text(LocalizedStringKey(trigger.rawValue)) } icon: { Image(systemName: "exclamationmark.triangle.fill") }
                                     .foregroundStyle(.red)
                             }
                         }

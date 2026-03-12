@@ -74,10 +74,13 @@ struct ShutdownView: View {
                     Text("System Active")
                         .font(.title2.bold())
                         .foregroundStyle(AppTheme.primary)
-                    Text("You can eat normally. Shutdown begins at \(shutdownTimeString).")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
+                    VStack(spacing: 2) {
+                        Text("You can eat normally. Shutdown begins at")
+                        Text(shutdownTimeString)
+                    }
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
@@ -138,7 +141,7 @@ struct ShutdownView: View {
                     Image(systemName: iconForDrink(drink))
                         .foregroundStyle(AppTheme.accent)
                         .frame(width: 24)
-                    Text(drink)
+                    Text(LocalizedStringKey(drink))
                         .font(.subheadline)
                     Spacer()
                     Image(systemName: "checkmark")

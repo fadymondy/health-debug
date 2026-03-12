@@ -44,12 +44,30 @@ struct ProfileSettingsView: View {
                 Section("Work Window") {
                     DatePicker("Start", selection: $workStart, displayedComponents: .hourAndMinute)
                     DatePicker("End", selection: $workEnd, displayedComponents: .hourAndMinute)
-                    Stepper("Water Goal: \(profile.dailyWaterGoalMl) ml", value: $profile.dailyWaterGoalMl, in: 1000...5000, step: 250)
+                    Stepper(value: $profile.dailyWaterGoalMl, in: 1000...5000, step: 250) {
+                        HStack(spacing: 4) {
+                            Text("Daily Water Goal")
+                            Text(verbatim: "\(profile.dailyWaterGoalMl)")
+                                .foregroundStyle(.secondary)
+                            Text("ml")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                 }
 
                 Section("Sleep") {
                     DatePicker("Bedtime", selection: $sleepTime, displayedComponents: .hourAndMinute)
-                    Stepper("Shutdown: \(shutdownHours)h before", value: $shutdownHours, in: 1...6)
+                    Stepper(value: $shutdownHours, in: 1...6) {
+                        HStack(spacing: 4) {
+                            Text("Shutdown Window")
+                            Text(verbatim: "\(shutdownHours)")
+                                .foregroundStyle(.secondary)
+                            Text("hours")
+                                .foregroundStyle(.secondary)
+                            Text("before")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                 }
 
                 Section {
@@ -62,8 +80,11 @@ struct ProfileSettingsView: View {
                     HStack {
                         Text("Work Hours")
                         Spacer()
-                        Text(String(format: "%.1fh", profile.workWindowHours))
-                            .foregroundStyle(.secondary)
+                        HStack(spacing: 2) {
+                            Text(String(format: "%.1f", profile.workWindowHours))
+                            Text("hours")
+                        }
+                        .foregroundStyle(.secondary)
                     }
                 }
             }
@@ -82,7 +103,7 @@ struct ProfileSettingsView: View {
         .tint(AppTheme.primary)
     }
 
-    private func fieldRow(_ label: String, value: Binding<Double>, unit: String) -> some View {
+    private func fieldRow(_ label: LocalizedStringKey, value: Binding<Double>, unit: LocalizedStringKey) -> some View {
         HStack {
             Text(label)
             Spacer()
@@ -96,7 +117,7 @@ struct ProfileSettingsView: View {
         }
     }
 
-    private func intFieldRow(_ label: String, value: Binding<Int>, unit: String) -> some View {
+    private func intFieldRow(_ label: LocalizedStringKey, value: Binding<Int>, unit: LocalizedStringKey) -> some View {
         HStack {
             Text(label)
             Spacer()

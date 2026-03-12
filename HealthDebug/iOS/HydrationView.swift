@@ -94,7 +94,7 @@ struct HydrationView: View {
             case .dehydrated: return .red
             }
         }()
-        return Text(status.rawValue)
+        return Text(LocalizedStringKey(status.rawValue))
             .font(.caption2.bold())
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
@@ -168,9 +168,13 @@ struct HydrationView: View {
                 HStack {
                     Image(systemName: "timer")
                         .foregroundStyle(AppTheme.secondary)
-                    Text("Next glass in ~\(nextDrink) min")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                    HStack(spacing: 4) {
+                        Text("Next glass in ~")
+                        Text("\(nextDrink)")
+                        Text("min left")
+                    }
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
                 }
                 .padding(.top, 4)
             }
