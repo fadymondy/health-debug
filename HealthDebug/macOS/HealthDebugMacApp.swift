@@ -3,27 +3,23 @@ import SwiftData
 import AppKit
 import HealthDebugKit
 
+// Shared container — created once at process start, reused by all targets.
+private let sharedContainer: ModelContainer = {
+    do { return try ModelContainerFactory.create() }
+    catch { fatalError("Could not create ModelContainer: \(error)") }
+}()
+
 @main
 struct HealthDebugMacApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
-    var sharedModelContainer: ModelContainer = {
-        do {
-            return try ModelContainerFactory.create()
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
     var body: some Scene {
         WindowGroup(id: "main") {
             MacContentView()
-                .modelContainer(sharedModelContainer)
-                .onAppear {
-                    NSApp.activate(ignoringOtherApps: true)
-                }
+                .modelContainer(sharedContainer)
+                .onAppear { NSApp.activate(ignoringOtherApps: true) }
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(sharedContainer)
         .defaultLaunchBehavior(.presented)
         .restorationBehavior(.disabled)
     }
@@ -34,13 +30,9 @@ struct HealthDebugMacApp: App {
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
     private var popover: NSPopover?
-    private var container: ModelContainer?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.activate(ignoringOtherApps: true)
-
-        guard let container = try? ModelContainerFactory.create() else { return }
-        self.container = container
 
         // Status bar item
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -50,14 +42,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         item.button?.target = self
         self.statusItem = item
 
-        // Popover
+        // Popover — reuse the shared container (no second create() call)
         let popover = NSPopover()
         popover.contentSize = NSSize(width: 320, height: 420)
         popover.behavior = .transient
         popover.animates = true
         popover.contentViewController = NSHostingController(
-            rootView: MenuBarView()
-                .modelContainer(container)
+            rootView: MenuBarView().modelContainer(sharedContainer)
         )
         self.popover = popover
     }
