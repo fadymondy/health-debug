@@ -28,3 +28,4 @@ Packages/HealthDebugKit/.build/
 *.env
 *.key
 *.pem
+GoogleService-Info.plist
