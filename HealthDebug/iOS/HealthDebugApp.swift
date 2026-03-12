@@ -41,8 +41,15 @@ struct RootView: View {
                 }
                 .transition(.opacity)
             } else {
-                ContentView()
-                    .transition(.opacity)
+                TabView {
+                    Tab("Dashboard", systemImage: "heart.text.clipboard") {
+                        ContentView()
+                    }
+                    Tab("Stand", systemImage: "figure.stand") {
+                        StandTimerView()
+                    }
+                }
+                .transition(.opacity)
             }
         }
         .animation(.easeInOut(duration: 0.6), value: showSplash)

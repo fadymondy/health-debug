@@ -3,7 +3,9 @@ import SwiftData
 import HealthDebugKit
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var context
     @StateObject private var health = HealthKitManager.shared
+    @StateObject private var standTimer = StandTimerManager.shared
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
     @State private var showSettings = false
@@ -16,6 +18,7 @@ struct ContentView: View {
                         authCard
                     } else {
                         metricsGrid
+                        standTimerCard
                         zeppCard
                         sleepCard
                     }
@@ -81,6 +84,59 @@ struct ContentView: View {
             MetricCard(icon: "moon.zzz.fill", title: "Sleep", value: String(format: "%.1fh", health.sleepHours), color: AppTheme.secondary)
         }
         .padding(.horizontal)
+    }
+
+    // MARK: - Stand Timer Card
+
+    private var standTimerCard: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Stand Timer", systemImage: "figure.stand")
+                .font(.headline)
+                .foregroundStyle(AppTheme.accent)
+            Divider()
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    switch standTimer.state {
+                    case .idle:
+                        Text("Inactive")
+                            .font(.title3.bold())
+                    case .sitting:
+                        let mins = Int(standTimer.sitSecondsRemaining) / 60
+                        Text("\(mins) min left")
+                            .font(.title3.bold())
+                    case .standAlert:
+                        Text("Stand Now!")
+                            .font(.title3.bold())
+                            .foregroundStyle(.orange)
+                    case .walking:
+                        let mins = standTimer.walkSecondsRemaining / 60
+                        let secs = standTimer.walkSecondsRemaining % 60
+                        Text(String(format: "%d:%02d", mins, secs))
+                            .font(.title3.bold())
+                            .foregroundStyle(AppTheme.accent)
+                    }
+                    Text("\(standTimer.todayCompleted) / \(StandTimerManager.dailyTarget) sessions")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                if standTimer.state == .idle {
+                    Button {
+                        standTimer.startCycle()
+                    } label: {
+                        Image(systemName: "play.fill")
+                    }
+                    .buttonStyle(.glass)
+                }
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassEffect(.regular.tint(AppTheme.accent.opacity(0.15)), in: RoundedRectangle(cornerRadius: 20))
+        .padding(.horizontal)
+        .onAppear {
+            standTimer.refreshTodayCount(context: context)
+        }
     }
 
     // MARK: - Zepp Card
