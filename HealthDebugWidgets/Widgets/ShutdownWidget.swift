@@ -104,6 +104,7 @@ struct ShutdownWidgetEntryView: View {
                 ShutdownSmallView(snapshot: entry.snapshot)
             }
         }
+        .ibmFont()
         .containerBackground(for: .widget) { Color(.systemBackground) }
         .widgetURL(URL(string: "healthdebug://shutdown")!)
     }

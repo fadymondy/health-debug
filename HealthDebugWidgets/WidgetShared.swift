@@ -4,6 +4,42 @@
 // so we replicate the minimal data types here. Both must stay in sync.
 
 import Foundation
+import SwiftUI
+
+// MARK: - IBM Plex Sans helper (widget process — mirrors Theme.swift in main app)
+
+extension Font {
+    static var ibmWidgetFamily: String {
+        let isArabic = Bundle.main.preferredLocalizations.first?.hasPrefix("ar") == true
+        return isArabic ? "IBM Plex Sans Arabic" : "IBMPlexSans"
+    }
+
+    static func ibmWidget(_ style: Font.TextStyle) -> Font {
+        .custom(ibmWidgetFamily, size: widgetSize(for: style), relativeTo: style)
+    }
+
+    private static func widgetSize(for style: Font.TextStyle) -> CGFloat {
+        switch style {
+        case .title:       return 28
+        case .title2:      return 22
+        case .title3:      return 20
+        case .headline:    return 17
+        case .body:        return 17
+        case .subheadline: return 15
+        case .footnote:    return 13
+        case .caption:     return 12
+        case .caption2:    return 11
+        @unknown default:  return 15
+        }
+    }
+}
+
+extension View {
+    /// Applies IBM Plex Sans as the default font for all Text in widget views.
+    func ibmFont() -> some View {
+        self.font(.custom(Font.ibmWidgetFamily, size: 15, relativeTo: .body))
+    }
+}
 
 struct WidgetSnapshot: Codable {
     var steps: Double = 0

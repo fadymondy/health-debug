@@ -224,6 +224,7 @@ struct StepsWidgetEntryView: View {
                 StepsSmallView(snapshot: entry.snapshot)
             }
         }
+        .ibmFont()
         .containerBackground(for: .widget) { Color(.systemBackground) }
         .widgetURL(URL(string: "healthdebug://steps")!)
     }

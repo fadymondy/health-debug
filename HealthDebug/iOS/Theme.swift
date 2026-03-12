@@ -1,4 +1,81 @@
 import SwiftUI
+import UIKit
+
+// MARK: - IBM Plex Sans Font System
+
+extension Font {
+    /// Returns the IBM Plex Sans (Arabic or Latin) family name based on current locale.
+    static var ibmFamily: String {
+        let isArabic = Bundle.main.preferredLocalizations.first?.hasPrefix("ar") == true
+        return isArabic ? "IBM Plex Sans Arabic" : "IBMPlexSans"
+    }
+
+    /// Dynamic-Type–aware IBM Plex Sans font for a given text style.
+    static func ibm(_ style: Font.TextStyle) -> Font {
+        .custom(ibmFamily, size: defaultSize(for: style), relativeTo: style)
+    }
+
+    /// Fixed-size IBM Plex Sans font.
+    static func ibm(size: CGFloat, weight: Font.Weight = .regular) -> Font {
+        .custom(ibmFamily, fixedSize: size).weight(weight)
+    }
+
+    private static func defaultSize(for style: Font.TextStyle) -> CGFloat {
+        switch style {
+        case .largeTitle:  return 34
+        case .title:       return 28
+        case .title2:      return 22
+        case .title3:      return 20
+        case .headline:    return 17
+        case .body:        return 17
+        case .callout:     return 16
+        case .subheadline: return 15
+        case .footnote:    return 13
+        case .caption:     return 12
+        case .caption2:    return 11
+        @unknown default:  return 17
+        }
+    }
+}
+
+// MARK: - Global UIKit font override
+
+enum IBMPlexFontSetup {
+    /// Call once at app launch to set IBM Plex Sans as the default font for UIKit
+    /// components (navigation bar titles, tab bar labels, alerts, etc.).
+    static func apply() {
+        let isArabic = Bundle.main.preferredLocalizations.first?.hasPrefix("ar") == true
+        let family = isArabic ? "IBM Plex Sans Arabic" : "IBMPlexSans"
+
+        func makeFont(size: CGFloat, weight: UIFont.Weight = .regular, style: UIFont.TextStyle = .body) -> UIFont {
+            let descriptor = UIFontDescriptor(fontAttributes: [
+                .family: family,
+                .traits: [UIFontDescriptor.TraitKey.weight: weight.rawValue]
+            ])
+            let font = UIFont(descriptor: descriptor, size: size)
+            return UIFontMetrics(forTextStyle: style).scaledFont(for: font)
+        }
+
+        // Navigation bar: large title + regular title
+        let largeTitleAttrs: [NSAttributedString.Key: Any] = [
+            .font: makeFont(size: 34, weight: .bold, style: .largeTitle)
+        ]
+        let titleAttrs: [NSAttributedString.Key: Any] = [
+            .font: makeFont(size: 17, weight: .semibold, style: .headline)
+        ]
+        UINavigationBar.appearance().largeTitleTextAttributes = largeTitleAttrs
+        UINavigationBar.appearance().titleTextAttributes = titleAttrs
+
+        // Tab bar item labels
+        UITabBarItem.appearance().setTitleTextAttributes(
+            [.font: makeFont(size: 10, weight: .medium, style: .caption2)], for: .normal
+        )
+
+        // Text fields and text views (for search bars, form inputs)
+        UITextField.appearance().font = makeFont(size: 17, style: .body)
+        UITextView.appearance().font = makeFont(size: 17, style: .body)
+    }
+}
 
 // MARK: - App Theme
 

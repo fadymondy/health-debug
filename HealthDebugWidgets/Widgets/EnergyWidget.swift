@@ -120,6 +120,7 @@ struct EnergyWidgetEntryView: View {
                 EnergySmallView(snapshot: entry.snapshot)
             }
         }
+        .ibmFont()
         .containerBackground(for: .widget) { Color(.systemBackground) }
         .widgetURL(URL(string: "healthdebug://energy")!)
     }

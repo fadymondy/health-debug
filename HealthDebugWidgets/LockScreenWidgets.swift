@@ -141,6 +141,7 @@ struct StepsLockWidgetView: View {
                 StepsLockCircularView(snapshot: entry.snapshot)
             }
         }
+        .ibmFont()
         .containerBackground(for: .widget) { Color.clear }
         .widgetURL(URL(string: "healthdebug://steps")!)
     }
@@ -238,6 +239,7 @@ struct HeartRateLockWidgetView: View {
                 HeartRateLockCircularView(snapshot: entry.snapshot)
             }
         }
+        .ibmFont()
         .containerBackground(for: .widget) { Color.clear }
         .widgetURL(URL(string: "healthdebug://heartRate")!)
     }
@@ -331,6 +333,7 @@ struct HydrationLockWidgetView: View {
                 HydrationLockCircularView(snapshot: entry.snapshot)
             }
         }
+        .ibmFont()
         .containerBackground(for: .widget) { Color.clear }
         .widgetURL(URL(string: "healthdebug://hydration")!)
     }
@@ -421,6 +424,7 @@ struct StandTimerLockWidgetView: View {
                 StandTimerLockCircularView(snapshot: entry.snapshot)
             }
         }
+        .ibmFont()
         .containerBackground(for: .widget) { Color.clear }
         .widgetURL(URL(string: "healthdebug://standTimer")!)
     }
@@ -507,6 +511,7 @@ struct SleepLockWidgetView: View {
                 SleepLockCircularView(snapshot: entry.snapshot)
             }
         }
+        .ibmFont()
         .containerBackground(for: .widget) { Color.clear }
         .widgetURL(URL(string: "healthdebug://sleep")!)
     }
@@ -601,6 +606,7 @@ struct DailyFlowLockWidgetView: View {
                 DailyFlowLockCircularView(snapshot: entry.snapshot)
             }
         }
+        .ibmFont()
         .containerBackground(for: .widget) { Color.clear }
         .widgetURL(URL(string: "healthdebug://dailyFlow")!)
     }

@@ -15,6 +15,8 @@ struct HealthDebugApp: App {
     }()
 
     init() {
+        // Apply IBM Plex Sans as global font before any views are rendered
+        IBMPlexFontSetup.apply()
         // Register BGTaskScheduler identifiers before app finishes launching
         NotificationManager.registerBackgroundTasks()
     }
@@ -22,6 +24,7 @@ struct HealthDebugApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .font(Font.ibm(.body))
                 .onAppear {
                     Task {
                         await NotificationManager.shared.requestAuthorization()

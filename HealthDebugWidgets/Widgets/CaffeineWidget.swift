@@ -133,6 +133,7 @@ struct CaffeineWidgetEntryView: View {
                 CaffeineSmallView(snapshot: entry.snapshot)
             }
         }
+        .ibmFont()
         .containerBackground(for: .widget) { Color(.systemBackground) }
         .widgetURL(URL(string: "healthdebug://caffeine")!)
     }

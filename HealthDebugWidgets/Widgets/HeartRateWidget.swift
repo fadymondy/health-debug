@@ -151,6 +151,7 @@ struct HeartRateWidgetEntryView: View {
                 HeartRateSmallView(snapshot: entry.snapshot)
             }
         }
+        .ibmFont()
         .containerBackground(for: .widget) { Color(.systemBackground) }
         .widgetURL(URL(string: "healthdebug://heartRate")!)
     }
