@@ -131,7 +131,8 @@
       "Bash(xcodebuild -project HealthDebug.xcodeproj -scheme HealthDebug -destination 'id=00008140-000E712926F1801C' build)",
       "Bash(xcodebuild -project HealthDebug.xcodeproj -scheme \"HealthDebug iOS\" -destination 'id=00008140-000E712926F1801C' build)",
       "Bash(xcodebuild -project /Users/fadymondy/Sites/health-debug/HealthDebug.xcodeproj -scheme \"HealthDebug iOS\" -destination 'id=00008140-000E712926F1801C' clean build)",
-      "Bash(xcodebuild -project HealthDebug.xcodeproj -scheme \"HealthDebug iOS\" -destination 'id=00008140-000E712926F1801C' -configuration Debug build)"
+      "Bash(xcodebuild -project HealthDebug.xcodeproj -scheme \"HealthDebug iOS\" -destination 'id=00008140-000E712926F1801C' -configuration Debug build)",
+      "Bash(xcodebuild -project /Users/fadymondy/Sites/health-debug/HealthDebug.xcodeproj -scheme \"HealthDebug iOS\" -destination 'id=00008140-000E712926F1801C' build)"
     ],
     "additionalDirectories": [
       "/Users/fadymondy/Sites/health-debug",
