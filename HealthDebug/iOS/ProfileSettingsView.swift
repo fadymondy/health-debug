@@ -11,6 +11,7 @@ struct ProfileSettingsView: View {
     @State private var workEnd: Date
     @State private var sleepTime: Date
     @State private var shutdownHours: Int
+    @State private var weightAlertTime: Date
 
     init(profile: UserProfile, sleepConfig: SleepConfig?) {
         self.profile = profile
@@ -20,6 +21,7 @@ struct ProfileSettingsView: View {
         _workEnd = State(initialValue: cal.date(from: DateComponents(hour: profile.workEndHour, minute: profile.workEndMinute))!)
         _sleepTime = State(initialValue: cal.date(from: DateComponents(hour: sc.targetSleepHour, minute: sc.targetSleepMinute))!)
         _shutdownHours = State(initialValue: sc.shutdownWindowHours)
+        _weightAlertTime = State(initialValue: cal.date(from: DateComponents(hour: profile.weightAlertHour, minute: profile.weightAlertMinute)) ?? Date())
     }
 
     var body: some View {
@@ -53,6 +55,33 @@ struct ProfileSettingsView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
+                }
+
+                Section {
+                    Toggle(isOn: $profile.weightAlertEnabled) {
+                        Label(String(localized: "Daily Weight Check-In"), systemImage: "scalemass.fill")
+                    }
+                    if profile.weightAlertEnabled {
+                        DatePicker(
+                            String(localized: "Wake Time"),
+                            selection: $weightAlertTime,
+                            displayedComponents: .hourAndMinute
+                        )
+                        Stepper(value: $profile.weightAlertDelayMinutes, in: 1...30) {
+                            HStack(spacing: 4) {
+                                Text(String(localized: "Remind after"))
+                                Text(verbatim: "\(profile.weightAlertDelayMinutes)")
+                                    .foregroundStyle(.secondary)
+                                Text(String(localized: "min"))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                } header: {
+                    Text(String(localized: "Weight Alert"))
+                } footer: {
+                    Text(String(localized: "Reminds you to step on your smart scale each morning."))
+                        .font(.caption)
                 }
 
                 Section("Sleep") {
@@ -141,6 +170,10 @@ struct ProfileSettingsView: View {
         profile.workEndHour = we.hour ?? 19
         profile.workEndMinute = we.minute ?? 0
 
+        let wa = cal.dateComponents([.hour, .minute], from: weightAlertTime)
+        profile.weightAlertHour = wa.hour ?? 7
+        profile.weightAlertMinute = wa.minute ?? 0
+
         profile.lastUpdated = .now
 
         let sc = cal.dateComponents([.hour, .minute], from: sleepTime)
@@ -152,6 +185,11 @@ struct ProfileSettingsView: View {
         }
 
         try? context.save()
+
+        Task {
+            await WeightAlertScheduler.shared.reschedule(profile: profile)
+        }
+
         dismiss()
     }
 }

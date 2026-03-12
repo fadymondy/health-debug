@@ -65,7 +65,7 @@ struct StandTimerView: View {
                 Image(systemName: phaseIcon)
                     .font(.system(size: 26))
                     .foregroundStyle(ringColor)
-                    .symbolEffect(.pulse, isActive: pomodoro.phase == .idle && pomodoro.secondsRemaining == 0)
+                    .symbolEffect(.pulse, isActive: pomodoro.phase == .standAlert)
 
                 Text(timerText)
                     .font(.system(size: 44, weight: .bold, design: .rounded))
@@ -95,22 +95,16 @@ struct StandTimerView: View {
     private var actionButtons: some View {
         switch pomodoro.phase {
         case .idle:
-            if pomodoro.secondsRemaining == 0 && pomodoro.completedCycles > 0 {
-                // Work session just ended — show break choice
-                breakPrompt
-            } else {
-                // True idle — start
-                GlassEffectContainer {
-                    Button { pomodoro.startCycle() } label: {
-                        Label("Start Focus", systemImage: "play.fill")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.glassProminent)
-                    .tint(AppTheme.primary)
-                    .controlSize(.large)
+            GlassEffectContainer {
+                Button { pomodoro.startCycle() } label: {
+                    Label("Start Focus", systemImage: "play.fill")
+                        .frame(maxWidth: .infinity)
                 }
-                .padding(.horizontal)
+                .buttonStyle(.glassProminent)
+                .tint(AppTheme.primary)
+                .controlSize(.large)
             }
+            .padding(.horizontal)
 
         case .work:
             GlassEffectContainer {
@@ -173,14 +167,7 @@ struct StandTimerView: View {
                     .buttonStyle(.glass)
                     .controlSize(.large)
 
-                    Button {
-                        let isLongBreak = pomodoro.cyclePosition == 0 && pomodoro.completedCycles > 0
-                        if isLongBreak {
-                            // start long break
-                        } else {
-                            pomodoro.startCycle()
-                        }
-                    } label: {
+                    Button { pomodoro.startBreak() } label: {
                         Label("Start Break", systemImage: "cup.and.heat.waves.fill")
                             .frame(maxWidth: .infinity)
                     }
@@ -266,7 +253,7 @@ struct StandTimerView: View {
     private var ringProgress: CGFloat {
         let total: TimeInterval
         switch pomodoro.phase {
-        case .idle:         return pomodoro.secondsRemaining == 0 && pomodoro.completedCycles > 0 ? 1.0 : 0
+        case .idle:         return 0
         case .work:         total = PomodoroManager.workDurationSeconds
         case .standAlert:   return 1.0
         case .shortBreak:   total = PomodoroManager.shortBreakSeconds

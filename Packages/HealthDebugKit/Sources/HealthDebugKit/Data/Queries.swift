@@ -91,37 +91,7 @@ public extension CaffeineLog {
     }
 }
 
-// MARK: - StandSession Queries
-
-public extension StandSession {
-    /// Fetch today's stand sessions.
-    static func todayDescriptor() -> FetchDescriptor<StandSession> {
-        let calendar = Calendar.current
-        let startOfDay = calendar.startOfDay(for: .now)
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-
-        return FetchDescriptor<StandSession>(
-            predicate: #Predicate { session in
-                session.startTime >= startOfDay && session.startTime < endOfDay
-            },
-            sortBy: [SortDescriptor(\.startTime, order: .reverse)]
-        )
-    }
-
-    /// Number of completed stand sessions today.
-    static func todayCompletedCount(in context: ModelContext) -> Int {
-        let calendar = Calendar.current
-        let startOfDay = calendar.startOfDay(for: .now)
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-
-        let descriptor = FetchDescriptor<StandSession>(
-            predicate: #Predicate { session in
-                session.startTime >= startOfDay && session.startTime < endOfDay && session.completed
-            }
-        )
-        return (try? context.fetchCount(descriptor)) ?? 0
-    }
-}
+// MARK: - PomodoroSession Queries are defined in PomodoroSession.swift
 
 // MARK: - UserProfile Query
 

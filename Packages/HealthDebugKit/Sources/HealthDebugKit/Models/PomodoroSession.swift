@@ -27,5 +27,29 @@ public final class PomodoroSession {
     }
 }
 
+// MARK: - Queries
+
+extension PomodoroSession {
+    /// FetchDescriptor for today's sessions, newest first.
+    public static func todayDescriptor() -> FetchDescriptor<PomodoroSession> {
+        let start = Calendar.current.startOfDay(for: .now)
+        let pred = #Predicate<PomodoroSession> { $0.startTime >= start }
+        var d = FetchDescriptor<PomodoroSession>(predicate: pred,
+                                                 sortBy: [SortDescriptor(\.startTime, order: .reverse)])
+        d.fetchLimit = 50
+        return d
+    }
+
+    /// Count of completed work sessions today.
+    public static func todayCompletedCount(in context: ModelContext) -> Int {
+        let start = Calendar.current.startOfDay(for: .now)
+        let workPhase = "work"
+        let pred = #Predicate<PomodoroSession> {
+            $0.startTime >= start && $0.completed == true && $0.phase == workPhase
+        }
+        return (try? context.fetchCount(FetchDescriptor<PomodoroSession>(predicate: pred))) ?? 0
+    }
+}
+
 // MARK: - Backward compat alias (existing StandSession references keep working)
 public typealias StandSession = PomodoroSession

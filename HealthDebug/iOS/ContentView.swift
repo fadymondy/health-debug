@@ -205,7 +205,7 @@ struct ContentView: View {
         case "standTimer":
             NavigationLink(value: HealthScreen.standTimer) {
                 HealthMetricCard(
-                    icon: "figure.stand", title: "Stand Timer",
+                    icon: "timer", title: NSLocalizedString("Pomodoro", comment: ""),
                     value: "\(standTimer.todayCompleted)", unit: nil,
                     caption: "\(NSLocalizedString("of", comment: "")) \(StandTimerManager.dailyTarget) \(NSLocalizedString("sessions", comment: ""))",
                     color: AppTheme.accent,
@@ -371,16 +371,20 @@ struct ContentView: View {
         case "standTimer":
             NavigationLink(value: HealthScreen.standTimer) {
                 HealthCard(
-                    icon: "figure.stand", title: "Stand Timer",
+                    icon: "timer", title: NSLocalizedString("Pomodoro", comment: ""),
                     color: AppTheme.accent,
                     primaryValue: "\(standTimer.todayCompleted)",
                     detail: "/ \(StandTimerManager.dailyTarget) \(NSLocalizedString("sessions", comment: ""))",
                     statusText: standTimerStatusText,
                     statusColor: standTimerStatusColor,
                     progress: min(1.0, Double(standTimer.todayCompleted) / Double(StandTimerManager.dailyTarget)),
-                    quickActions: standTimer.state == .idle ? [
-                        .init(label: NSLocalizedString("Start", comment: ""), icon: "play.circle.fill", color: AppTheme.accent) {
+                    quickActions: standTimer.phase == .idle ? [
+                        .init(label: NSLocalizedString("Start Focus", comment: ""), icon: "play.circle.fill", color: AppTheme.accent) {
                             standTimer.startCycle()
+                        }
+                    ] : standTimer.phase == .work ? [
+                        .init(label: NSLocalizedString("Take Break", comment: ""), icon: "pause.circle.fill", color: AppTheme.secondary) {
+                            standTimer.startBreak()
                         }
                     ] : []
                 )
@@ -493,19 +497,21 @@ struct ContentView: View {
         }
     }
     private var standTimerStatusText: String {
-        switch standTimer.state {
-        case .idle: return NSLocalizedString("Inactive", comment: "")
-        case .sitting: return String(format: NSLocalizedString("%d min left", comment: ""), Int(standTimer.sitSecondsRemaining) / 60)
-        case .standAlert: return NSLocalizedString("Stand Now!", comment: "")
-        case .walking: return String(format: "%d:%02d", standTimer.walkSecondsRemaining / 60, standTimer.walkSecondsRemaining % 60)
+        switch standTimer.phase {
+        case .idle:        return NSLocalizedString("Inactive", comment: "")
+        case .work:        return String(format: NSLocalizedString("%d min left", comment: ""), Int(standTimer.secondsRemaining) / 60)
+        case .standAlert:  return NSLocalizedString("Stand Up!", comment: "")
+        case .shortBreak:  return String(format: "%d:%02d", Int(standTimer.secondsRemaining) / 60, Int(standTimer.secondsRemaining) % 60)
+        case .longBreak:   return String(format: "%d:%02d", Int(standTimer.secondsRemaining) / 60, Int(standTimer.secondsRemaining) % 60)
         }
     }
     private var standTimerStatusColor: Color {
-        switch standTimer.state {
-        case .idle: return .secondary
-        case .sitting: return AppTheme.accent
-        case .standAlert: return .orange
-        case .walking: return AppTheme.primary
+        switch standTimer.phase {
+        case .idle:        return .secondary
+        case .work:        return AppTheme.accent
+        case .standAlert:  return .orange
+        case .shortBreak:  return AppTheme.primary
+        case .longBreak:   return AppTheme.secondary
         }
     }
     private var nutritionStatusColor: Color {
@@ -600,7 +606,7 @@ struct DashboardEditSheet: View {
         case "heartRate": return "Heart Rate"
         case "sleep": return "Sleep"
         case "hydration": return "Hydration"
-        case "standTimer": return "Stand Timer"
+        case "standTimer": return NSLocalizedString("Pomodoro", comment: "")
         case "nutrition": return "Nutrition"
         case "caffeine": return "Caffeine"
         case "shutdown": return "System Shutdown"
@@ -617,7 +623,7 @@ struct DashboardEditSheet: View {
         case "heartRate": return "heart.fill"
         case "sleep": return "moon.zzz.fill"
         case "hydration": return "drop.fill"
-        case "standTimer": return "figure.stand"
+        case "standTimer": return "timer"
         case "nutrition": return "fork.knife"
         case "caffeine": return "cup.and.saucer.fill"
         case "shutdown": return "moon.fill"

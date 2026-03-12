@@ -28,6 +28,12 @@ public final class UserProfile {
     // Hydration
     public var dailyWaterGoalMl: Int // default: 2500
 
+    // Notification: Daily Weight Check-In
+    public var weightAlertEnabled: Bool    // default: true
+    public var weightAlertHour: Int        // default: 7 (7am)
+    public var weightAlertMinute: Int      // default: 0
+    public var weightAlertDelayMinutes: Int // delay after wake time, default: 5
+
     // Metadata
     public var onboardingCompleted: Bool
     public var lastUpdated: Date
@@ -48,6 +54,10 @@ public final class UserProfile {
         targetBodyWaterPercent: Double = 55.0,
         targetMetabolicAge: Int = 35,
         dailyWaterGoalMl: Int = 2500,
+        weightAlertEnabled: Bool = true,
+        weightAlertHour: Int = 7,
+        weightAlertMinute: Int = 0,
+        weightAlertDelayMinutes: Int = 5,
         onboardingCompleted: Bool = false,
         lastUpdated: Date = .now
     ) {
@@ -66,6 +76,10 @@ public final class UserProfile {
         self.targetBodyWaterPercent = targetBodyWaterPercent
         self.targetMetabolicAge = targetMetabolicAge
         self.dailyWaterGoalMl = dailyWaterGoalMl
+        self.weightAlertEnabled = weightAlertEnabled
+        self.weightAlertHour = weightAlertHour
+        self.weightAlertMinute = weightAlertMinute
+        self.weightAlertDelayMinutes = weightAlertDelayMinutes
         self.onboardingCompleted = onboardingCompleted
         self.lastUpdated = lastUpdated
     }

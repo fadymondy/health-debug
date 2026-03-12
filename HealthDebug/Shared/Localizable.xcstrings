@@ -1042,6 +1042,16 @@
         }
       }
     },
+    "Daily Weight Check-In": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "قياس الوزن اليومي"
+          }
+        }
+      }
+    },
     "Dashboard": {
       "localizations": {
         "ar": {
