@@ -2172,6 +2172,16 @@
         }
       }
     },
+    "min": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "د"
+          }
+        }
+      }
+    },
     "min left": {
       "localizations": {
         "ar": {
@@ -2712,6 +2722,26 @@
         }
       }
     },
+    "Remind after": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تذكير بعد"
+          }
+        }
+      }
+    },
+    "Reminds you to step on your smart scale each morning.": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يذكّرك بالوقوف على الميزان الذكي كل صباح."
+          }
+        }
+      }
+    },
     "Remove": {
       "localizations": {
         "ar": {
@@ -3182,6 +3212,16 @@
         }
       }
     },
+    "Step on your smart scale and log your weight for today.": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اصعد على الميزان الذكي وسجّل وزنك اليوم."
+          }
+        }
+      }
+    },
     "Steps": {
       "localizations": {
         "ar": {
@@ -3532,6 +3572,16 @@
         }
       }
     },
+    "Time to Weigh In": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "حان وقت القياس"
+          }
+        }
+      }
+    },
     "Today": {
       "localizations": {
         "ar": {
@@ -3762,6 +3812,16 @@
         }
       }
     },
+    "Wake Time": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "وقت الاستيقاظ"
+          }
+        }
+      }
+    },
     "Walking...": {
       "localizations": {
         "ar": {
@@ -3818,6 +3878,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "الوزن"
+          }
+        }
+      }
+    },
+    "Weight Alert": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تنبيه الوزن"
           }
         }
       }
