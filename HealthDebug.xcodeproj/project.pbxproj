@@ -11,6 +11,7 @@
 		1339FAF7C35449C66E6BE7DC /* WeightWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E825C568F0A9B040E4DDE9D0 /* WeightWidget.swift */; };
 		169D1F337D466ECB58FAF0C8 /* StepsWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FAD251B7A0CF93658E9605 /* StepsWidget.swift */; };
 		196FE9FF6EB9D27E9A4EDDE6 /* NutritionWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E89C3670D7A5FC2B1BC41 /* NutritionWidget.swift */; };
+		21EF5F924560D054407B6A3D /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = DDEDDB3867004F83D6DE68D5 /* Localizable.xcstrings */; };
 		2C953F2CACA747ACDA481A5A /* WidgetTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AAB05036E99B56BC73A184 /* WidgetTimelineProvider.swift */; };
 		2E0C17F61B9665DE8B7176ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26460479F87454DB463B8DF2 /* Foundation.framework */; };
 		3A5CB509C1FE6507A52FD311 /* LockScreenWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C311252328831FF36EA929 /* LockScreenWidgets.swift */; };
@@ -100,6 +101,7 @@
 		C3B9B7E5D70E8F9CC949B704 /* SleepWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SleepWidget.swift; sourceTree = "<group>"; };
 		D4475ACA474D0C991F06D93B /* ShutdownWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShutdownWidget.swift; sourceTree = "<group>"; };
 		DDE302E2CC6FEF57F3AC835D /* StandTimerWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StandTimerWidget.swift; sourceTree = "<group>"; };
+		DDEDDB3867004F83D6DE68D5 /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = ../HealthDebug/Shared/Localizable.xcstrings; sourceTree = "<group>"; };
 		E06B3F7683686CA8E5D875AC /* HydrationWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HydrationWidget.swift; sourceTree = "<group>"; };
 		E825C568F0A9B040E4DDE9D0 /* WeightWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeightWidget.swift; sourceTree = "<group>"; };
 		F99B6C0078EE2518DB649CA4 /* HealthDebugWidgets.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = HealthDebugWidgets.entitlements; sourceTree = "<group>"; };
@@ -196,6 +198,7 @@
 				96B3EFEF50F369DA2D44E730 /* WidgetShared.swift */,
 				F99B6C0078EE2518DB649CA4 /* HealthDebugWidgets.entitlements */,
 				440E34F990B700964DCB6554 /* Info.plist */,
+				DDEDDB3867004F83D6DE68D5 /* Localizable.xcstrings */,
 			);
 			name = HealthDebugWidgets;
 			path = HealthDebugWidgets;
@@ -422,6 +425,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21EF5F924560D054407B6A3D /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

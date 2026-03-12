@@ -25,10 +25,16 @@ struct ContentView: View {
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
 
+    @Binding var deepLinkScreen: HealthScreen?
     @State private var showEditLayout = false
+    @State private var navPath: [HealthScreen] = []
+
+    init(deepLinkScreen: Binding<HealthScreen?> = .constant(nil)) {
+        _deepLinkScreen = deepLinkScreen
+    }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navPath) {
             ScrollView {
                 VStack(spacing: 14) {
                     if !health.isAuthorized {
@@ -86,6 +92,11 @@ struct ContentView: View {
                 shutdownMgr.startCountdown(config: sleepConfigs.first)
                 standTimer.refreshTodayCount(context: context)
                 refreshWidgets()
+            }
+            .onChange(of: deepLinkScreen) { _, screen in
+                guard let screen else { return }
+                navPath = [screen]
+                deepLinkScreen = nil
             }
         }
     }

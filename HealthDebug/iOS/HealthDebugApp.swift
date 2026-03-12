@@ -79,25 +79,50 @@ struct MainAppView: View {
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
 
+    @State private var selectedTab: String = "dashboard"
+    @State private var deepLinkScreen: HealthScreen? = nil
+
     var body: some View {
-        TabView {
-            Tab("Dashboard", systemImage: "heart.text.clipboard") {
-                ContentView()
+        TabView(selection: $selectedTab) {
+            Tab("Dashboard", systemImage: "heart.text.clipboard", value: "dashboard") {
+                ContentView(deepLinkScreen: $deepLinkScreen)
             }
 
-            Tab("Search", systemImage: "magnifyingglass", role: .search) {
+            Tab("Search", systemImage: "magnifyingglass", value: "search", role: .search) {
                 SearchView()
             }
 
-            Tab("Intelligence", systemImage: "brain.head.profile.fill") {
+            Tab("Intelligence", systemImage: "brain.head.profile.fill", value: "intelligence") {
                 IntelligenceView()
             }
 
-            Tab("Profile", systemImage: "person.crop.circle") {
+            Tab("Profile", systemImage: "person.crop.circle", value: "profile") {
                 profileTab
             }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
+        .onOpenURL { url in
+            guard url.scheme == "healthdebug", let host = url.host else { return }
+            let screen: HealthScreen?
+            switch host {
+            case "steps":       screen = .steps
+            case "energy":      screen = .energy
+            case "heartRate":   screen = .heartRate
+            case "sleep":       screen = .sleep
+            case "hydration":   screen = .hydration
+            case "standTimer":  screen = .standTimer
+            case "nutrition":   screen = .nutrition
+            case "caffeine":    screen = .caffeine
+            case "shutdown":    screen = .shutdown
+            case "weight":      screen = .weight
+            case "dailyFlow":   screen = .dailyFlow
+            default:            screen = nil
+            }
+            if let screen {
+                selectedTab = "dashboard"
+                deepLinkScreen = screen
+            }
+        }
     }
 
     @ViewBuilder
