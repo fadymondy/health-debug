@@ -4908,6 +4908,101 @@
           }
         }
       }
+    },
+    "%.1f hrs": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "%.1f ساعة" } }
+      }
+    },
+    "< 60 bpm": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "أقل من 60 نبضة" } }
+      }
+    },
+    "> 120 bpm": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "أكثر من 120 نبضة" } }
+      }
+    },
+    "100–120 bpm": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "100–120 نبضة" } }
+      }
+    },
+    "60–100 bpm": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "60–100 نبضة" } }
+      }
+    },
+    "Almost there — keep going!": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "تقريباً وصلت — استمر!" } }
+      }
+    },
+    "Goal": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "الهدف" } }
+      }
+    },
+    "Goal achieved! Great work.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "حققت هدفك! عمل رائع." } }
+      }
+    },
+    "Good start, keep moving.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "بداية جيدة، استمر بالحركة." } }
+      }
+    },
+    "Halfway there, stay on track.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "في المنتصف، حافظ على مسارك." } }
+      }
+    },
+    "meals": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "وجبات" } }
+      }
+    },
+    "No caffeine today — keep it up!": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "لا كافيين اليوم — أحسنت!" } }
+      }
+    },
+    "of 6 goals": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "من 6 أهداف" } }
+      }
+    },
+    "of goal": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "من الهدف" } }
+      }
+    },
+    "Safety score": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "نقاط السلامة" } }
+      }
+    },
+    "Start walking to hit your goal.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "ابدأ المشي لتحقيق هدفك." } }
+      }
+    },
+    "Staying within healthy limits.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "ضمن الحدود الصحية." } }
+      }
+    },
+    "today": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "اليوم" } }
+      }
+    },
+    "Try to reduce caffeine intake.": {
+      "localizations": {
+        "ar": { "stringUnit": { "state": "translated", "value": "حاول تقليل تناول الكافيين." } }
+      }
     }
   },
   "version": "1.0"

@@ -3,6 +3,7 @@
 
 import SwiftUI
 import WidgetKit
+import AppIntents
 
 // MARK: - Views
 
@@ -89,13 +90,20 @@ private struct CaffeineMediumView: View {
                     .minimumScaleFactor(0.7)
                     .lineLimit(1)
 
-                Spacer(minLength: 0)
-
                 Text(motivationalText)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
+
+                Spacer(minLength: 0)
+
+                Button(intent: LogCleanDrinkIntent()) {
+                    Label(LocalizedStringKey("Log Clean Drink"), systemImage: "plus.circle.fill")
+                        .font(.caption.bold())
+                        .foregroundStyle(Color(.systemGreen))
+                }
+                .buttonStyle(.plain)
             }
 
             Spacer(minLength: 0)

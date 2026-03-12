@@ -3,6 +3,7 @@
 
 import SwiftUI
 import WidgetKit
+import AppIntents
 
 // MARK: - Phase Display
 
@@ -62,6 +63,9 @@ private struct StandTimerSmallView: View {
 private struct StandTimerMediumView: View {
     let snapshot: WidgetSnapshot
 
+    private var isIdle: Bool { snapshot.pomodoroPhase == "idle" }
+    private var isWorking: Bool { snapshot.pomodoroPhase == "work" || snapshot.pomodoroPhase == "standAlert" }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -75,7 +79,7 @@ private struct StandTimerMediumView: View {
                     .foregroundStyle(snapshot.pomodoroPhase.phaseColor)
             }
 
-            // 8 session dots
+            // Session dots
             HStack(spacing: 6) {
                 ForEach(0..<snapshot.pomodoroTarget, id: \.self) { index in
                     Circle()
@@ -97,6 +101,25 @@ private struct StandTimerMediumView: View {
                 Text(LocalizedStringKey("sessions"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
+
+                Spacer()
+
+                // Context-aware action button
+                if isIdle {
+                    Button(intent: StartFocusIntent()) {
+                        Label(LocalizedStringKey("Start"), systemImage: "play.circle.fill")
+                            .font(.caption.bold())
+                            .foregroundStyle(Color(.systemTeal))
+                    }
+                    .buttonStyle(.plain)
+                } else if isWorking {
+                    Button(intent: TakeBreakIntent()) {
+                        Label(LocalizedStringKey("Break"), systemImage: "pause.circle.fill")
+                            .font(.caption.bold())
+                            .foregroundStyle(Color(.systemOrange))
+                    }
+                    .buttonStyle(.plain)
+                }
             }
         }
         .padding(16)

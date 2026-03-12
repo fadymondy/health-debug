@@ -91,6 +91,7 @@ struct ContentView: View {
                 caffeineMgr.refresh(context: context)
                 shutdownMgr.startCountdown(config: sleepConfigs.first)
                 standTimer.refreshTodayCount(context: context)
+                flushWidgetActions()
                 refreshWidgets()
             }
             .onChange(of: deepLinkScreen) { _, screen in
@@ -98,6 +99,29 @@ struct ContentView: View {
                 navPath = [screen]
                 deepLinkScreen = nil
             }
+        }
+    }
+
+    // MARK: - Widget Action Flush
+
+    private func flushWidgetActions() {
+        let reader = WidgetActionReader.shared
+
+        let hydrationMl = reader.consumeHydration()
+        if hydrationMl > 0 {
+            hydration.logWater(hydrationMl, source: "widget", context: context, profile: profiles.first)
+        }
+
+        if let pomodoroAction = reader.consumePomodoro() {
+            switch pomodoroAction {
+            case "start": standTimer.startCycle()
+            case "break": standTimer.startBreak()
+            default: break
+            }
+        }
+
+        if reader.consumeCaffeineClean() {
+            _ = caffeineMgr.logCaffeine(.espresso, context: context, profile: profiles.first)
         }
     }
 

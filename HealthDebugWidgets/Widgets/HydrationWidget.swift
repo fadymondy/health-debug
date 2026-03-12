@@ -3,6 +3,7 @@
 
 import SwiftUI
 import WidgetKit
+import AppIntents
 
 // MARK: - Views
 
@@ -90,17 +91,26 @@ private struct HydrationMediumView: View {
                     .minimumScaleFactor(0.6)
                     .lineLimit(1)
 
-                Text(LocalizedStringKey("ml"))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
                 Text(goalText())
                     .font(.caption2)
                     .foregroundStyle(.secondary)
 
-                Text(percentageText())
-                    .font(.caption2)
-                    .foregroundStyle(Color(.systemBlue))
+                // Interactive log buttons
+                HStack(spacing: 8) {
+                    Button(intent: LogHydration250Intent()) {
+                        Label(LocalizedStringKey("+250ml"), systemImage: "plus.circle.fill")
+                            .font(.caption2.bold())
+                            .foregroundStyle(Color(.systemBlue))
+                    }
+                    .buttonStyle(.plain)
+
+                    Button(intent: LogHydration500Intent()) {
+                        Label(LocalizedStringKey("+500ml"), systemImage: "drop.circle.fill")
+                            .font(.caption2.bold())
+                            .foregroundStyle(Color(.systemBlue).opacity(0.8))
+                    }
+                    .buttonStyle(.plain)
+                }
             }
 
             Spacer(minLength: 0)

@@ -69,8 +69,35 @@ The widget extension is registered as `HealthDebugWidgets` in `HealthDebug.xcode
 
 The widget extension does **not** link `HealthDebugKit` to avoid pulling in HealthKit entitlements. All shared data flows through the App Group UserDefaults via `WidgetShared.swift`.
 
+## Interactive Widgets (AppIntents)
+
+Three widgets support in-place action buttons (iOS 17+, no app launch needed):
+
+| Widget | Button | Action |
+|--------|--------|--------|
+| Hydration (Medium) | +250ml | `LogHydration250Intent` — queues 250ml in App Group |
+| Hydration (Medium) | +500ml | `LogHydration500Intent` — queues 500ml in App Group |
+| Stand Timer (Medium) | Start / Break | `StartFocusIntent` / `TakeBreakIntent` — context-aware |
+| Caffeine (Medium) | Log Clean Drink | `LogCleanDrinkIntent` — queues espresso log |
+
+**Architecture:**
+1. Widget button taps an `AppIntent` (in `HealthDebugWidgets/WidgetActions.swift`)
+2. Intent writes a pending command to App Group UserDefaults (`widget_action_*` keys)
+3. `WidgetCenter.shared.reloadTimelines(ofKind:)` refreshes the widget display
+4. When the main app comes to foreground, `ContentView.flushWidgetActions()` calls `WidgetActionReader.shared` to consume and execute each pending action
+
+**Key files:**
+- `HealthDebugWidgets/WidgetActions.swift` — all AppIntents + `WidgetActionStore` writer
+- `Packages/HealthDebugKit/Sources/HealthDebugKit/Data/WidgetDataStore.swift` — `WidgetActionReader` consumer
+- `HealthDebug/iOS/ContentView.swift` — `flushWidgetActions()` called on `.onAppear`
+
+## Deep Links
+
+Tapping any widget (outside a button) opens the app directly to that widget's detail screen via the `healthdebug://` URL scheme. Registered in `HealthDebug/iOS/Info.plist` → `CFBundleURLTypes`. Handled by `onOpenURL` in `MainAppView`.
+
 ## Adding a New Widget
 
 1. Add a new `Widget` struct in `HealthDebugWidgets/Widgets/`
 2. Register it in `HealthDebugWidgetBundle.swift`
 3. Add a `WidgetCard` entry to `allWidgetCards` in `WidgetGalleryView.swift`
+4. (Optional) Add an `AppIntent` in `WidgetActions.swift` + a consumer in `WidgetActionReader`

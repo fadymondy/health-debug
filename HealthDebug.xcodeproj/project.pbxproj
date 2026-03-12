@@ -29,6 +29,7 @@
 		ADA1621134E411C32644C124 /* WidgetShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B3EFEF50F369DA2D44E730 /* WidgetShared.swift */; };
 		E45A2DD704D85E73123F0E77 /* ShutdownWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4475ACA474D0C991F06D93B /* ShutdownWidget.swift */; };
 		E87F12C6C88452340E9E99B8 /* StandTimerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE302E2CC6FEF57F3AC835D /* StandTimerWidget.swift */; };
+		F77DA6BDB4B5BD44D7E494A9 /* WidgetActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A38619CFA61076FBDB741E /* WidgetActions.swift */; };
 		FDF34E000B18783E4BD58E33 /* EnergyWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4C374D73AB6D91AE65691A /* EnergyWidget.swift */; };
 /* End PBXBuildFile section */
 
@@ -86,6 +87,7 @@
 		3DE1E77944743D0F956B4A0E /* HealthDebugWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HealthDebugWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		440E34F990B700964DCB6554 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49FAD251B7A0CF93658E9605 /* StepsWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StepsWidget.swift; sourceTree = "<group>"; };
+		52A38619CFA61076FBDB741E /* WidgetActions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetActions.swift; sourceTree = "<group>"; };
 		6A4C374D73AB6D91AE65691A /* EnergyWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EnergyWidget.swift; sourceTree = "<group>"; };
 		7614089CFDDF33337A5F037E /* HeartRateWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HeartRateWidget.swift; sourceTree = "<group>"; };
 		767E89C3670D7A5FC2B1BC41 /* NutritionWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NutritionWidget.swift; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 				F99B6C0078EE2518DB649CA4 /* HealthDebugWidgets.entitlements */,
 				440E34F990B700964DCB6554 /* Info.plist */,
 				DDEDDB3867004F83D6DE68D5 /* Localizable.xcstrings */,
+				52A38619CFA61076FBDB741E /* WidgetActions.swift */,
 			);
 			name = HealthDebugWidgets;
 			path = HealthDebugWidgets;
@@ -472,6 +475,7 @@
 				841A1C00A642912275503FAF /* DailyFlowWidget.swift in Sources */,
 				1339FAF7C35449C66E6BE7DC /* WeightWidget.swift in Sources */,
 				E87F12C6C88452340E9E99B8 /* StandTimerWidget.swift in Sources */,
+				F77DA6BDB4B5BD44D7E494A9 /* WidgetActions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

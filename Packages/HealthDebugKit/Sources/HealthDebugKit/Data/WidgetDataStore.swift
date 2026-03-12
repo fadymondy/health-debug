@@ -91,6 +91,49 @@ public struct WidgetSnapshot: Codable, Sendable {
     }
 }
 
+// MARK: - Widget Action Reader
+
+/// Reads and clears pending actions queued by interactive widget buttons.
+/// The widget extension writes these via `WidgetActionStore`; the main app flushes them here.
+public final class WidgetActionReader: @unchecked Sendable {
+    public static let shared = WidgetActionReader()
+
+    private static let appGroupID = "group.io.3x1.HealthDebug"
+    private let defaults: UserDefaults
+
+    // Keys must match WidgetActions.swift in the widget extension
+    private static let hydrationKey  = "widget_action_hydration_ml"
+    private static let pomodoroKey   = "widget_action_pomodoro"
+    private static let caffeineKey   = "widget_action_caffeine_clean"
+
+    private init() {
+        defaults = UserDefaults(suiteName: Self.appGroupID) ?? UserDefaults.standard
+    }
+
+    /// Returns pending hydration ml to log (0 if none), then clears the key.
+    public func consumeHydration() -> Int {
+        let ml = defaults.integer(forKey: Self.hydrationKey)
+        if ml > 0 { defaults.removeObject(forKey: Self.hydrationKey) }
+        return ml
+    }
+
+    /// Returns pending pomodoro action ("start" | "break") if any, then clears.
+    public func consumePomodoro() -> String? {
+        guard let action = defaults.string(forKey: Self.pomodoroKey), !action.isEmpty else { return nil }
+        defaults.removeObject(forKey: Self.pomodoroKey)
+        return action
+    }
+
+    /// Returns true if a clean caffeine drink should be logged, then clears.
+    public func consumeCaffeineClean() -> Bool {
+        let pending = defaults.bool(forKey: Self.caffeineKey)
+        if pending { defaults.removeObject(forKey: Self.caffeineKey) }
+        return pending
+    }
+}
+
+// MARK: - Widget Data Store
+
 /// Reads and writes `WidgetSnapshot` via shared App Group UserDefaults.
 public final class WidgetDataStore: @unchecked Sendable {
 
