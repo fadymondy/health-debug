@@ -509,6 +509,12 @@ struct ContentView: View {
             weightBodyFat: health.zeppMetrics.bodyFatPercent,
             dailyFlowScore: flowScore
         )
+        // Sync latest snapshot to Firestore for macOS real-time updates
+        let uid = AuthManager.shared.uid
+        if !uid.isEmpty {
+            let snap = WidgetDataStore.shared.read()
+            FirebaseSync.shared.writeSnapshot(snap, uid: uid)
+        }
     }
 
     // MARK: - Welcome Header

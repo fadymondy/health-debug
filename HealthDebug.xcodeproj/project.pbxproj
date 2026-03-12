@@ -12,14 +12,18 @@
 		169D1F337D466ECB58FAF0C8 /* StepsWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FAD251B7A0CF93658E9605 /* StepsWidget.swift */; };
 		196FE9FF6EB9D27E9A4EDDE6 /* NutritionWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E89C3670D7A5FC2B1BC41 /* NutritionWidget.swift */; };
 		21EF5F924560D054407B6A3D /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = DDEDDB3867004F83D6DE68D5 /* Localizable.xcstrings */; };
+		28C8705D92D65A4154492DD2 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = D293CBEE2E5AA4B419B8A557 /* FirebaseFirestore */; };
 		2C953F2CACA747ACDA481A5A /* WidgetTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AAB05036E99B56BC73A184 /* WidgetTimelineProvider.swift */; };
 		2E0C17F61B9665DE8B7176ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26460479F87454DB463B8DF2 /* Foundation.framework */; };
 		3A5CB509C1FE6507A52FD311 /* LockScreenWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C311252328831FF36EA929 /* LockScreenWidgets.swift */; };
 		53FF489EAB1CA60CAAF6CB8F /* HydrationWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06B3F7683686CA8E5D875AC /* HydrationWidget.swift */; };
 		57BAE374CF0609688A45B8BB /* CaffeineWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0FD03B760ED0F147AE8336 /* CaffeineWidget.swift */; };
+		5943FC588E162405325E32D3 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = CD644BE328DCAF865673ABD4 /* FirebaseAuth */; };
 		618B17D97895F3599C7A5880 /* HealthDebugWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3DE1E77944743D0F956B4A0E /* HealthDebugWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		75215E8F08E5C3E5288E4A1F /* SleepWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B9B7E5D70E8F9CC949B704 /* SleepWidget.swift */; };
 		841A1C00A642912275503FAF /* DailyFlowWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FC81EB5574C563F904DEB03 /* DailyFlowWidget.swift */; };
+		874E30D722D61B39CAC5C646 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 13E878AC45549893A8A819A5 /* FirebaseAuth */; };
+		99AE43980491B73165921951 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A1959CB7363BA1BF1678D8F0 /* FirebaseFirestore */; };
 		A1000001 /* HealthDebugKit in Frameworks */ = {isa = PBXBuildFile; productRef = A1000002 /* HealthDebugKit */; };
 		A1000003 /* HealthDebugKit in Frameworks */ = {isa = PBXBuildFile; productRef = A1000004 /* HealthDebugKit */; };
 		A1000005 /* HealthDebugKit in Frameworks */ = {isa = PBXBuildFile; productRef = A1000006 /* HealthDebugKit */; };
@@ -38,7 +42,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = A1A00001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 1BFDC00696FB531241866EEC;
+			remoteGlobalIDString = EE19D0A63C30AE132A3125CF;
 			remoteInfo = HealthDebugWidgets;
 		};
 		936055775FB5CC6580B67E5F /* PBXContainerItemProxy */ = {
@@ -52,14 +56,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = A1A00001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 63C767F0E8507A4A3DE24ED0;
+			remoteGlobalIDString = EE19D0A63C30AE132A3125CF;
 			remoteInfo = HealthDebugWidgets;
 		};
 		FC0CFB9BDCB08C6DE5B071BD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A1A00001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 0466E42137B0ECAB71663DA7;
+			remoteGlobalIDString = EE19D0A63C30AE132A3125CF;
 			remoteInfo = HealthDebugWidgets;
 		};
 /* End PBXContainerItemProxy section */
@@ -159,6 +163,8 @@
 			files = (
 				A1000001 /* HealthDebugKit in Frameworks */,
 				A1000007 /* HealthKit.framework in Frameworks */,
+				5943FC588E162405325E32D3 /* FirebaseAuth in Frameworks */,
+				99AE43980491B73165921951 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,6 +173,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1000003 /* HealthDebugKit in Frameworks */,
+				874E30D722D61B39CAC5C646 /* FirebaseAuth in Frameworks */,
+				28C8705D92D65A4154492DD2 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,7 +211,6 @@
 				DDEDDB3867004F83D6DE68D5 /* Localizable.xcstrings */,
 				52A38619CFA61076FBDB741E /* WidgetActions.swift */,
 			);
-			name = HealthDebugWidgets;
 			path = HealthDebugWidgets;
 			sourceTree = SOURCE_ROOT;
 		};
@@ -275,7 +282,6 @@
 				E825C568F0A9B040E4DDE9D0 /* WeightWidget.swift */,
 				DDE302E2CC6FEF57F3AC835D /* StandTimerWidget.swift */,
 			);
-			name = Widgets;
 			path = Widgets;
 			sourceTree = "<group>";
 		};
@@ -306,6 +312,8 @@
 			name = "HealthDebug iOS";
 			packageProductDependencies = (
 				A1000002 /* HealthDebugKit */,
+				CD644BE328DCAF865673ABD4 /* FirebaseAuth */,
+				A1959CB7363BA1BF1678D8F0 /* FirebaseFirestore */,
 			);
 			productName = HealthDebug;
 			productReference = A1100001 /* HealthDebug.app */;
@@ -330,6 +338,8 @@
 			name = "HealthDebug macOS";
 			packageProductDependencies = (
 				A1000004 /* HealthDebugKit */,
+				13E878AC45549893A8A819A5 /* FirebaseAuth */,
+				D293CBEE2E5AA4B419B8A557 /* FirebaseFirestore */,
 			);
 			productName = HealthDebugMac;
 			productReference = A1100002 /* Health Debug.app */;
@@ -409,6 +419,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				A1B00001 /* XCLocalSwiftPackageReference "HealthDebugKit" */,
+				31346001A4A92A0182F5C6CD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A1600004 /* Products */;
@@ -510,14 +521,17 @@
 		};
 		CC430CED247E6A257C3DA544 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			target = EE19D0A63C30AE132A3125CF /* HealthDebugWidgets */;
 			targetProxy = 826E8B09C34E37BFD0AA5D4D /* PBXContainerItemProxy */;
 		};
 		CF7B51FA339F897C334EB76C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			target = EE19D0A63C30AE132A3125CF /* HealthDebugWidgets */;
 			targetProxy = FC0CFB9BDCB08C6DE5B071BD /* PBXContainerItemProxy */;
 		};
 		DCB2547E455C8E82C552115F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			target = EE19D0A63C30AE132A3125CF /* HealthDebugWidgets */;
 			targetProxy = 97F6573B3D56A752BB4C4022 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -904,7 +918,23 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		31346001A4A92A0182F5C6CD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		13E878AC45549893A8A819A5 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 31346001A4A92A0182F5C6CD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
 		A1000002 /* HealthDebugKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = HealthDebugKit;
@@ -916,6 +946,21 @@
 		A1000006 /* HealthDebugKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = HealthDebugKit;
+		};
+		A1959CB7363BA1BF1678D8F0 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 31346001A4A92A0182F5C6CD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		CD644BE328DCAF865673ABD4 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 31346001A4A92A0182F5C6CD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		D293CBEE2E5AA4B419B8A557 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 31346001A4A92A0182F5C6CD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

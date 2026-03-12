@@ -301,6 +301,7 @@ public final class NotificationManager: NSObject, ObservableObject {
 
     // MARK: - Background Tasks
 
+    #if os(iOS)
     /// Register background task identifiers — call from AppDelegate / App init before the app finishes launching.
     public static func registerBackgroundTasks() {
         BGTaskScheduler.shared.register(
@@ -393,6 +394,7 @@ public final class NotificationManager: NSObject, ObservableObject {
             task.setTaskCompleted(success: false)
         }
     }
+    #endif
 }
 
 // MARK: - UNUserNotificationCenterDelegate

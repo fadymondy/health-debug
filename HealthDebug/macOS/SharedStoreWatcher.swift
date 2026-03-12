@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import SwiftData
 import HealthDebugKit
+import FirebaseFirestore
 
 /// Watches the shared App Group store for changes written by iOS/watchOS.
 ///
@@ -169,6 +170,26 @@ final class SharedStoreWatcher: ObservableObject {
         snapshot = WidgetDataStore.shared.read()
         // Do NOT send didChange here — this is called from the toolbar button
         // and sending during a SwiftUI update causes a render-loop deadlock.
+    }
+
+    // MARK: - Firebase real-time listener
+
+    /// Call after Firebase Auth is confirmed. When a new snapshot arrives from
+    /// Firestore it replaces the local snapshot and fires `didChange` so all
+    /// macOS views re-render immediately.
+    func startFirebaseListener(uid: String) {
+        guard !uid.isEmpty else { return }
+        FirebaseSync.shared.startListening(uid: uid) { [weak self] newSnapshot in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.snapshot = newSnapshot
+                self.didChange.send()
+            }
+        }
+    }
+
+    func stopFirebaseListener() {
+        FirebaseSync.shared.stopListening()
     }
 
     deinit {

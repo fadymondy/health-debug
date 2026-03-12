@@ -3,6 +3,7 @@ import SwiftData
 import UserNotifications
 import BackgroundTasks
 import HealthDebugKit
+import FirebaseCore
 
 @main
 struct HealthDebugApp: App {
@@ -15,6 +16,8 @@ struct HealthDebugApp: App {
     }()
 
     init() {
+        // Configure Firebase before any other setup
+        FirebaseApp.configure()
         // Apply IBM Plex Sans as global font before any views are rendered
         IBMPlexFontSetup.apply()
         // Register BGTaskScheduler identifiers before app finishes launching
@@ -44,6 +47,7 @@ struct HealthDebugApp: App {
 struct RootView: View {
     @Environment(\.modelContext) private var context
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
+    @StateObject private var auth = AuthManager.shared
     @State private var showOnboarding = false
     @State private var showSplash = true
 
@@ -56,6 +60,9 @@ struct RootView: View {
             if showSplash {
                 SplashView()
                     .transition(.opacity)
+            } else if !auth.isSignedIn {
+                AuthView()
+                    .transition(.opacity)
             } else if needsOnboarding || showOnboarding {
                 OnboardingView {
                     showOnboarding = false
@@ -67,6 +74,7 @@ struct RootView: View {
             }
         }
         .animation(.easeInOut(duration: 0.6), value: showSplash)
+        .animation(.easeInOut(duration: 0.4), value: auth.isSignedIn)
         .onAppear {
             showOnboarding = needsOnboarding
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {

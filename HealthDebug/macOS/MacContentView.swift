@@ -14,9 +14,35 @@ struct MacContentView: View {
     @Environment(\.modelContext) private var context
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
+    @StateObject private var auth = AuthManager.shared
     @State private var selectedTab = "feed"
 
     var body: some View {
+        Group {
+            if !auth.isSignedIn {
+                AuthView()
+                    .frame(minWidth: 500, minHeight: 400)
+            } else {
+                mainTabs
+                    .onAppear {
+                        ensureProfile()
+                        SharedStoreWatcher.shared.startFirebaseListener(uid: auth.uid)
+                    }
+                    .onChange(of: auth.uid) { _, newUID in
+                        if newUID.isEmpty {
+                            SharedStoreWatcher.shared.stopFirebaseListener()
+                        } else {
+                            SharedStoreWatcher.shared.startFirebaseListener(uid: newUID)
+                        }
+                    }
+            }
+        }
+        .animation(.easeInOut(duration: 0.4), value: auth.isSignedIn)
+        .frame(minWidth: 900, minHeight: 640)
+    }
+
+    @ViewBuilder
+    private var mainTabs: some View {
         TabView(selection: $selectedTab) {
             Tab("Feed", systemImage: "list.bullet.rectangle.portrait.fill", value: "feed") {
                 MacDashboardView()
@@ -40,8 +66,6 @@ struct MacContentView: View {
                 MacSearchView()
             }
         }
-        .frame(minWidth: 900, minHeight: 640)
-        .onAppear { ensureProfile() }
     }
 
     private func ensureProfile() {

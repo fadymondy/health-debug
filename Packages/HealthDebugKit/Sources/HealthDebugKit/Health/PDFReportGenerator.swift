@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import Foundation
 import SwiftData
 import UIKit
@@ -241,3 +242,4 @@ public final class PDFReportGenerator: @unchecked Sendable {
         footer.draw(at: CGPoint(x: (pageWidth - footerSize.width) / 2, y: pageHeight - margin + 10), withAttributes: footerAttrs)
     }
 }
+#endif

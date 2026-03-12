@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 import AppKit
 import HealthDebugKit
+import FirebaseCore
 
 // Shared container — created once at process start, reused by all targets.
 private let sharedContainer: ModelContainer = {
@@ -31,6 +32,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var mainWindowController: NSWindowController?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        FirebaseApp.configure()
         openMainWindow()
         setupStatusBarItem()
     }
