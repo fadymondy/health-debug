@@ -12,46 +12,59 @@ struct ContentView: View {
     @StateObject private var nutritionMgr = NutritionManager.shared
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
-    @State private var showSettings = false
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 16) {
-                    if !health.isAuthorized {
-                        authCard
-                    } else {
-                        AIInsightCard(domain: .dashboard)
-                        metricsGrid
+        ScrollView {
+            VStack(spacing: 16) {
+                if !health.isAuthorized {
+                    authCard
+                } else {
+                    AIInsightCard(domain: .dashboard)
+                    metricsGrid
+                    NavigationLink(destination: HydrationDetailView()) {
                         hydrationCard
+                    }
+                    .buttonStyle(.plain)
+                    NavigationLink(destination: NutritionDetailView()) {
                         nutritionCard
+                    }
+                    .buttonStyle(.plain)
+                    NavigationLink(destination: CaffeineDetailView()) {
                         caffeineCard
+                    }
+                    .buttonStyle(.plain)
+                    NavigationLink(destination: ShutdownDetailView()) {
                         shutdownCard
+                    }
+                    .buttonStyle(.plain)
+                    NavigationLink(destination: StandTimerDetailView()) {
                         standTimerCard
+                    }
+                    .buttonStyle(.plain)
+                    NavigationLink(destination: ZeppDetailView()) {
                         zeppCard
+                    }
+                    .buttonStyle(.plain)
+                    NavigationLink(destination: SleepDetailView()) {
                         sleepCard
                     }
-                }
-                .padding(.vertical)
-            }
-            .navigationTitle("Dashboard")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showSettings = true
-                    } label: {
-                        Image(systemName: "gearshape")
-                    }
+                    .buttonStyle(.plain)
                 }
             }
-            .sheet(isPresented: $showSettings) {
-                if let profile = profiles.first {
-                    ProfileSettingsView(profile: profile, sleepConfig: sleepConfigs.first)
-                }
+            .padding(.vertical)
+        }
+        .refreshable {
+            await health.refreshAll()
+        }
+        .onAppear {
+            hydration.refresh(context: context)
+            if let profile = profiles.first {
+                hydration.dailyGoal = profile.dailyWaterGoalMl
             }
-            .refreshable {
-                await health.refreshAll()
-            }
+            nutritionMgr.refresh(context: context)
+            caffeineMgr.refresh(context: context)
+            shutdownMgr.startCountdown(config: sleepConfigs.first)
+            standTimer.refreshTodayCount(context: context)
         }
     }
 
@@ -62,17 +75,19 @@ struct ContentView: View {
             Image(systemName: "lock.shield")
                 .font(.system(size: 40))
                 .foregroundStyle(AppTheme.secondary)
-            Text("HealthKit Access Required")
+            Text(LocalizedStringKey("HealthKit Access Required"))
                 .font(.headline)
-            Text("Tap to authorize reading your health data.")
+            Text(LocalizedStringKey("Tap to authorize reading your health data."))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-            Button("Authorize HealthKit") {
+            Button(action: {
                 Task {
                     try? await health.requestAuthorization()
                     await health.refreshAll()
                 }
+            }) {
+                Text(LocalizedStringKey("Authorize HealthKit"))
             }
             .buttonStyle(.glassProminent)
             .tint(AppTheme.primary)
@@ -99,7 +114,7 @@ struct ContentView: View {
 
     private var hydrationCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Hydration", systemImage: "drop.fill")
+            Label(LocalizedStringKey("Hydration"), systemImage: "drop.fill")
                 .font(.headline)
                 .foregroundStyle(AppTheme.secondary)
             Divider()
@@ -128,6 +143,9 @@ struct ContentView: View {
                         .glassEffect(.regular.tint(color.opacity(0.3)), in: Capsule())
                         .foregroundStyle(color)
                 }
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
             }
             ProgressView(value: min(1.0, Double(hydration.todayTotal) / Double(max(1, hydration.dailyGoal))))
                 .tint(AppTheme.secondary)
@@ -136,19 +154,13 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .glassEffect(.regular.tint(AppTheme.secondary.opacity(0.15)), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal)
-        .onAppear {
-            hydration.refresh(context: context)
-            if let profile = profiles.first {
-                hydration.dailyGoal = profile.dailyWaterGoalMl
-            }
-        }
     }
 
     // MARK: - Nutrition Card
 
     private var nutritionCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Nutrition", systemImage: "fork.knife")
+            Label(LocalizedStringKey("Nutrition"), systemImage: "fork.knife")
                 .font(.headline)
                 .foregroundStyle(nutritionStatusColor)
             Divider()
@@ -160,11 +172,11 @@ struct ContentView: View {
                     HStack(spacing: 4) {
                         Text("\(nutritionMgr.todaySafeCount)")
                             .foregroundStyle(AppTheme.primary)
-                        Text("safe")
+                        Text(LocalizedStringKey("safe"))
                         Text("·").foregroundStyle(.tertiary)
                         Text("\(nutritionMgr.todayUnsafeCount)")
                             .foregroundStyle(nutritionMgr.todayUnsafeCount > 0 ? .red : .secondary)
-                        Text("unsafe")
+                        Text(LocalizedStringKey("unsafe"))
                     }
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -173,6 +185,9 @@ struct ContentView: View {
                 Text(String(format: "%.0f%%", nutritionMgr.safetyScore))
                     .font(.title2.bold())
                     .foregroundStyle(nutritionStatusColor)
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
             }
             if !nutritionMgr.todayTriggers.isEmpty {
                 HStack {
@@ -196,9 +211,6 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .glassEffect(.regular.tint(nutritionStatusColor.opacity(0.15)), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal)
-        .onAppear {
-            nutritionMgr.refresh(context: context)
-        }
     }
 
     private var nutritionStatusColor: Color {
@@ -213,7 +225,7 @@ struct ContentView: View {
 
     private var caffeineCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Caffeine", systemImage: "cup.and.saucer.fill")
+            Label(LocalizedStringKey("Caffeine"), systemImage: "cup.and.saucer.fill")
                 .font(.headline)
                 .foregroundStyle(caffeineMgr.fattyLiverAlert ? .red : AppTheme.primary)
             Divider()
@@ -225,11 +237,11 @@ struct ContentView: View {
                     HStack(spacing: 4) {
                         Text("\(caffeineMgr.todayCleanCount)")
                             .foregroundStyle(AppTheme.primary)
-                        Text("clean")
+                        Text(LocalizedStringKey("clean"))
                         Text("·").foregroundStyle(.tertiary)
                         Text("\(caffeineMgr.todaySugarCount)")
                             .foregroundStyle(caffeineMgr.todaySugarCount > 0 ? .red : .secondary)
-                        Text("sugar")
+                        Text(LocalizedStringKey("sugar"))
                     }
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -238,15 +250,15 @@ struct ContentView: View {
                 Text(String(format: "%.0f%%", caffeineMgr.cleanTransitionPercent))
                     .font(.title2.bold())
                     .foregroundStyle(caffeineStatusColor)
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
             }
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .glassEffect(.regular.tint((caffeineMgr.fattyLiverAlert ? Color.red : AppTheme.primary).opacity(0.15)), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal)
-        .onAppear {
-            caffeineMgr.refresh(context: context)
-        }
     }
 
     private var caffeineStatusColor: Color {
@@ -261,29 +273,29 @@ struct ContentView: View {
 
     private var shutdownCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("System Shutdown", systemImage: "moon.fill")
+            Label(LocalizedStringKey("System Shutdown"), systemImage: "moon.fill")
                 .font(.headline)
                 .foregroundStyle(shutdownMgr.state == .active ? .orange : AppTheme.secondary)
             Divider()
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     if shutdownMgr.state == .active {
-                        Text("ACTIVE — No Food")
+                        Text(LocalizedStringKey("ACTIVE — No Food"))
                             .font(.title3.bold())
                             .foregroundStyle(.orange)
                         HStack(spacing: 4) {
                             Text(ShutdownManager.formatCountdown(shutdownMgr.secondsUntilSleep))
-                            Text("until sleep")
+                            Text(LocalizedStringKey("until sleep"))
                         }
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     } else {
                         HStack(spacing: 4) {
-                            Text("Shutdown in")
+                            Text(LocalizedStringKey("Shutdown in"))
                             Text(ShutdownManager.formatCountdown(shutdownMgr.secondsUntilShutdown))
                         }
                         .font(.title3.bold())
-                        Text("You can eat normally")
+                        Text(LocalizedStringKey("You can eat normally"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -292,22 +304,22 @@ struct ContentView: View {
                 Image(systemName: shutdownMgr.state == .active ? "exclamationmark.triangle.fill" : "checkmark.circle.fill")
                     .font(.title2)
                     .foregroundStyle(shutdownMgr.state == .active ? .orange : AppTheme.primary)
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
             }
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .glassEffect(.regular.tint((shutdownMgr.state == .active ? Color.orange : AppTheme.secondary).opacity(0.15)), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal)
-        .onAppear {
-            shutdownMgr.startCountdown(config: sleepConfigs.first)
-        }
     }
 
     // MARK: - Stand Timer Card
 
     private var standTimerCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Stand Timer", systemImage: "figure.stand")
+            Label(LocalizedStringKey("Stand Timer"), systemImage: "figure.stand")
                 .font(.headline)
                 .foregroundStyle(AppTheme.accent)
             Divider()
@@ -315,17 +327,17 @@ struct ContentView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     switch standTimer.state {
                     case .idle:
-                        Text("Inactive")
+                        Text(LocalizedStringKey("Inactive"))
                             .font(.title3.bold())
                     case .sitting:
                         let mins = Int(standTimer.sitSecondsRemaining) / 60
                         HStack(spacing: 4) {
                             Text("\(mins)")
-                            Text("min left")
+                            Text(LocalizedStringKey("min left"))
                         }
                         .font(.title3.bold())
                     case .standAlert:
-                        Text("Stand Now!")
+                        Text(LocalizedStringKey("Stand Now!"))
                             .font(.title3.bold())
                             .foregroundStyle(.orange)
                     case .walking:
@@ -337,10 +349,10 @@ struct ContentView: View {
                     }
                     HStack(spacing: 4) {
                         Text("\(standTimer.todayCompleted) / \(StandTimerManager.dailyTarget)")
-                        Text("sessions")
+                        Text(LocalizedStringKey("sessions"))
                     }
                     .font(.caption)
-                        .foregroundStyle(.secondary)
+                    .foregroundStyle(.secondary)
                 }
                 Spacer()
                 if standTimer.state == .idle {
@@ -351,39 +363,45 @@ struct ContentView: View {
                     }
                     .buttonStyle(.glass)
                 }
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
             }
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .glassEffect(.regular.tint(AppTheme.accent.opacity(0.15)), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal)
-        .onAppear {
-            standTimer.refreshTodayCount(context: context)
-        }
     }
 
     // MARK: - Zepp Card
 
     private var zeppCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Zepp Scale", systemImage: "scalemass.fill")
+            Label(LocalizedStringKey("Zepp Scale"), systemImage: "scalemass.fill")
                 .font(.headline)
                 .foregroundStyle(AppTheme.primary)
             Divider()
-            HStack(spacing: 4) {
-                Text(String(format: "%.1f", health.zeppMetrics.weight))
-                    .font(.title3.bold())
-                Text("kg")
-                    .font(.caption.bold())
-                    .foregroundStyle(.secondary)
-            }
-            if let date = health.zeppMetrics.lastUpdated {
+            HStack {
                 HStack(spacing: 4) {
-                    Text("Last synced")
-                    Text(date.formatted(.relative(presentation: .named)))
+                    Text(String(format: "%.1f", health.zeppMetrics.weight))
+                        .font(.title3.bold())
+                    Text(LocalizedStringKey("kg"))
+                        .font(.caption.bold())
+                        .foregroundStyle(.secondary)
                 }
-                .font(.caption2)
-                .foregroundStyle(.tertiary)
+                Spacer()
+                if let date = health.zeppMetrics.lastUpdated {
+                    HStack(spacing: 4) {
+                        Text(LocalizedStringKey("Last synced"))
+                        Text(date.formatted(.relative(presentation: .named)))
+                    }
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                }
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
             }
         }
         .padding()
@@ -396,18 +414,21 @@ struct ContentView: View {
 
     private var sleepCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Last Night", systemImage: "bed.double.fill")
+            Label(LocalizedStringKey("Last Night"), systemImage: "bed.double.fill")
                 .font(.headline)
                 .foregroundStyle(AppTheme.secondary)
             Divider()
             HStack {
                 HStack(spacing: 4) {
                     Text(String(format: "%.1f", health.sleepHours))
-                    Text("hours")
+                    Text(LocalizedStringKey("hours"))
                 }
                 .font(.title3.bold())
                 Spacer()
                 sleepQualityBadge
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
             }
         }
         .padding()
@@ -424,7 +445,7 @@ struct ContentView: View {
             default: return ("Critical", .red)
             }
         }()
-        return Text(label)
+        return Text(LocalizedStringKey(label))
             .font(.caption.bold())
             .padding(.horizontal, 8)
             .padding(.vertical, 4)

@@ -126,7 +126,12 @@
       "Bash(ls /Users/fadymondy/Sites/health-debug/build/Debug-iphoneos/HealthDebug.app/*.lproj)",
       "Bash(xcodebuild -project HealthDebug.xcodeproj -target \"HealthDebug iOS\" -configuration Debug -destination \"id=B4649636-CEB2-5239-AD15-FF544FCAF6AE\" SYMROOT=/tmp/healthdebug-build OBJROOT=/tmp/healthdebug-obj build)",
       "Bash(xcrun devicectl device install app --device B4649636-CEB2-5239-AD15-FF544FCAF6AE /tmp/healthdebug-build/Debug-iphoneos/HealthDebug.app)",
-      "Bash(xcrun devicectl device install app --device 00008140-000E712926F1801C /tmp/healthdebug-build/Debug-iphoneos/HealthDebug.app)"
+      "Bash(xcrun devicectl device install app --device 00008140-000E712926F1801C /tmp/healthdebug-build/Debug-iphoneos/HealthDebug.app)",
+      "mcp__orchestra__delete_feature",
+      "Bash(xcodebuild -project HealthDebug.xcodeproj -scheme HealthDebug -destination 'id=00008140-000E712926F1801C' build)",
+      "Bash(xcodebuild -project HealthDebug.xcodeproj -scheme \"HealthDebug iOS\" -destination 'id=00008140-000E712926F1801C' build)",
+      "Bash(xcodebuild -project /Users/fadymondy/Sites/health-debug/HealthDebug.xcodeproj -scheme \"HealthDebug iOS\" -destination 'id=00008140-000E712926F1801C' clean build)",
+      "Bash(xcodebuild -project HealthDebug.xcodeproj -scheme \"HealthDebug iOS\" -destination 'id=00008140-000E712926F1801C' -configuration Debug build)"
     ],
     "additionalDirectories": [
       "/Users/fadymondy/Sites/health-debug",

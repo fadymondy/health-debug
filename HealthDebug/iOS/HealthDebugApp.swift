@@ -48,33 +48,8 @@ struct RootView: View {
                 }
                 .transition(.opacity)
             } else {
-                TabView {
-                    Tab("Dashboard", systemImage: "heart.text.clipboard") {
-                        ContentView()
-                    }
-                    Tab("Hydration", systemImage: "drop.fill") {
-                        HydrationView()
-                    }
-                    Tab("Stand", systemImage: "figure.stand") {
-                        StandTimerView()
-                    }
-                    Tab("Nutrition", systemImage: "fork.knife") {
-                        NutritionView()
-                    }
-                    Tab("Caffeine", systemImage: "cup.and.saucer.fill") {
-                        CaffeineView()
-                    }
-                    Tab("Shutdown", systemImage: "moon.fill") {
-                        ShutdownView()
-                    }
-                    Tab("AI Chat", systemImage: "brain.head.profile.fill") {
-                        AIChatView()
-                    }
-                    Tab("Analytics", systemImage: "chart.bar.fill") {
-                        AnalyticsView()
-                    }
-                }
-                .transition(.opacity)
+                MainAppView()
+                    .transition(.opacity)
             }
         }
         .animation(.easeInOut(duration: 0.6), value: showSplash)
@@ -87,6 +62,97 @@ struct RootView: View {
     }
 }
 
+// MARK: - Main App View
+
+struct MainAppView: View {
+    @State private var mode: AppMode = .dashboard
+    @State private var showSettings = false
+    @State private var showSearch = false
+    @Environment(\.modelContext) private var context
+    @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
+    @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
+
+    enum AppMode: String, CaseIterable {
+        case dashboard = "Dashboard"
+        case intelligence = "Intelligence"
+    }
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 0) {
+                modeSwitcher
+                    .padding(.horizontal)
+                    .padding(.bottom, 8)
+
+                ZStack {
+                    if mode == .dashboard {
+                        ContentView()
+                    } else {
+                        IntelligenceView()
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            .navigationTitle(LocalizedStringKey(mode.rawValue))
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showSearch = true
+                    } label: {
+                        Image(systemName: "magnifyingglass")
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                }
+            }
+            .sheet(isPresented: $showSettings) {
+                if let profile = profiles.first {
+                    ProfileSettingsView(profile: profile, sleepConfig: sleepConfigs.first)
+                }
+            }
+            .sheet(isPresented: $showSearch) {
+                Text(LocalizedStringKey("Search coming soon"))
+                    .presentationDetents([.medium])
+            }
+        }
+    }
+
+    private var modeSwitcher: some View {
+        HStack(spacing: 0) {
+            ForEach(AppMode.allCases, id: \.self) { m in
+                Button {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        mode = m
+                    }
+                } label: {
+                    Text(LocalizedStringKey(m.rawValue))
+                        .font(.subheadline.bold())
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(mode == m ? Color.primary : Color.secondary)
+                .background {
+                    if mode == m {
+                        Capsule()
+                            .glassEffect(.regular.tint(AppTheme.primary.opacity(0.2)), in: Capsule())
+                    }
+                }
+            }
+        }
+        .padding(4)
+        .glassEffect(.regular.tint(Color.primary.opacity(0.05)), in: Capsule())
+    }
+}
+
+// MARK: - Splash View
+
 struct SplashView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var logoScale: CGFloat = 0.5
@@ -98,11 +164,9 @@ struct SplashView: View {
 
     var body: some View {
         ZStack {
-            // Clean adaptive background
             Color(.systemBackground)
                 .ignoresSafeArea()
 
-            // Subtle brand-colored radial pulse behind logo
             Circle()
                 .fill(AppTheme.primary.opacity(0.06))
                 .frame(width: 250, height: 250)
@@ -110,7 +174,6 @@ struct SplashView: View {
                 .blur(radius: 40)
 
             VStack(spacing: 24) {
-                // Logo with shimmer
                 Image("SplashLogo")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -149,24 +212,20 @@ struct SplashView: View {
             }
         }
         .onAppear {
-            // Logo bounces in
             withAnimation(.spring(response: 0.7, dampingFraction: 0.6)) {
                 logoScale = 1.0
                 logoOpacity = 1.0
             }
 
-            // Title slides up after logo
             withAnimation(.easeOut(duration: 0.5).delay(0.3)) {
                 titleOffset = 0
                 titleOpacity = 1.0
             }
 
-            // Shimmer sweep across logo
             withAnimation(.easeInOut(duration: 0.8).delay(0.5)) {
                 shimmerOffset = 200
             }
 
-            // Subtle pulse loop
             withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
                 pulseScale = 1.15
             }
