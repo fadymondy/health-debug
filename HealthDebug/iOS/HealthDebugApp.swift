@@ -92,10 +92,6 @@ struct MainAppView: View {
                 SearchView()
             }
 
-            Tab("Intelligence", systemImage: "brain.head.profile.fill", value: "intelligence") {
-                IntelligenceView()
-            }
-
             Tab("Profile", systemImage: "person.crop.circle", value: "profile") {
                 profileTab
             }
