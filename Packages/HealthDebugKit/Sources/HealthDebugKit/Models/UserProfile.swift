@@ -44,6 +44,35 @@ public final class UserProfile {
     public var pomodoroEndAlertEnabled: Bool       // default: true
     public var pomodoroEndLeadMinutes: Int         // minutes before work end, default: 15
 
+    // Notification: Heart Rate Thresholds
+    public var heartRateHighThreshold: Int    // default: 120 bpm
+    public var heartRateLowThreshold: Int     // default: 45 bpm
+
+    // Notification: Meal Reminder
+    public var mealReminderEnabled: Bool      // default: true
+
+    // Notification: Coffee Time
+    public var coffeeAlertEnabled: Bool       // default: true
+    public var coffeeAlertHour: Int           // default: 10
+    public var coffeeAlertMinute: Int         // default: 0
+
+    // Notification: Hydration Gap
+    public var hydrationAlertEnabled: Bool    // default: true
+    public var hydrationAlertGapMinutes: Int  // minutes without water before alert, default: 60
+
+    // Notification: Movement / Stand-Up
+    public var movementAlertEnabled: Bool         // default: true
+    public var movementAlertIntervalMinutes: Int  // interval during work hours, default: 60
+
+    // Notification: GERD Shutdown Lead
+    public var gerdShutdownLeadMinutes: Int   // minutes before shutdown, default: 15
+
+    // Personal Info
+    public var name: String
+    public var email: String
+    public var bio: String
+    public var avatarData: Data?
+
     // Metadata
     public var onboardingCompleted: Bool
     public var lastUpdated: Date
@@ -74,6 +103,21 @@ public final class UserProfile {
         pomodoroStartLeadMinutes: Int = 15,
         pomodoroEndAlertEnabled: Bool = true,
         pomodoroEndLeadMinutes: Int = 15,
+        heartRateHighThreshold: Int = 120,
+        heartRateLowThreshold: Int = 45,
+        mealReminderEnabled: Bool = true,
+        coffeeAlertEnabled: Bool = true,
+        coffeeAlertHour: Int = 10,
+        coffeeAlertMinute: Int = 0,
+        hydrationAlertEnabled: Bool = true,
+        hydrationAlertGapMinutes: Int = 60,
+        movementAlertEnabled: Bool = true,
+        movementAlertIntervalMinutes: Int = 60,
+        gerdShutdownLeadMinutes: Int = 15,
+        name: String = "",
+        email: String = "",
+        bio: String = "",
+        avatarData: Data? = nil,
         onboardingCompleted: Bool = false,
         lastUpdated: Date = .now
     ) {
@@ -102,6 +146,21 @@ public final class UserProfile {
         self.pomodoroStartLeadMinutes = pomodoroStartLeadMinutes
         self.pomodoroEndAlertEnabled = pomodoroEndAlertEnabled
         self.pomodoroEndLeadMinutes = pomodoroEndLeadMinutes
+        self.heartRateHighThreshold = heartRateHighThreshold
+        self.heartRateLowThreshold = heartRateLowThreshold
+        self.mealReminderEnabled = mealReminderEnabled
+        self.coffeeAlertEnabled = coffeeAlertEnabled
+        self.coffeeAlertHour = coffeeAlertHour
+        self.coffeeAlertMinute = coffeeAlertMinute
+        self.hydrationAlertEnabled = hydrationAlertEnabled
+        self.hydrationAlertGapMinutes = hydrationAlertGapMinutes
+        self.movementAlertEnabled = movementAlertEnabled
+        self.movementAlertIntervalMinutes = movementAlertIntervalMinutes
+        self.gerdShutdownLeadMinutes = gerdShutdownLeadMinutes
+        self.name = name
+        self.email = email
+        self.bio = bio
+        self.avatarData = avatarData
         self.onboardingCompleted = onboardingCompleted
         self.lastUpdated = lastUpdated
     }

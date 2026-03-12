@@ -17,10 +17,10 @@ features:
     - FEAT-OND
 id: PLAN-LKZ
 project_id: health-debug
-status: in-progress
+status: completed
 title: In-App Notification Center & Smart Alerts
-updated_at: "2026-03-12T11:45:36Z"
-version: 2
+updated_at: "2026-03-12T12:30:12Z"
+version: 3
 ---
 
 # In-App Notification Center & Smart Alerts
