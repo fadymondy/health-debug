@@ -51,6 +51,9 @@ struct RootView: View {
                     Tab("Stand", systemImage: "figure.stand") {
                         StandTimerView()
                     }
+                    Tab("Shutdown", systemImage: "moon.fill") {
+                        ShutdownView()
+                    }
                 }
                 .transition(.opacity)
             }

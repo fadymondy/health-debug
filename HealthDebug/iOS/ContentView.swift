@@ -7,6 +7,7 @@ struct ContentView: View {
     @StateObject private var health = HealthKitManager.shared
     @StateObject private var standTimer = StandTimerManager.shared
     @StateObject private var hydration = HydrationManager.shared
+    @StateObject private var shutdownMgr = ShutdownManager.shared
     @Query(UserProfile.currentDescriptor()) private var profiles: [UserProfile]
     @Query(SleepConfig.currentDescriptor()) private var sleepConfigs: [SleepConfig]
     @State private var showSettings = false
@@ -20,6 +21,7 @@ struct ContentView: View {
                     } else {
                         metricsGrid
                         hydrationCard
+                        shutdownCard
                         standTimerCard
                         zeppCard
                         sleepCard
@@ -134,6 +136,46 @@ struct ContentView: View {
             if let profile = profiles.first {
                 hydration.dailyGoal = profile.dailyWaterGoalMl
             }
+        }
+    }
+
+    // MARK: - Shutdown Card
+
+    private var shutdownCard: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("System Shutdown", systemImage: "moon.fill")
+                .font(.headline)
+                .foregroundStyle(shutdownMgr.state == .active ? .orange : AppTheme.secondary)
+            Divider()
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    if shutdownMgr.state == .active {
+                        Text("ACTIVE — No Food")
+                            .font(.title3.bold())
+                            .foregroundStyle(.orange)
+                        Text(ShutdownManager.formatCountdown(shutdownMgr.secondsUntilSleep) + " until sleep")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("Shutdown in " + ShutdownManager.formatCountdown(shutdownMgr.secondsUntilShutdown))
+                            .font(.title3.bold())
+                        Text("You can eat normally")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                Spacer()
+                Image(systemName: shutdownMgr.state == .active ? "exclamationmark.triangle.fill" : "checkmark.circle.fill")
+                    .font(.title2)
+                    .foregroundStyle(shutdownMgr.state == .active ? .orange : AppTheme.primary)
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassEffect(.regular.tint((shutdownMgr.state == .active ? Color.orange : AppTheme.secondary).opacity(0.15)), in: RoundedRectangle(cornerRadius: 20))
+        .padding(.horizontal)
+        .onAppear {
+            shutdownMgr.startCountdown(config: sleepConfigs.first)
         }
     }
 
